@@ -1,254 +1,187 @@
-# Extension 6: Job Hunt Pipeline
+# Job Hunt Pipeline
 
-## Why This Matters
+> Extension 6 of the Open Brain learning path: a Supabase Edge Function MCP server for end-to-end job search tracking — companies, postings, applications, interviews, and contacts with CRM integration.
 
-Job hunting is an emotional grinder. You think you're failing because you got 3 rejections this week. But your agent can show you that your actual interview conversion rate is 40% — well above average. It can catch that you haven't followed up with the hiring manager at Company X in 8 days. It can normalize compensation across 4 different offer structures so you're comparing apples to apples. The data doesn't lie, and having an agent that can reason across your entire pipeline turns an emotional process into a manageable one.
+## Quick Reference
 
-## Learning Path: Extension 6 of 6
+### Environment Variables
 
-| Extension | Name | Status |
-|-----------|------|--------|
-| 1 | Household Knowledge Base | Completed |
-| 2 | Home Maintenance Tracker | Completed |
-| 3 | Family Calendar | Completed |
-| 4 | Meal Planning & Recipes | Completed |
-| 5 | Professional CRM | Completed |
-| **6** | **Job Hunt Pipeline** | **<-- You are here** |
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `SUPABASE_URL` | Supabase project URL (`https://your-project.supabase.co`) | Yes |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (set automatically on deploy) | Yes |
+| `MCP_ACCESS_KEY` | Bearer key required on every MCP request (`?key=` or `x-access-key` header) | Yes |
+| `DEFAULT_USER_ID` | UUID of the default user; set as an Edge Function secret | Yes |
 
-## What It Does
+`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected automatically by Supabase at deploy time. Only `MCP_ACCESS_KEY` and `DEFAULT_USER_ID` require manual configuration.
 
-A complete job search management system — companies, postings, applications, interviews, and contacts. The most complex extension in the learning path, with 5 RLS-protected tables and sophisticated cross-extension integration to your Professional CRM (Extension 5). This extension demonstrates advanced multi-table relationships, pipeline tracking, and data analysis patterns.
+### HTTP Endpoints
 
-## What You'll Learn
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/*` | MCP JSON-RPC endpoint — all tool calls |
+| `GET` | `/*` | Health check |
 
-- Most complex multi-table schema design (5 tables with cascading relationships)
-- Pipeline/funnel tracking with status transitions
-- Cross-extension integration with Extension 5 (Professional CRM)
-- Advanced queries (conversion rates, timeline analysis, upcoming events)
-- Bridge tables for linking separate data domains
-- Handling nullable foreign keys and optional relationships
-
-## Prerequisites
-
-- Working Open Brain setup
-- Extension 5 (Professional CRM) strongly recommended — cross-extension linking depends on it
-- Supabase CLI installed and linked to your project
-- **Required reading:** [Row Level Security](../../primitives/rls/) primitive
-
-## Credential Tracker
-
-You'll reference these values during setup. Copy this block into a text editor and fill it in as you go.
-
-> **Already have your Supabase credentials from the [Setup Guide](../../docs/01-getting-started.md)?** You just need the same Project ref, Secret key, and MCP Access Key — reuse the key from your core setup.
-
-```text
-JOB HUNT PIPELINE -- CREDENTIAL TRACKER
---------------------------------------
-
-SUPABASE (from your Open Brain setup)
-  Project ref:           ____________
-  Secret key:            ____________
-
-MCP SERVER (new for this extension)
-  Default User ID:       ____________
-  MCP Access Key:        ____________  (same key for all extensions)
-  MCP Server URL:        ____________
-  MCP Connection URL:    ____________
-
---------------------------------------
-```
-
-## Steps
-
-### 1. Set Up the Database Schema
-
-Run the SQL in `schema.sql` in your Supabase SQL Editor:
+Authentication: every `POST` request must include the access key as a query parameter or header.
 
 ```bash
-# Navigate to your Supabase project SQL editor
-# https://supabase.com/dashboard/project/YOUR_PROJECT_ID/sql/new
+# Health check
+curl https://your-project.supabase.co/functions/v1/job-hunt
+
+# Call an MCP tool (example: get_pipeline_overview)
+curl -X POST \
+  "https://your-project.supabase.co/functions/v1/job-hunt?key=YOUR_MCP_ACCESS_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/call",
+    "params": {
+      "name": "get_pipeline_overview",
+      "arguments": { "days_ahead": 7 }
+    }
+  }'
 ```
 
-Copy and paste the contents of `schema.sql` and click Run. This creates five RLS-enabled tables with proper foreign key relationships and cascading deletes.
+### MCP Tools
 
-### 2. Generate Your User ID
+| Tool | Description |
+|------|-------------|
+| `add_company` | Add a company to track in your job search |
+| `add_job_posting` | Add a job posting at a tracked company |
+| `add_job_contact` | Add a recruiter, hiring manager, referral, or interviewer |
+| `submit_application` | Record a submitted application |
+| `schedule_interview` | Schedule an interview for an application |
+| `log_interview_notes` | Add post-interview feedback and mark as completed |
+| `get_pipeline_overview` | Dashboard summary: status counts and upcoming interviews |
+| `get_upcoming_interviews` | List interviews in the next N days with full context |
+| `search_job_contacts` | Search or filter job contacts by name, role, or company |
+| `link_contact_to_professional_crm` | Cross-extension: promote a job contact to Extension 5's `professional_contacts` table |
 
-The extension needs a user ID to scope your data. Generate a UUID and save it in your credential tracker:
+### Commands
 
 ```bash
-# macOS / Linux
-uuidgen | tr '[:upper:]' '[:lower:]'
+# Deploy the Edge Function via Supabase CLI
+supabase functions deploy job-hunt
 
-# Or use any UUID generator — the value just needs to be unique to you
+# Set required secrets
+supabase secrets set MCP_ACCESS_KEY=your-key
+supabase secrets set DEFAULT_USER_ID=your-uuid
+
+# Run schema migrations
+supabase db push
+# or apply manually:
+psql "$DATABASE_URL" -f schema.sql
+
+# Serve locally for development
+supabase functions serve job-hunt --env-file .env.example
 ```
 
-Set it as an environment variable for your Edge Function:
+### Configuration
 
-```bash
-supabase secrets set DEFAULT_USER_ID=your-generated-uuid-here
-```
+| File | Purpose |
+|------|---------|
+| `deno.json` | Deno import map — pins all npm dependencies |
+| `.env.example` | Template showing required environment variables |
+| `schema.sql` | Full database schema with RLS policies and indexes |
 
-> If you already set `DEFAULT_USER_ID` for a previous extension, you can skip this step — all extensions share the same user ID.
+### Database Tables
 
-### 3. Deploy the MCP Server
+| Table | Purpose |
+|-------|---------|
+| `companies` | Organizations tracked in your job search (industry, size, remote policy, Glassdoor rating) |
+| `job_postings` | Specific roles at companies (salary range, requirements, source, closing date) |
+| `applications` | Submitted applications with status pipeline (`draft` → `accepted`/`rejected`) |
+| `interviews` | Scheduled and completed interviews with prep notes and post-interview feedback |
+| `job_contacts` | Recruiters, hiring managers, referrals, and interviewers; optional link to Extension 5 CRM |
 
-Follow the [Deploy an Edge Function](../../primitives/deploy-edge-function/) guide using these values:
+All tables have Row Level Security enabled. Users can only read and write their own rows.
 
-| Setting | Value |
-|---------|-------|
-| Function name | `job-hunt-mcp` |
-| Download path | `extensions/job-hunt` |
+Application status values: `draft`, `applied`, `screening`, `interviewing`, `offer`, `accepted`, `rejected`, `withdrawn`.
 
-### 4. Connect to Your AI
+Interview type values: `phone_screen`, `technical`, `behavioral`, `system_design`, `hiring_manager`, `team`, `final`.
 
-Follow the [Remote MCP Connection](../../primitives/remote-mcp/) guide to connect this extension to Claude Desktop, ChatGPT, Claude Code, or any other MCP client.
+### Prerequisites
 
-| Setting | Value |
-|---------|-------|
-| Connector name | `Job Hunt Pipeline` |
-| URL | Your **MCP Connection URL** from the credential tracker |
+- Open Brain core setup complete (Supabase project with `thoughts` table)
+- Supabase CLI installed
+- Extension 5 (Professional CRM) deployed if you intend to use `link_contact_to_professional_crm`
+- Primitives read: `deploy-edge-function`, `remote-mcp`, `rls`
 
-### 5. Test the Extension
+## Common Tasks
 
-Try these commands with Claude:
-
-```
-Add a company I'm tracking: TechCorp, enterprise software company, remote-first, San Francisco
-```
-
-```
-Add a job posting at TechCorp: Senior AI Engineer, $150k-$200k, posted on LinkedIn
-```
+### Add a company and first job posting
 
 ```
-Submit an application for the TechCorp AI Engineer role, used resume v3
+# Step 1 — add the company
+add_company: { "name": "Acme Corp", "industry": "SaaS", "size": "mid-market", "remote_policy": "remote" }
+# → returns company.id
+
+# Step 2 — add a posting using the returned ID
+add_job_posting: { "company_id": "<id>", "title": "Senior Engineer", "url": "https://...", "salary_min": 150000, "salary_max": 190000 }
+# → returns job_posting.id
+
+# Step 3 — submit an application
+submit_application: { "job_posting_id": "<id>", "status": "applied", "applied_date": "2026-04-23" }
 ```
 
-```
-Schedule a phone screen interview for my TechCorp application, tomorrow at 2pm
-```
+### Track an interview from scheduling through debrief
 
 ```
-Show me my pipeline overview - how many applications, what stages, upcoming interviews
+# Schedule
+schedule_interview: {
+  "application_id": "<id>",
+  "interview_type": "technical",
+  "scheduled_at": "2026-04-30T14:00:00Z",
+  "duration_minutes": 60,
+  "interviewer_name": "Jane Smith"
+}
+# → returns interview.id
+
+# After the interview, log notes
+log_interview_notes: {
+  "interview_id": "<id>",
+  "feedback": "Strong on system design, review concurrency patterns",
+  "rating": 4
+}
 ```
 
-```
-Add a job contact at TechCorp: Jessica Lee, recruiter, jessica@techcorp.com
-```
+### Check your pipeline dashboard
 
 ```
-Show me my TechCorp job contacts
+get_pipeline_overview: { "days_ahead": 7 }
+# → returns total application count, status breakdown, and upcoming interviews
 ```
 
+### Promote a job contact to your Professional CRM
+
 ```
-Link the TechCorp recruiter to my professional CRM
+# Find the contact ID
+search_job_contacts: { "query": "Jane Smith", "role_in_process": "hiring_manager" }
+
+# Link to Extension 5
+link_contact_to_professional_crm: { "job_contact_id": "<id>" }
 ```
 
-## Cross-Extension Integration
+### Connect Claude Desktop
 
-**This is the most sophisticated cross-extension integration in the learning path.**
-
-### `link_contact_to_professional_crm` — The Bridge Tool
-
-A recruiter you're talking to during the job search is also a professional contact worth maintaining. Your agent can create the CRM record automatically — the recruiter's name, company, and interaction history carry over. When you land the job (or don't), those contacts don't disappear from your network. They're already in your CRM, ready for the long-term relationship.
-
-**Example workflow:**
-
-1. You add a job contact with `add_job_contact`: "Jessica Lee, TechCorp recruiter, jessica@techcorp.com"
-2. You have multiple interactions: phone screen, interview coordination, offer negotiation
-3. If you need to recover the contact later, your agent uses `search_job_contacts` to find the right `job_contact_id`
-4. Your agent uses `link_contact_to_professional_crm` to create a professional_contacts record in Extension 5
-5. The `professional_crm_contact_id` field is set, creating a bidirectional link
-6. After the job search ends, Jessica is already in your CRM with full context: company, role, all notes from the job search
-
-**How it works technically:**
-
-The bridge tool takes a `job_contact_id` from the `job_contacts` table. In normal use, your agent creates that row with `add_job_contact`, and if it needs to recover the UUID later it can call `search_job_contacts` first. Once it has the ID, it retrieves the contact details and creates a corresponding record in Extension 5's `professional_contacts` table. The `professional_crm_contact_id` field stores the link — this is application-managed rather than a database foreign key, because the two extensions live in separate table domains and you might install one without the other. This means:
-
-- Future interactions in the job hunt also appear in the CRM context
-- You can track the relationship long-term in Extension 5
-- Your networking doesn't restart from zero after the job search
-
-### Integration with Extensions 1-4
-
-Your agent has even more context when you're job hunting:
-
-- **Extension 1 (Household Knowledge):** Knows your current location, family situation relevant to relocation decisions
-- **Extension 2 (Home Maintenance):** Understands timing constraints (e.g., "I can't start until after the roof replacement in May")
-- **Extension 3 (Family Calendar):** Can schedule interviews around existing commitments, factor in family obligations
-- **Extension 4 (Meal Planning):** Knows your dietary needs for interview lunches, can plan around busy interview days
-
-This is the power of a fully interconnected Open Brain — context flows across domains.
-
-## Available Tools
-
-1. **`add_company`** — Add a company to track (name, industry, website, size, location, remote_policy, notes, glassdoor_rating)
-2. **`add_job_posting`** — Add a specific role at a company (company_id, title, url, salary_min, salary_max, requirements, nice_to_haves, source, posted_date)
-3. **`add_job_contact`** — Add a recruiter, hiring manager, referral, or interviewer to `job_contacts` (company_id, name, title, email, phone, linkedin_url, role_in_process, notes, last_contacted)
-4. **`submit_application`** — Record a submitted application (job_posting_id, status, applied_date, resume_version, cover_letter_notes, referral_contact)
-5. **`schedule_interview`** — Schedule an interview for an application (application_id, interview_type, scheduled_at, duration_minutes, interviewer_name, interviewer_title, notes)
-6. **`log_interview_notes`** — Add feedback/notes after an interview, update status to completed (interview_id, feedback, rating 1-5)
-7. **`get_pipeline_overview`** — Dashboard summary: counts by application status, upcoming interviews in next N days, recent activity. This is your "how's it going?" tool.
-8. **`get_upcoming_interviews`** — List interviews in the next N days with full company/role context
-9. **`search_job_contacts`** — Search or list job contacts to recover recruiter/interviewer records and IDs before linking or follow-up
-10. **`link_contact_to_professional_crm`** — **CROSS-EXTENSION BRIDGE** — Takes a job_contact_id, creates/links to a professional_contacts record in Extension 5, sets professional_crm_contact_id
-
-## Expected Outcome
-
-After completing this extension, you should be able to:
-
-1. Track companies and roles across your entire job search
-2. Manage application status through the pipeline (applied → screening → interviewing → offer → accepted/rejected)
-3. Schedule and log interviews with detailed notes and ratings
-4. Track contacts (recruiters, hiring managers, interviewers) with CRM integration
-5. Get pipeline analytics: conversion rates, stage distribution, interview performance
-6. Bridge job search contacts into your long-term professional network
-
-Your agent will be able to answer questions like:
-- "Show me my pipeline overview"
-- "What interviews do I have this week?"
-- "What's my conversion rate from phone screen to technical interview?"
-- "Which applications are in the proposal stage?"
-- "Who's the recruiter at TechCorp and when did I last talk to them?"
-- "Link all my TechCorp contacts to my professional CRM"
+In Claude Desktop: Settings → Connectors → Add custom connector → paste your deployed Edge Function URL with `?key=YOUR_MCP_ACCESS_KEY`.
 
 ## Troubleshooting
 
-For common issues (connection errors, 401s, deployment problems), see [Common Troubleshooting](../../primitives/troubleshooting/).
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| `401 Unauthorized` on every request | `MCP_ACCESS_KEY` mismatch or missing | Confirm the key in your request matches `supabase secrets set MCP_ACCESS_KEY=...` |
+| `DEFAULT_USER_ID not configured` (500) | Secret not set | Run `supabase secrets set DEFAULT_USER_ID=your-uuid` and redeploy |
+| `Failed to add company: ...` | Schema not applied | Run `supabase db push` or apply `schema.sql` manually |
+| `link_contact_to_professional_crm` fails with CRM insert error | Extension 5 `professional_contacts` table missing | Deploy Extension 5 (Professional CRM) and apply its schema first |
+| Health check returns 200 but tool calls time out | Edge Function cold start | Retry; Supabase Edge Functions spin down after inactivity |
+| RLS policy violation | `DEFAULT_USER_ID` does not match `auth.uid()` in policies | The service role key bypasses RLS by default; confirm `createClient` is using the service role key |
 
-**Extension-specific issues:**
+## Related
 
-**"Foreign key violation" errors**
-- Ensure parent records exist before creating child records (company → job_posting → application → interview)
-- Verify UUIDs are correct and belong to the same user_id
-- Deleting a company will cascade-delete all related postings, applications, and interviews
-
-**"Extension 5 not found" when linking contacts**
-- Verify Extension 5 (Professional CRM) is installed and its tables exist
-- Check that the `professional_contacts` table is accessible
-- Ensure both extensions are using the same Supabase project
-
-## Next Steps
-
-**You've completed all 6 extensions!**
-
-At this point, your agent has a comprehensive, interconnected system:
-
-- **Extension 1:** Household knowledge (paint colors, appliances, vendors)
-- **Extension 2:** Home maintenance (recurring tasks, service logs)
-- **Extension 3:** Family calendar (events, recurring schedules)
-- **Extension 4:** Meal planning (recipes, shopping lists, meal schedules)
-- **Extension 5:** Professional CRM (contacts, interactions, opportunities)
-- **Extension 6:** Job hunt pipeline (companies, applications, interviews)
-
-All wired together through your Open Brain, with cross-extension tools that let context flow between domains.
-
-### What's Next?
-
-1. **Audit and optimize your tools** — You now have ~40 MCP tool definitions across 6 extensions. That's a lot of context weight. Run the [MCP Tool Audit & Optimization Guide](../../docs/05-tool-audit.md) to identify redundancies, merge CRUD tools, and scope your servers by workflow. This is the single highest-impact thing you can do to keep your AI performing well.
-2. **Build your own extensions** — Use these 6 as templates for domains specific to your life
-3. **Explore primitives** — Dive deeper into [Row Level Security](../../primitives/rls/), [Remote MCP](../../primitives/remote-mcp/), and other patterns
-4. **Create compound queries** — Build tools that reason across multiple extensions simultaneously
-5. **Share your extensions** — Contribute back to the OB1 community
-
-[Explore Primitives →](../../primitives/)
+- [CONTEXT.md](CONTEXT.md) — Architecture context for this extension
+- [../professional-crm/README.md](../professional-crm/README.md) — Extension 5, required for CRM cross-linking
+- [../../primitives/deploy-edge-function/README.md](../../primitives/deploy-edge-function/README.md) — Edge Function deployment guide
+- [../../primitives/remote-mcp/README.md](../../primitives/remote-mcp/README.md) — Remote MCP pattern
+- [../../primitives/rls/README.md](../../primitives/rls/README.md) — Row Level Security primer

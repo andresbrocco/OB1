@@ -1,261 +1,191 @@
-# Repo Learning Coach
+# repo-learning-coach
 
-> Turn repo research into a local lesson app backed by Supabase learning tables, with durable takeaways captured into Open Brain.
+> Interactive learning coach that turns any GitHub repository into a structured course — Express API backend + Vite frontend with curriculum sync, lesson progress tracking, quiz submission, and thought capture.
 
-## What It Does
+## Quick Reference
 
-Repo Learning Coach gives you a local React + Express learning workspace for understanding a codebase. Research docs and lesson files live in markdown, structured learning state lives in dedicated Supabase tables, and the best takeaways flow back into `thoughts` so they can resurface in future sessions.
+### Environment Variables
 
-Unlike an OB1 extension, this stays a local app in v1. It uses your existing Open Brain project as the backend, but it does not create a new MCP server.
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `SUPABASE_URL` | Supabase project URL | — | Yes |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-side only) | — | Yes |
+| `OPENROUTER_API_KEY` | OpenRouter API key for embedding-based brain bridge | — | Yes (if brain bridge enabled) |
+| `OPENROUTER_EMBEDDING_MODEL` | Embedding model for related thought retrieval | `openai/text-embedding-3-small` | No |
+| `PORT` | Port the Express API listens on | `8787` | No |
+| `NODE_ENV` | Runtime environment; set to `production` to serve built frontend | — | No |
 
-## Prerequisites
+Copy `.env.example` to `.env` and fill in values before starting.
 
-- Working Open Brain setup ([guide](../../docs/01-getting-started.md))
-- Node.js 18+ and `npm`
-- Supabase project URL and service role key from your existing Open Brain setup
-- OpenRouter API key for related-thought retrieval and durable capture into `thoughts`
+### Ports
 
-## Credential Tracker
+| Port | Service |
+|------|---------|
+| `8787` | Express API server (default; override with `PORT`) |
+| `5173` | Vite dev server (default Vite port, started by `npm run dev`) |
 
-Copy this block into a text editor and fill it in as you go.
+### API Endpoints
 
-```text
-REPO LEARNING COACH -- CREDENTIAL TRACKER
------------------------------------------
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/bootstrap` | Returns project metadata, all lessons with progress, research document index, and brain bridge state |
+| `GET` | `/api/lessons/:slug` | Full lesson detail including quiz, comments, related research, and brain bridge thoughts |
+| `POST` | `/api/lessons/:slug/progress` | Update lesson status and confidence rating |
+| `POST` | `/api/lessons/:slug/comments` | Add a lesson comment with understanding state |
+| `POST` | `/api/lessons/:slug/capture` | Capture a learning artifact (takeaway, confusion, or summary) to Open Brain |
+| `POST` | `/api/quizzes/:quizId/submit` | Submit quiz answers and record attempt score |
+| `GET` | `/api/research/:slug` | Full research document detail |
 
-FROM YOUR OPEN BRAIN SETUP
-  Supabase Project URL:        ____________
-  Supabase Service Role Key:   ____________
-  OpenRouter API Key:          ____________
-
-LOCAL APP
-  Recipe folder path:          ____________
-  Local app URL:               ____________
-
------------------------------------------
-```
-
-![Step 1](https://img.shields.io/badge/Step_1-Create_the_Learning_Tables-1E88E5?style=for-the-badge)
-
-Open your Supabase SQL Editor and run the contents of [schema.sql](./schema.sql).
-
-<details>
-<summary>📋 <strong>SQL: Repo Learning Coach tables</strong> (copy from <code>schema.sql</code>)</summary>
-
-This recipe keeps its structured state in these tables:
-
-- `repo_learning_projects`
-- `repo_learning_research_documents`
-- `repo_learning_tracks`
-- `repo_learning_lessons`
-- `repo_learning_quizzes`
-- `repo_learning_quiz_questions`
-- `repo_learning_lesson_progress`
-- `repo_learning_quiz_attempts`
-- `repo_learning_quiz_responses`
-- `repo_learning_lesson_comments`
-
-The SQL also creates the `updated_at` trigger helper and grants `service_role` access for every table.
-
-</details>
-
-> [!IMPORTANT]
-> This recipe does **not** modify the core `thoughts` table. The only Open Brain integration is through the existing `upsert_thought` and `match_thoughts` path your OB1 setup already provides.
-
-✅ **Done when:** The new `repo_learning_*` tables appear in Supabase Table Editor and the query finishes without errors.
-
----
-
-![Step 2](https://img.shields.io/badge/Step_2-Configure_the_Local_App-1E88E5?style=for-the-badge)
-
-**1. Move into the recipe folder:**
+**Example requests:**
 
 ```bash
-cd recipes/repo-learning-coach
+# Load initial app data
+curl http://localhost:8787/api/bootstrap
+
+# Get lesson detail
+curl http://localhost:8787/api/lessons/intro-to-supabase
+
+# Update lesson progress
+curl -X POST http://localhost:8787/api/lessons/intro-to-supabase/progress \
+  -H "Content-Type: application/json" \
+  -d '{"status": "completed", "confidence": 4}'
+
+# Add a lesson comment
+curl -X POST http://localhost:8787/api/lessons/intro-to-supabase/comments \
+  -H "Content-Type: application/json" \
+  -d '{"body": "This clicked once I saw the RLS example.", "understandingState": "clear"}'
+
+# Capture a takeaway to Open Brain
+curl -X POST http://localhost:8787/api/lessons/intro-to-supabase/capture \
+  -H "Content-Type: application/json" \
+  -d '{"kind": "takeaway", "content": "RLS policies apply before any query reaches your data."}'
+
+# Submit quiz answers
+curl -X POST http://localhost:8787/api/quizzes/<quiz-uuid>/submit \
+  -H "Content-Type: application/json" \
+  -d '{"answers": [{"questionId": "<uuid>", "selectedOption": "B"}]}'
+
+# Get research document detail
+curl http://localhost:8787/api/research/rls-deep-dive
 ```
 
-**2. Copy the environment file:**
+**Progress status values:** `not_started` | `in_progress` | `completed`
+
+**Confidence range:** `1` (low) – `5` (high)
+
+**Comment understanding states:** `clear` | `unsure` | `confused` | `want_more_depth` | `want_examples`
+
+**Capture kinds:** `takeaway` | `confusion` | `summary`
+
+### Commands
 
 ```bash
-cp .env.example .env
-```
-
-**3. Fill in the variables:**
-
-```text
-SUPABASE_URL=https://your-project-ref.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-OPENROUTER_API_KEY=your-openrouter-key
-OPENROUTER_EMBEDDING_MODEL=openai/text-embedding-3-small
-PORT=8787
-```
-
-**4. Install dependencies:**
-
-```bash
-npm install
-```
-
-✅ **Done when:** `node_modules/` exists and your `.env` file contains real values.
-
----
-
-![Step 3](https://img.shields.io/badge/Step_3-Sync_the_Source_Content-1E88E5?style=for-the-badge)
-
-The recipe treats markdown as the source of truth.
-
-**1. Run the importer:**
-
-```bash
-npm run sync
-```
-
-**2. Inspect the content files if you want to understand the contract:**
-
-- Project config: [repo-learning.config.ts](./repo-learning.config.ts)
-- Research docs: [research/](./research/)
-- Lessons: [curriculum/lessons/](./curriculum/lessons/)
-
-> [!NOTE]
-> Re-running `npm run sync` updates content in place for surviving lesson and research slugs. If you delete or rename source content, the importer prunes the stale database rows so markdown remains the source of truth.
-
-✅ **Done when:** The sync command reports lesson and research counts, and you can see rows in the new `repo_learning_*` tables.
-
----
-
-![Step 4](https://img.shields.io/badge/Step_4-Run_the_App-1E88E5?style=for-the-badge)
-
-**1. Start the local app:**
-
-```bash
+# Development — starts Express API (tsx watch) and Vite frontend concurrently
 npm run dev
+
+# Sync curriculum files to Supabase (run before first start and after editing content)
+npm run sync
+
+# Production — compiles TypeScript + Vite, then serves
+npm run build
+npm run serve
+
+# Lint
+npm run lint
 ```
 
-**2. Open the browser UI:**
+### Configuration
 
-```text
-http://localhost:5173
+| File | Purpose |
+|------|---------|
+| `repo-learning.config.ts` | Project slug, title, curriculum directories, track definition, brain integration settings |
+| `.env` / `.env.example` | Runtime environment variables |
+| `vite.config.ts` | Vite build and dev server configuration |
+
+`repo-learning.config.ts` is the primary file to edit when deploying this recipe for a new repo. Update `slug`, `title`, `description`, `audience`, `researchDirectory`, and `lessonDirectory` to match your content layout.
+
+### Database Tables
+
+| Table | Purpose |
+|-------|---------|
+| `repo_learning_projects` | Top-level project record (one per deployed instance) |
+| `repo_learning_tracks` | Learning track grouping lessons under a project |
+| `repo_learning_lessons` | Individual lesson content, metadata, and goals |
+| `repo_learning_lesson_progress` | Per-lesson status, confidence, and quiz score rollups |
+| `repo_learning_lesson_comments` | Learner comments with understanding state |
+| `repo_learning_research_documents` | Research reference documents synced from the repo |
+| `repo_learning_quizzes` | Quiz definition linked to a lesson |
+| `repo_learning_quiz_questions` | Individual quiz questions with options and correct answer |
+| `repo_learning_quiz_attempts` | Recorded quiz attempt with aggregate score |
+| `repo_learning_quiz_responses` | Per-question responses for each attempt |
+
+### Prerequisites
+
+- Node.js 20+
+- A Supabase project with the `repo_learning_*` tables provisioned
+- OpenRouter API key (only required when brain bridge / related-thought retrieval is enabled)
+- Lesson and research Markdown files placed in the directories configured in `repo-learning.config.ts`
+
+## Common Tasks
+
+### First-time setup
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Copy and fill environment variables
+cp .env.example .env
+# Edit .env with your SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, OPENROUTER_API_KEY
+
+# 3. Sync curriculum content to Supabase
+npm run sync
+
+# 4. Start the development server
+npm run dev
+# API: http://localhost:8787  |  Frontend: http://localhost:5173
 ```
 
-You should see:
+### Syncing updated curriculum content
 
-- a lesson path in the sidebar
-- a research library
-- lesson progress controls
-- quizzes and note capture
-- an Open Brain capture panel
-- related thoughts when the bridge is configured successfully
-
-✅ **Done when:** You can open a lesson, save progress, submit a quiz, and save a note without errors.
-
----
-
-![Step 5](https://img.shields.io/badge/Step_5-Adapt_It_to_Your_Repo-1E88E5?style=for-the-badge)
-
-To retarget this recipe to a new repo, change content first, not app code.
-
-**1. Update the project identity in [repo-learning.config.ts](./repo-learning.config.ts).**
-
-**2. Replace the sample research docs in [research/](./research/).**
-
-Each research file uses frontmatter:
-
-```yaml
----
-slug: architecture-overview
-title: Architecture Overview
-summary: What matters most about the system design.
-category: architecture
-sourceUrl: https://example.com/optional-source
----
-```
-
-**3. Replace the lesson files in [curriculum/lessons/](./curriculum/lessons/).**
-
-Each lesson file uses frontmatter for the lesson metadata and quiz, followed by markdown for the actual lesson body:
-
-```yaml
----
-slug: orient-the-system
-title: Orient the System
-stage: Foundations
-difficulty: Intro
-order: 1
-estimatedMinutes: 20
-summary: What this lesson is trying to teach.
-goals:
-  - First goal
-  - Second goal
-relatedResearch:
-  - architecture-overview
-quiz:
-  title: Check the basics
-  passingScore: 70
-  questions:
-    - prompt: A real question
-      options:
-        - Option A
-        - Option B
-      correctOption: Option A
-      explanation: Why that answer is right.
----
-```
-
-**4. Re-run the importer:**
+After editing any Markdown files in `researchDirectory` or `lessonDirectory`:
 
 ```bash
 npm run sync
 ```
 
-✅ **Done when:** Your own repo title, research docs, and lessons show up in the UI.
+The sync is also run automatically on server start (`npm run serve`), so in production a redeploy is sufficient.
 
----
+### Deploying to production
 
-![Step 6](https://img.shields.io/badge/Step_6-Use_the_Open_Brain_Bridge-1E88E5?style=for-the-badge)
+```bash
+npm run build        # TypeScript compile + Vite bundle
+npm run serve        # Express serves API + static frontend from dist/
+```
 
-Open a lesson and use the **Open Brain capture** panel to save one of three artifact types:
+In production the Express server serves the built frontend as static files, so only port `8787` needs to be exposed.
 
-- `Takeaway` — a durable lesson insight
-- `Confusion note` — something worth resurfacing later
-- `Lesson summary` — a reusable summary for future work
+### Adapting for a new repository
 
-The lesson view also shows **Related thoughts** pulled from your existing `thoughts` table when OpenRouter retrieval is configured.
-
-> [!TIP]
-> Keep this bridge narrow. Capture durable artifacts, not every note or every quiz result.
-
-✅ **Done when:** Clicking **Send to Open Brain** returns a success message and a later search can find that saved artifact.
-
-## Expected Outcome
-
-When working correctly, you should have:
-
-- a local lesson app running against your existing OB1 Supabase project
-- research and lesson content sourced from plain markdown files
-- persistent progress, notes, and quiz history in dedicated `repo_learning_*` tables
-- explicit capture of durable learning artifacts back into `thoughts`
-- lesson views that can surface related prior thoughts from Open Brain
-
-## Future Extraction Path
-
-This v1 intentionally keeps the UI local. If you want to turn it into a hosted OB1 dashboard later, the clean extraction path is:
-
-1. keep the content contract and Supabase tables the same
-2. move the React app into `dashboards/`
-3. keep the capture/retrieval bridge behind the existing server-layer interface
-
-That way the frontend can move without redesigning the learning schema.
+1. Edit `repo-learning.config.ts` — update `slug`, `title`, `description`, `audience`, and point `researchDirectory`/`lessonDirectory` to your content folders.
+2. Place research Markdown files in the configured research directory.
+3. Place lesson Markdown files (with quiz frontmatter) in the configured lesson directory.
+4. Run `npm run sync` to push content to Supabase.
 
 ## Troubleshooting
 
-**Issue: `npm run sync` fails with a missing table error**  
-Solution: Run the full contents of [schema.sql](./schema.sql) in Supabase first. The app assumes the `repo_learning_*` tables already exist.
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| `Project <slug> was not found. Run npm run sync first.` | Curriculum has never been synced | Run `npm run sync` before starting the server |
+| `Lesson <slug> was not found.` on GET `/api/lessons/:slug` | Slug does not match any synced lesson | Confirm the slug in the URL matches the Markdown filename; re-run `npm run sync` |
+| Brain bridge returns `enabled: false` | `OPENROUTER_API_KEY` is missing or embedding call failed | Set `OPENROUTER_API_KEY` in `.env`; check OpenRouter quota |
+| `Invalid lesson progress payload.` (400) | `status` or `confidence` outside allowed values | `status` must be one of `not_started` / `in_progress` / `completed`; `confidence` must be an integer 1–5 |
+| Vite proxy errors in dev | Express not yet listening when Vite starts | Wait a moment; `concurrently` starts both processes simultaneously — the API may need a second to boot |
+| `Failed to sync research document <slug>.` during sync | Supabase write error or missing table | Confirm the `repo_learning_*` tables exist in your Supabase project |
 
-**Issue: The app loads, but “Related thoughts” stays empty**  
-Solution: Check `OPENROUTER_API_KEY` in `.env`. The bridge needs embeddings to query `match_thoughts`. Also make sure your Open Brain already has useful content in `thoughts`.
+## Related
 
-**Issue: “Send to Open Brain” fails**  
-Solution: Confirm your OB1 project includes the usual `upsert_thought` flow from the core setup and that your service role key is correct. This recipe writes through that existing path; it does not define its own capture RPC.
-
-**Issue: Re-syncing creates duplicate lessons**  
-Solution: Keep lesson `slug` values stable. The importer uses slugs as the durable source-of-truth key for content updates.
+- [CONTEXT.md](CONTEXT.md) — Architecture context
+- [server/CONTEXT.md](server/CONTEXT.md) — Server-side implementation details
+- [src/CONTEXT.md](src/CONTEXT.md) — Frontend implementation details
+- [src/lib/CONTEXT.md](src/lib/CONTEXT.md) — Frontend API client and types

@@ -1,186 +1,158 @@
-# Kubernetes Self-Hosted Deployment
+# kubernetes-deployment
 
-<div align="center">
+> Self-hosted Kubernetes deployment path for Open Brain — packages the MCP server as a Docker image with Deno runtime and deploys alongside a pgvector Postgres StatefulSet via Kubernetes manifests.
 
-![Community Contribution](https://img.shields.io/badge/OB1_COMMUNITY-Approved_Contribution-2ea44f?style=for-the-badge&logo=github)
+## Quick Reference
 
-**Created by [@velo](https://github.com/velo)**
+### Environment Variables
 
-*Reviewed and merged by the Open Brain maintainer team — thank you for building the future of AI memory!*
+Secrets are injected via a Kubernetes `Secret` object (`openbrain-secret`). Copy `k8s/secrets.yml.example` to `k8s/secrets.yml`, fill in values, and apply before deploying.
 
-</div>
+| Variable | Description | Default in manifests | Required |
+|----------|-------------|----------------------|----------|
+| `DB_HOST` | Postgres host (loopback in pod) | `127.0.0.1` | Yes |
+| `DB_PORT` | Postgres port | `5432` | Yes |
+| `DB_NAME` | Postgres database name | `openbrain` | Yes |
+| `DB_USER` | Postgres user | `postgres` | Yes |
+| `DB_PASSWORD` | Postgres password (from secret `postgres-password`) | — | Yes |
+| `MCP_ACCESS_KEY` | Bearer token clients use to authenticate (from secret `mcp-access-key`) | — | Yes |
+| `EMBEDDING_API_BASE` | Base URL for the embedding model API | `https://openrouter.ai/api/v1` | Yes |
+| `EMBEDDING_API_KEY` | API key for embedding provider (from secret `embedding-api-key`) | — | Yes |
+| `EMBEDDING_MODEL` | Embedding model identifier | `openai/text-embedding-3-small` | Yes |
+| `CHAT_API_BASE` | Base URL for the chat/completion model API | `https://openrouter.ai/api/v1` | Yes |
+| `CHAT_API_KEY` | API key for chat provider (from secret `chat-api-key`) | — | Yes |
+| `CHAT_MODEL` | Chat model identifier | `openai/gpt-4o-mini` | Yes |
+| `PORT` | Port the MCP server listens on | `8000` | Yes |
 
-> Deploy Open Brain on Kubernetes with self-hosted PostgreSQL + pgvector, replacing Supabase with fully self-managed infrastructure.
+> The variables `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are not used in this deployment path — the MCP server talks directly to the co-located Postgres container.
 
-## What It Does
+### Ports
 
-This integration provides Kubernetes manifests and a modified MCP server that connects directly to PostgreSQL instead of Supabase. Your thoughts database, embeddings, and MCP endpoint all run on your own cluster. The MCP HTTP endpoint is served via Kubernetes Ingress, making it a remote endpoint accessible by URL from any MCP client.
+| Port | Service | Protocol | Exposed as |
+|------|---------|----------|------------|
+| `8000` | `mcp-server` (MCP HTTP) | TCP | Kubernetes `ClusterIP` service; optionally via Ingress |
+| `5432` | `db` (Postgres/pgvector) | TCP | Internal to pod only |
 
-## Prerequisites
-
-- Working Kubernetes cluster (tested on K3s v1.31, works with any K8s distribution)
-- `kubectl` configured for your cluster
-- Docker installed (for building the MCP server image)
-- An embedding/chat API provider (OpenRouter, OpenAI, or a local model with OpenAI-compatible API)
-- An ingress controller (Traefik, nginx-ingress, etc.) if you want external access
-
-## Credential Tracker
-
-Copy this block into a text editor and fill it in as you go.
-
-```text
-KUBERNETES DEPLOYMENT -- CREDENTIAL TRACKER
---------------------------------------------
-
-POSTGRESQL
-  Password:              ____________
-
-MCP SERVER
-  Access key:            ____________
-
-EMBEDDING/CHAT API
-  API base URL:          ____________
-  API key:               ____________
-  Embedding model:       ____________
-  Chat model:            ____________
-
---------------------------------------------
-```
-
-## Steps
-
-### 1. Build the MCP Server Docker Image
-
-From this directory, build and import the image:
+### Commands
 
 ```bash
-docker build -t openbrain-mcp-server:latest .
+# 1. Build the MCP server Docker image (run from this directory)
+docker build -t openbrain-mcp-server .
 
-# For K3s:
-docker save openbrain-mcp-server:latest | sudo k3s ctr images import -
-
-# For minikube:
-minikube image load openbrain-mcp-server:latest
-
-# For other clusters, push to your registry:
-docker tag openbrain-mcp-server:latest your-registry/openbrain-mcp-server:latest
-docker push your-registry/openbrain-mcp-server:latest
-```
-
-### 2. Configure Secrets
-
-```bash
+# 2. Apply secrets (fill in k8s/secrets.yml from the example first)
 cp k8s/secrets.yml.example k8s/secrets.yml
+# ... edit k8s/secrets.yml with real values ...
+kubectl apply -f k8s/secrets.yml
+
+# 3. Deploy to Kubernetes
+kubectl apply -f k8s/openbrain.yml
+
+# 4. Local development (Deno, no Docker)
+deno run --allow-net --allow-env --allow-read index.ts
 ```
 
-Edit `k8s/secrets.yml` with your actual credentials. **Never commit this file.**
+### Configuration Files
 
-### 3. Deploy to Kubernetes
+| File | Purpose |
+|------|---------|
+| `Dockerfile` | Builds the MCP server image on `denoland/deno:2.3.3` |
+| `deno.json` | Deno project manifest and dependency cache config |
+| `k8s/openbrain.yml` | Full Kubernetes manifest: Namespace, ConfigMap, StatefulSet, Service, optional Ingress |
+| `k8s/secrets.yml.example` | Template for the `openbrain-secret` Kubernetes Secret — copy and fill before applying |
+| `k8s/init.sql` | Database initialisation SQL (creates `vector` extension, `thoughts` table, `match_thoughts` function) |
+
+### Database Tables
+
+| Table | Purpose |
+|-------|---------|
+| `thoughts` | Core memory store — `id`, `content`, `embedding vector(1536)`, `metadata JSONB`, `created_at` |
+
+Initialised automatically on first pod start via the `init.sql` ConfigMap mounted at `/docker-entrypoint-initdb.d/init.sql`.
+
+### Prerequisites
+
+- Docker (any recent version)
+- `kubectl` configured against a target cluster
+- Deno 2.3.3 (for local development without Docker)
+- A cluster node with sufficient memory (db container requests 256 Mi, limit 1 Gi; mcp-server requests 128 Mi, limit 512 Mi)
+- Writable host path `/var/openbrain/db` on the target node (used for Postgres data persistence)
+
+## Common Tasks
+
+### Deploy from scratch
 
 ```bash
+# Build image
+docker build -t openbrain-mcp-server .
+
+# Prepare secrets (edit values in the copied file)
+cp k8s/secrets.yml.example k8s/secrets.yml
+
+# Apply secrets, then the full stack
 kubectl apply -f k8s/secrets.yml
 kubectl apply -f k8s/openbrain.yml
+
+# Confirm pods are ready
+kubectl -n openbrain get pods
 ```
 
-### 4. Verify Deployment
+### Check service health
 
 ```bash
-# Check pod status
-kubectl get pods -n openbrain
+# Watch pod readiness (both containers must reach 2/2 Running)
+kubectl -n openbrain get pods -w
 
-# Check database is initialized
-kubectl exec -n openbrain openbrain-0 -c db -- \
-  psql -U postgres -d openbrain -c '\dt'
+# View MCP server logs
+kubectl -n openbrain logs statefulset/openbrain -c mcp-server
 
-# Test MCP endpoint (via port-forward)
-kubectl port-forward -n openbrain svc/openbrain 8000:8000 &
-curl -X POST http://localhost:8000 \
-  -H "x-brain-key: YOUR_ACCESS_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"tools/list","id":1}'
+# View Postgres logs
+kubectl -n openbrain logs statefulset/openbrain -c db
 ```
 
-### 5. Connect Your MCP Client
+### Expose the MCP server externally
 
-For Claude Desktop or any MCP-compatible client, configure the remote MCP endpoint:
+The `openbrain` Service is a `ClusterIP` by default. To make it reachable from Claude Desktop, uncomment and configure the Ingress block at the bottom of `k8s/openbrain.yml`, then re-apply:
 
-```json
-{
-  "mcpServers": {
-    "openbrain": {
-      "url": "http://openbrain.openbrain.svc.cluster.local:8000",
-      "transport": "http",
-      "headers": {
-        "x-brain-key": "YOUR_ACCESS_KEY"
-      }
-    }
-  }
-}
+```bash
+# After editing the Ingress section with your domain and TLS secret:
+kubectl apply -f k8s/openbrain.yml
+
+# Add the MCP server as a custom connector in Claude Desktop:
+# Settings → Connectors → Add custom connector → paste https://brain.yourdomain.com
 ```
 
-If you've configured an Ingress, use your external URL instead:
+### Tear down
 
-```json
-{
-  "mcpServers": {
-    "openbrain": {
-      "url": "https://brain.yourdomain.com",
-      "transport": "http",
-      "headers": {
-        "x-brain-key": "YOUR_ACCESS_KEY"
-      }
-    }
-  }
-}
+```bash
+# Remove all Open Brain resources (keeps host path data intact)
+kubectl delete -f k8s/openbrain.yml
+kubectl delete -f k8s/secrets.yml
+
+# Delete the namespace entirely
+kubectl delete namespace openbrain
 ```
 
-## Using a Local LLM Instead of OpenRouter
+### Update the MCP server image
 
-To use a local model (e.g., Ollama, BitNet, llama.cpp) for embeddings and chat, update the environment variables in `k8s/openbrain.yml`:
-
-```yaml
-- name: EMBEDDING_API_BASE
-  value: "http://your-local-model:8080/v1"
-- name: EMBEDDING_API_KEY
-  value: "not-needed"
-- name: EMBEDDING_MODEL
-  value: "your-model-name"
-- name: CHAT_API_BASE
-  value: "http://your-local-model:8080/v1"
-- name: CHAT_API_KEY
-  value: "not-needed"
-- name: CHAT_MODEL
-  value: "your-model-name"
+```bash
+docker build -t openbrain-mcp-server .
+# If using a registry, push and update the image tag in k8s/openbrain.yml, then:
+kubectl rollout restart statefulset/openbrain -n openbrain
 ```
-
-If your embedding model produces a different vector dimension than 1536, update the `vector(1536)` in the init SQL to match.
-
-## Expected Outcome
-
-After deployment you should see:
-
-- `openbrain-0` pod running with 2 containers (db + mcp-server)
-- PostgreSQL with `thoughts` table and `match_thoughts` function
-- MCP endpoint responding to `tools/list` with 4 tools: `search_thoughts`, `list_thoughts`, `thought_stats`, `capture_thought`
-- Thoughts captured via any MCP client are stored in your self-hosted database
 
 ## Troubleshooting
 
-**Pod stuck in CrashLoopBackOff (mcp-server)**
-- Check logs: `kubectl logs -n openbrain openbrain-0 -c mcp-server`
-- Most common cause: invalid API key or unreachable embedding API base URL
-- For local models, ensure the model service is running and accessible from the cluster
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| `mcp-server` container in `CrashLoopBackOff` | DB not ready yet when server starts | Wait — the readiness probe retries every 10 s; the server will restart until Postgres accepts connections |
+| `ImagePullBackOff` on `openbrain-mcp-server:latest` | Image not present on the node | Run `docker build -t openbrain-mcp-server .` on the node, or push to a registry and update `imagePullPolicy` |
+| Pod stuck at `0/1` or `1/2` ready | Postgres init taking longer than 10 s | Increase `initialDelaySeconds` in the readiness probe in `k8s/openbrain.yml` |
+| `permission denied` on `/var/openbrain/db` | Host path doesn't exist or wrong ownership | `mkdir -p /var/openbrain/db` on the node; the manifest uses `DirectoryOrCreate` but the path must be writable by the postgres UID |
+| MCP client gets `401 Unauthorized` | Wrong or missing `MCP_ACCESS_KEY` | Verify the secret value matches what the client sends; re-apply `k8s/secrets.yml` and restart the pod |
+| Embedding or chat calls fail | `EMBEDDING_API_KEY` / `CHAT_API_KEY` incorrect or wrong base URL | Check secret values in `k8s/secrets.yml`; confirm the model identifiers match your provider's naming |
 
-**Database not initialized / tables missing**
-- The init SQL runs only on first startup. If the data volume already exists with an old database, the init script is skipped.
-- To re-initialize: delete the data volume directory and restart the pod
-- `kubectl delete pod openbrain-0 -n openbrain` (StatefulSet will recreate it)
+## Related
 
-**Embedding dimension mismatch**
-- If you see errors about vector dimensions, your embedding model produces vectors of a different size than expected
-- Check your model's output dimension and update `vector(1536)` in the init SQL ConfigMap
-- Drop and recreate the `thoughts` table if changing dimensions on an existing database
-
-**Connection refused to database**
-- Containers in the same pod communicate via `127.0.0.1` — this is normal Kubernetes multi-container pod behavior
-- Check that the `db` container is ready: `kubectl logs -n openbrain openbrain-0 -c db`
+- [CONTEXT.md](CONTEXT.md) — Architecture context
+- [k8s/CONTEXT.md](k8s/CONTEXT.md) — Kubernetes manifest details
+- [../README.md](../README.md) — Integrations overview

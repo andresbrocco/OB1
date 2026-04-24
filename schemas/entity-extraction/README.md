@@ -1,120 +1,149 @@
-# Entity Extraction Schema
+# schemas/entity-extraction
 
-> Tables, trigger, and queue for **automatic** entity and relationship extraction from thoughts. Complements the community [`recipes/ob-graph/`](../../recipes/ob-graph/) manual graph layer — this is the extraction side.
+> SQL schema extension that adds five knowledge graph tables for named entity extraction, relationship tracking, async processing, and audit logging.
 
-## Positioning
+## Quick Reference
 
-`ob-graph` gives you a clean 2-table manual graph (`graph_nodes`, `graph_edges`) that you build up via MCP calls. It's the right choice if you want to sketch relationships by hand.
+### Database Tables
 
-`entity-extraction` is the other half of the story: automatic extraction from the `thoughts` content you already have. It adds a typed entity table, an edges table with evidence + confidence, a queue for async processing, and a trigger that enqueues new thoughts for you. Pair it with the companion `integrations/entity-extraction-worker/` edge function (opens in a separate PR) to actually run the extraction.
+| Table | Purpose |
+|-------|---------|
+| `entities` | Canonical graph nodes — people, projects, topics, tools, organizations, places |
+| `edges` | Typed relationships between entities (co_occurs_with, works_on, uses, related_to, member_of, located_in) |
+| `thought_entities` | Junction linking thoughts to entities, with mention role and extraction confidence |
+| `entity_extraction_queue` | Async queue for thoughts awaiting entity extraction processing |
+| `consolidation_log` | Audit trail for dedup merges, metadata fixes, and bio synthesis operations |
 
-The two schemas are independent — you can install either, both, or neither. They don't share tables or functions.
+### Key Columns
 
-## What It Does
+**`entities`**
 
-- **`entities`** — Canonical nodes: people, projects, topics, tools, organizations, places. Deduplicates by normalized name within each type.
-- **`edges`** — Typed relationships (`co_occurs_with`, `works_on`, `uses`, `related_to`, `member_of`, `located_in`) with support counts and confidence scores.
-- **`thought_entities`** — Evidence-bearing links: which thought mentions which entity, in what role, with what extraction confidence, from which source.
-- **`entity_extraction_queue`** — Async work queue. Tracks attempt counts, errors, and content fingerprints so the worker can skip no-op updates.
-- **`consolidation_log`** — Audit trail for dedup merges, metadata fixes, and bio synthesis.
-- A trigger on `thoughts` enqueues new/updated rows automatically, skipping system-generated artifacts and fingerprint no-ops.
+| Column | Type | Notes |
+|--------|------|-------|
+| `id` | BIGSERIAL | Primary key |
+| `entity_type` | TEXT | `person`, `project`, `topic`, `tool`, `organization`, `place` |
+| `canonical_name` | TEXT | Display name |
+| `normalized_name` | TEXT | Lowercase, trimmed — used for dedup (unique with `entity_type`) |
+| `aliases` | JSONB | Alternative names for this entity |
+| `metadata` | JSONB | Extensible metadata bag |
+| `first_seen_at` / `last_seen_at` | TIMESTAMPTZ | Temporal tracking |
 
-## Prerequisites
+**`edges`**
 
-- Working Open Brain setup (see [`docs/01-getting-started.md`](../../docs/01-getting-started.md))
-- Supabase project with the `thoughts` table, `match_thoughts`, and `upsert_thought`
-- The `content_fingerprint` column on `thoughts` (from Step 2.6 of getting-started)
-- **Optional but recommended:** [`schemas/enhanced-thoughts/`](../enhanced-thoughts/) for the `type` / `sensitivity_tier` / `source_type` columns the extraction worker uses for gating
+| Column | Type | Notes |
+|--------|------|-------|
+| `from_entity_id` / `to_entity_id` | BIGINT | FK to `entities` — cascade deletes |
+| `relation` | TEXT | `co_occurs_with`, `works_on`, `uses`, `related_to`, `member_of`, `located_in` |
+| `support_count` | INT | How many thoughts support this edge |
+| `confidence` | NUMERIC(3,2) | 0.00–1.00 |
 
-## Credential Tracker
+**`entity_extraction_queue`**
 
-```text
-ENTITY EXTRACTION -- CREDENTIAL TRACKER
---------------------------------------
+| Column | Type | Notes |
+|--------|------|-------|
+| `thought_id` | UUID | PK + FK to `thoughts` |
+| `status` | TEXT | `pending`, `processing`, `complete`, `failed`, `skipped` |
+| `attempt_count` | INT | Retry tracking |
+| `last_error` | TEXT | Last worker error message |
+| `source_fingerprint` | TEXT | `content_fingerprint` snapshot at queue time — prevents no-op reprocessing |
+| `worker_version` | TEXT | Version of worker that processed this row |
 
-SUPABASE (from your Open Brain setup)
-  Project URL:           ____________
-  Secret key:            ____________
+### Trigger
 
---------------------------------------
-```
+`trg_queue_entity_extraction` fires `AFTER INSERT OR UPDATE OF content, metadata` on `public.thoughts`. It inserts or resets a `pending` row in `entity_extraction_queue`, skipping system-generated thoughts (`metadata->>'generated_by'` is non-null) and no-op fingerprint changes.
 
-## Steps
+### Prerequisites
 
-1. Open your Supabase dashboard and navigate to the **SQL Editor**
-2. Create a new query and paste the full contents of `schema.sql`
-3. Click **Run** to execute the migration
-4. Open **Table Editor** and confirm five new tables appear: `entities`, `edges`, `thought_entities`, `entity_extraction_queue`, `consolidation_log`
-5. Navigate to **Database > Functions** and verify the `queue_entity_extraction` function exists
-6. Navigate to **Database > Triggers** on the `thoughts` table and verify `trg_queue_entity_extraction` is attached
-7. Test the trigger by capturing a new thought (via the MCP server or direct insert) and checking the queue:
+- Supabase project with `public.thoughts` table from the base OB1 setup
+- `content_fingerprint` column on `thoughts` — from `docs/01-getting-started.md` Step 2.6 (the migration hard-fails with a clear error if missing)
+- `integrations/entity-extraction-worker` to consume the queue
 
-   ```sql
-   SELECT count(*) FROM entity_extraction_queue WHERE status = 'pending';
-   -- Should return at least 1 after capturing a thought
-   ```
+### Schema File
 
-8. *(Optional — existing brains only)* To backfill the extraction queue with pre-existing thoughts, uncomment and run the backfill section at the bottom of `schema.sql`
-9. Install the companion [`integrations/entity-extraction-worker/`](../../integrations/entity-extraction-worker/) edge function to actually process the queue (separate PR)
+| File | Purpose |
+|------|---------|
+| `schema.sql` | Single idempotent migration — safe to run multiple times (`CREATE TABLE IF NOT EXISTS`, `CREATE INDEX IF NOT EXISTS`, `CREATE OR REPLACE FUNCTION`) |
 
-## Expected Outcome
+## Common Tasks
 
-After running the migration:
-
-- Five new tables with appropriate columns, constraints, and defaults.
-- Eight indexes for efficient querying: entity type and normalized name lookups, edge traversal by source/target/relation, thought-entity joins, and a partial index on pending queue items.
-- One trigger function (`queue_entity_extraction`) that automatically enqueues thoughts for extraction on insert or content/metadata change, with guards for system-generated artifacts and no-op fingerprint changes.
-- One trigger (`trg_queue_entity_extraction`) attached to the `thoughts` table firing after insert or update of content/metadata.
-- Row Level Security enabled on all five tables. `service_role` bypasses RLS (used by the MCP server and workers via the service-role key server-side) and has a full-access policy. `authenticated` has a minimum `SELECT`-only policy as a scaffold for future multi-tenant dashboards -- when per-user ownership is wired, tighten to `auth.uid() = user_id`. `anon` has no access: stock Open Brain's MCP path is an Edge Function using the service-role key, not the anon key, so no anon grant is needed.
-- New thoughts are automatically queued for entity extraction. Pre-existing thoughts require the optional backfill step.
-
-## How This Differs From `ob-graph`
-
-| Aspect | `recipes/ob-graph/` | `schemas/entity-extraction/` (this PR) |
-|---|---|---|
-| Build mode | Manual via MCP calls | Automatic extraction from thought content |
-| Tables | 2 (`graph_nodes`, `graph_edges`) | 5 (`entities`, `edges`, `thought_entities`, `entity_extraction_queue`, `consolidation_log`) |
-| Primary use | Sketch entities by hand, query graph paths | Turn accumulated thoughts into a queryable entity index |
-| Paired with | 10 MCP tools for building/querying | `integrations/entity-extraction-worker/` + `graph_search` in enhanced-mcp |
-
-Install whichever matches your workflow. They don't conflict.
-
-## Pruning and Retention
-
-`entity_extraction_queue` and `consolidation_log` are both unbounded by default -- neither has a TTL and both grow with the size of the brain. For a personal install this is usually fine for years. For brains with hundreds of thousands of thoughts, or as a matter of hygiene, operators may want to prune terminal-state queue rows and archive old consolidation records periodically.
-
-We deliberately do not ship automatic pruning. Retention is an operator choice: you know your audit requirements better than the schema does.
-
-**Queue pruning** -- `entity_extraction_queue` keeps one row per thought for the thought's lifetime. Rows in terminal states (`complete`, `skipped`, `failed`) are safe to delete; the trigger will re-queue the thought if it's later edited. Example: drop terminal-state rows older than 30 days.
+### Apply the schema to a new brain
 
 ```sql
-DELETE FROM public.entity_extraction_queue
-WHERE status IN ('complete', 'skipped', 'failed')
-  AND processed_at < now() - interval '30 days';
+-- Run in Supabase SQL Editor (or psql)
+\i schema.sql
 ```
 
-**Consolidation log** -- `consolidation_log` is an append-only audit trail. It has no TTL by design. Typical operators either (a) archive and truncate yearly, or (b) prune rows beyond a retention window. Example: drop log rows older than 90 days.
+### Backfill existing thoughts into the queue
+
+The trigger only fires on new inserts or updates. To queue pre-existing thoughts, uncomment the backfill block at the bottom of `schema.sql`:
 
 ```sql
-DELETE FROM public.consolidation_log
-WHERE created_at < now() - interval '90 days';
+INSERT INTO public.entity_extraction_queue
+  (thought_id, status, source_fingerprint, source_updated_at)
+SELECT id, 'pending', content_fingerprint, updated_at
+FROM public.thoughts
+WHERE (metadata->>'generated_by') IS NULL
+ON CONFLICT (thought_id) DO NOTHING;
 ```
 
-Wire either of these into a scheduled Edge Function or a `pg_cron` job if you want them to run automatically. For most personal brains, running them ad hoc when the tables get large is sufficient.
+### Check extraction queue status
+
+```sql
+SELECT status, COUNT(*) AS count
+FROM public.entity_extraction_queue
+GROUP BY status
+ORDER BY count DESC;
+```
+
+### View entities for a specific thought
+
+```sql
+SELECT e.entity_type, e.canonical_name, te.mention_role, te.confidence
+FROM public.thought_entities te
+JOIN public.entities e ON e.id = te.entity_id
+WHERE te.thought_id = '<your-thought-uuid>';
+```
+
+### Find relationships for an entity
+
+```sql
+SELECT
+  e1.canonical_name AS from_entity,
+  ed.relation,
+  e2.canonical_name AS to_entity,
+  ed.support_count,
+  ed.confidence
+FROM public.edges ed
+JOIN public.entities e1 ON e1.id = ed.from_entity_id
+JOIN public.entities e2 ON e2.id = ed.to_entity_id
+WHERE e1.canonical_name ILIKE '%<name>%'
+   OR e2.canonical_name ILIKE '%<name>%';
+```
+
+### Check consolidation audit history
+
+```sql
+SELECT operation, survivor_id, loser_id, details, created_at
+FROM public.consolidation_log
+ORDER BY created_at DESC
+LIMIT 50;
+```
 
 ## Troubleshooting
 
-**Issue: "relation already exists" warnings**
-Solution: These are safe to ignore. The `CREATE TABLE IF NOT EXISTS` syntax prevents errors but may log informational notices. The migration is fully idempotent.
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| Migration fails with `entity-extraction requires the content_fingerprint column` | `thoughts.content_fingerprint` does not exist | Run `docs/01-getting-started.md` Step 2.6 first, then re-apply `schema.sql` |
+| Existing thoughts never appear in the queue | Trigger only fires on INSERT/UPDATE | Run the backfill query in the Common Tasks section above |
+| Queue row stays `pending` with no progress | `integrations/entity-extraction-worker` is not deployed or not running | Deploy and configure the worker — see `integrations/entity-extraction-worker` |
+| Queue row status is `failed` | Worker encountered an extraction error | Check `last_error` column: `SELECT thought_id, attempt_count, last_error FROM entity_extraction_queue WHERE status = 'failed'` |
+| No-op re-queuing (row not reset after thought update) | `content_fingerprint` did not change | Expected behavior — the trigger skips re-queuing when the fingerprint is identical |
+| Dashboard cannot read entity tables | RLS blocks access | Ensure the client uses the `authenticated` role (JWT) or `service_role` key; `anon` has no access by design |
 
-**Issue: trigger not firing on new thoughts**
-Solution: The trigger fires `AFTER INSERT OR UPDATE OF content, metadata` on the `thoughts` table. Confirm the trigger exists by querying `SELECT tgname FROM pg_trigger WHERE tgrelid = 'public.thoughts'::regclass;`. If missing, re-run the trigger section of the migration.
+## Related
 
-**Issue: queue not populating for existing thoughts**
-Solution: The trigger only fires on new inserts or updates. For pre-existing thoughts, run the optional backfill query at the bottom of `schema.sql`. This safely inserts with `ON CONFLICT DO NOTHING`.
-
-**Issue: "column content_fingerprint does not exist" error in trigger**
-Solution: The trigger function reads `NEW.content_fingerprint` from the thoughts table. This column is created during Step 2.6 of the getting-started guide. If missing, apply that step first, then re-run this migration.
-
-**Issue: entities table has duplicate entries**
-Solution: The `UNIQUE (entity_type, normalized_name)` constraint prevents exact duplicates. If you see near-duplicates (e.g., "JavaScript" and "javascript"), these have different canonical names but the same normalized name should be caught. The extraction worker is responsible for consistent normalization.
+- [CONTEXT.md](CONTEXT.md) — Architecture context for this schema
+- [../schemas/README.md](../README.md) — Schemas category overview
+- `integrations/entity-extraction-worker` — Worker that consumes `entity_extraction_queue` and populates `entities`, `edges`, `thought_entities`
+- `recipes/ob-graph` — Graph visualization recipe built on these tables
+- `primitives/rls/` — RLS patterns used in this schema

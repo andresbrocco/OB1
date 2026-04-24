@@ -1,140 +1,124 @@
-# Fingerprint Dedup Backfill
+# fingerprint-dedup-backfill
 
-<div align="center">
+> Three-phase utility to backfill content fingerprints on existing thoughts and remove duplicates: backfill, report, cleanup.
 
-![Community Contribution](https://img.shields.io/badge/OB1_COMMUNITY-Approved_Contribution-2ea44f?style=for-the-badge&logo=github)
+## Quick Reference
 
-**Created by [@alanshurafa](https://github.com/alanshurafa)**
+### Environment Variables
 
-*Reviewed and merged by the Open Brain maintainer team — thank you for building the future of AI memory!*
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `SUPABASE_URL` | Your Supabase project URL (e.g. `https://your-project-ref.supabase.co`) | Yes |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key — bypasses RLS for bulk operations | Yes |
 
-</div>
-
-> Backfill content fingerprints on existing thoughts and safely remove duplicates discovered during the process.
-
-## What It Does
-
-If you imported thoughts before the [Content Fingerprint Dedup](../../recipes/content-fingerprint-dedup/) primitive was in place, those rows will have a NULL `content_fingerprint`. This recipe computes fingerprints for all existing rows and then identifies and removes duplicates — rows whose content already exists in the table under a properly fingerprinted copy.
-
-Two scripts work together:
-
-1. **`backfill-fingerprints.mjs`** — Scans all NULL-fingerprint rows and patches each one with a computed SHA-256 fingerprint. Resumable via state file.
-
-2. **`delete-duplicates.mjs`** — Finds NULL-fingerprint rows whose content already has a fingerprinted copy in the table. Defaults to **report-only mode** (no deletions). Pass `--delete` to actually remove duplicates.
-
-## Prerequisites
-
-- Working Open Brain setup ([guide](../../docs/01-getting-started.md))
-- [Content Fingerprint Dedup](../../recipes/content-fingerprint-dedup/) primitive applied (so `content_fingerprint` column exists)
-- Node.js 18+
-
-## Credential Tracker
-
-Copy this block into a text editor and fill it in as you go.
-
-```text
-FINGERPRINT DEDUP BACKFILL -- CREDENTIAL TRACKER
---------------------------------------
-
-FROM YOUR OPEN BRAIN SETUP
-  Supabase URL:            ____________
-  Service role key:        ____________
-
---------------------------------------
-```
-
-## Steps
-
-**1. Clone or download this recipe**
-
-Copy the recipe folder to your local machine.
-
-**2. Configure credentials**
-
-Copy `.env.example` to `.env` and fill in your Supabase credentials:
+Set these in `.env` or `.env.local` in this directory, or export them as shell variables. The scripts load `.env` first, then `.env.local`, then fall back to the process environment.
 
 ```bash
 cp .env.example .env
-# Edit .env with your Supabase URL and service role key
+# Edit .env with your actual values
 ```
 
-**3. Run the backfill**
-
-This computes and patches fingerprints for all rows where `content_fingerprint` is NULL:
+### Commands
 
 ```bash
+# Install dependencies (none required — pure Node.js ESM with no external packages)
+# Node.js >= 18 required (uses native fetch)
+
+# Phase 1 — Backfill fingerprints on all NULL rows
+npm run backfill
+
+# Phase 2 — Report duplicates without deleting anything (safe, read-only)
+npm run report
+
+# Phase 3 — Delete confirmed duplicate rows and patch remaining orphans
+npm run cleanup
+```
+
+Direct invocations (bypass npm scripts):
+
+```bash
+# Backfill
 node backfill-fingerprints.mjs
-```
 
-The script processes rows in batches of 1000, saving progress to `backfill-state.json` after each batch. If interrupted, it resumes from where it left off.
-
-**4. Generate a duplicate report**
-
-Before deleting anything, see what would be removed:
-
-```bash
+# Report only (no deletions)
 node delete-duplicates.mjs --report-only
-```
 
-This scans remaining NULL-fingerprint rows, computes their fingerprints, and reports how many are duplicates of existing fingerprinted rows — without deleting anything.
-
-**5. Remove duplicates (when ready)**
-
-Once you've reviewed the report and are satisfied:
-
-```bash
+# Destructive cleanup
 node delete-duplicates.mjs --delete
 ```
 
-> [!CAUTION]
-> The `--delete` flag permanently removes rows. Make sure you've reviewed the report first. The script also backfills fingerprints on any genuine orphan rows (those with no existing duplicate).
+### Configuration
 
-## Expected Outcome
+| File | Purpose |
+|------|---------|
+| `.env` | Primary environment variable file (gitignored) |
+| `.env.local` | Local override (gitignored, takes precedence over `.env`) |
+| `.env.example` | Template — copy to `.env` and fill in values |
+| `backfill-state.json` | Auto-generated cursor state for resumable backfill runs (deleted on completion) |
+| `cleanup-state.json` | Auto-generated cursor state for resumable cleanup runs (deleted on completion) |
 
-After running both scripts:
+### Database Tables
 
-- Every row in the `thoughts` table has a non-NULL `content_fingerprint`
-- No duplicate content exists (each unique fingerprint appears once)
-- The `content_fingerprint` unique constraint is now fully enforceable
+| Table | Operation | Description |
+|-------|-----------|-------------|
+| `thoughts` | PATCH | Writes `content_fingerprint` to rows where it is `NULL` |
+| `thoughts` | DELETE | Removes duplicate rows whose fingerprint already exists on a canonical row |
 
-Verify with:
+### Prerequisites
 
-```sql
--- Count remaining NULL fingerprints (should be 0)
-select count(*) from thoughts where content_fingerprint is null;
+- Node.js >= 18 (native `fetch` required — no polyfill)
+- A Supabase project with the Open Brain `thoughts` table
+- `content_fingerprint` column must exist on `thoughts` (added by the content-fingerprint-dedup primitive)
+- Service role key (not anon key) — operations bypass RLS
 
--- Check for duplicate fingerprints (should return 0 rows)
-select content_fingerprint, count(*) as copies
-from thoughts
-where content_fingerprint is not null
-group by content_fingerprint
-having count(*) > 1
-limit 10;
+## Common Tasks
+
+### Run a full deduplication pass (recommended order)
+
+```bash
+# Step 1: backfill fingerprints on all unprocessed rows
+npm run backfill
+
+# Step 2: preview what would be deleted (no writes)
+npm run report
+
+# Step 3: delete confirmed duplicates and patch orphans
+npm run cleanup
 ```
 
-## How the Fingerprint Is Computed
+### Resume an interrupted run
 
-The normalization matches the [Content Fingerprint Dedup](../../recipes/content-fingerprint-dedup/) primitive exactly:
+Both scripts save a cursor state file (`backfill-state.json` or `cleanup-state.json`) after each batch. If a run is interrupted, simply re-run the same command — it will resume from the last saved cursor automatically.
 
-1. Trim whitespace and collapse runs of whitespace to single spaces
-2. Lowercase
-3. Strip trailing punctuation (`.!?;:,`)
-4. Strip possessives (`'s` and `\u2019s`)
-5. Strip trailing `s` from the last word if the word has 4+ characters
-6. SHA-256 hex digest of the result
+```bash
+# Resume interrupted backfill
+npm run backfill
 
-This means "The dog's toys." and "the dogs toy" produce the same fingerprint.
+# Resume interrupted cleanup
+npm run cleanup
+```
+
+### Check how many duplicates exist without deleting
+
+```bash
+npm run report
+# Output shows "Total rows that would be deleted: N"
+# Re-run anytime — it is fully non-destructive
+```
 
 ## Troubleshooting
 
-**Issue: Script reports many "duplicate" PATCH errors (409 / 23505)**
-Solution: This means the computed fingerprint already exists on another row. The backfill script counts these but skips them — this is expected behavior. Run the cleanup script afterward to remove the duplicates.
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| `Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY` | Credentials not found | Copy `.env.example` to `.env` and fill in both values |
+| `Fetch HTTP 401` | Wrong or expired service role key | Re-copy the service role key from Supabase Dashboard → Settings → API |
+| `Fetch HTTP 404` | `SUPABASE_URL` points to wrong project or `thoughts` table does not exist | Verify the URL and confirm the `thoughts` table is present |
+| `PATCH error: HTTP 409 / 23505` | Fingerprint collision (unique constraint violation) | Expected — the script counts these as `duplicates (skipped)` and continues |
+| Script exits immediately with `(no rows) — Done` | All rows already have a fingerprint | Nothing to do; backfill is complete |
+| `content_fingerprint` column missing | Primitive not applied | Apply the `content-fingerprint-dedup` schema first |
+| Run appears stuck | Large table with slow REST batches | Each batch has a 150–200 ms delay; check progress via cursor output |
 
-**Issue: Script hangs or times out on large tables**
-Solution: The scripts use cursor-based pagination and save state after each batch. If a request times out, the script retries after 5 seconds. For very large tables (100K+), expect the backfill to take 10-30 minutes.
+## Related
 
-**Issue: `content_fingerprint` column doesn't exist**
-Solution: Apply the [Content Fingerprint Dedup](../../recipes/content-fingerprint-dedup/) primitive first. The column must exist before running these scripts.
-
-**Issue: Want to reset and start over**
-Solution: Delete the state file (`backfill-state.json` or `cleanup-state.json`) and run the script again. It will start from the beginning.
+- [CONTEXT.md](CONTEXT.md) — Architecture context for this recipe
+- [../../primitives/README.md](../../primitives/README.md) — Primitives index

@@ -1,123 +1,152 @@
-# Open Brain Dashboard
+# open-brain-dashboard
 
-<div align="center">
+> SvelteKit dashboard for Open Brain — read-only semantic search and thought browsing UI with a server-side MCP proxy to keep credentials out of the browser.
 
-![Community Contribution](https://img.shields.io/badge/OB1_COMMUNITY-Approved_Contribution-2ea44f?style=for-the-badge&logo=github)
+## Quick Reference
 
-**Created by [@headcrest](https://github.com/headcrest) | Auth fixes by [@matthallett1](https://github.com/matthallett1)**
+### Environment Variables
 
-*Reviewed and merged by the Open Brain maintainer team — thank you for building the future of AI memory!*
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `MCP_URL` | URL of the Open Brain MCP Edge Function (server-only, not exposed to browser) | Yes* |
+| `MCP_KEY` | Access key for the MCP Edge Function (server-only, not exposed to browser) | Yes* |
+| `PUBLIC_SUPABASE_URL` | Supabase project URL — used for client-side auth | Yes |
+| `PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key — used for client-side auth | Yes |
 
-</div>
+> `PUBLIC_MCP_URL` / `PUBLIC_MCP_KEY` are accepted as a backward-compatible fallback but will be visible in the browser bundle. Prefer the server-only `MCP_URL` / `MCP_KEY` pair.
 
-> Search, filter, and capture your thoughts from a production-ready SvelteKit UI.
+Copy `.env.example` to `.env.local` before running locally:
 
-## What it does
-
-This dashboard connects directly to your Open Brain MCP endpoint and gives you an interface to:
-
-- capture new thoughts from a web form,
-- search and filter existing thoughts by type, topic, and people,
-- inspect stats, action items, and recent capture activity in a clean, focused layout.
-
-## Prerequisites
-
-- Working Open Brain setup ([guide](../../docs/01-getting-started.md))
-- Supabase project URL + anon key for your Open Brain project
-- MCP function URL + access key for your Open Brain MCP function
-- Node.js 18+
-- A Supabase-authenticated user in your project (this dashboard uses email/password sign-in)
-
-## Credential Tracker
-
-Copy this block into a text editor and fill it as you go.
-
-```text
-OPEN BRAIN DASHBOARD -- CREDENTIAL TRACKER
-------------------------------------------
-
-FROM OPEN BRAIN
-  Supabase URL:              ____________
-  Supabase anon key:         ____________
-  MCP Function URL:          ____________
-  MCP Access Key:            ____________
-
-HOSTING
-  Deploy URL:                ____________
-
-------------------------------------------
+```bash
+cp .env.example .env.local
+# then fill in values in .env.local
 ```
 
-## Quick Start
+SvelteKit only picks up env changes after restarting `npm run dev`.
 
-1. Install dependencies:
+**Symlink tip** — share one env file across all dashboards in the repo:
 
-   ```bash
-   cd dashboards/open-brain-dashboard
-   npm install
-   ```
+```bash
+ln -s ../../.env.local dashboards/open-brain-dashboard/.env.local
+```
 
-2. Create `.env.local` in the dashboard folder (or symlink from the repo root):
+### API Endpoints
 
-   ```bash
-   cp .env.example .env.local
-   ```
+| Method | Path | Auth required | Description |
+|--------|------|---------------|-------------|
+| `POST` | `/api/mcp` | Yes (Supabase session) | Server-side proxy — forwards MCP tool calls to the upstream Edge Function and returns the result |
+| `GET` | `/signout` | — | Signs the current user out via Supabase Auth and redirects to `/signin` |
 
-3. Fill in your 4 values. You can find them at:
+**MCP proxy — example request**
 
-   | Variable | Where to get it |
-   |----------|----------------|
-   | `PUBLIC_SUPABASE_URL` | Supabase Dashboard → Settings → API → Project URL |
-   | `PUBLIC_SUPABASE_ANON_KEY` | Supabase Dashboard → Settings → API → `anon` `public` key |
-   | `MCP_URL` | Your deployed Edge Function URL (e.g. `https://<ref>.supabase.co/functions/v1/open-brain-mcp`) |
-   | `MCP_KEY` | The `MCP_ACCESS_KEY` you set during Open Brain setup. Also visible in Claude Desktop → Settings → Connectors → your connector URL after `?key=` |
+```bash
+# Requires a valid Supabase session cookie (obtained after signing in)
+curl -X POST http://localhost:5173/api/mcp \
+  -H "Content-Type: application/json" \
+  -b "<your-session-cookie>" \
+  -d '{"name": "search_thoughts", "args": {"query": "machine learning"}}'
+```
 
-4. Create a sign-in user (if you don't have one). In Supabase Dashboard → Authentication → Add user → create with email + password + Auto Confirm.
+Response shape:
 
-   > **Note:** If your existing user was created via OAuth, you won't have a password. Click "Send password recovery" from the user detail panel, or create a second user with email/password (e.g. `you+dashboard@gmail.com`).
+```json
+{ "result": { ... } }
+```
 
-5. Start the app:
+Error shape:
 
-   ```bash
-   npm run dev
-   ```
+```json
+{ "error": "reason string" }
+```
 
-6. Open `http://localhost:5173` and sign in.
+### Commands
 
-## Deploy to Production
+```bash
+# Install dependencies
+npm install
 
-- **Vercel:** Import this folder, set the same 4 environment variables.
-- **Netlify:** Deploy as a SvelteKit site, set the same 4 environment variables.
+# Start development server (default: http://localhost:5173)
+npm run dev
 
-## Expected outcome
+# Type-check all Svelte and TypeScript files
+npm run check
 
-After setup, you should be able to:
+# Watch mode type-checking
+npm run check:watch
 
-- see your total captured-thoughts count in the header,
-- search thoughts and get results sorted by recency,
-- filter by type (Observation/Task/Idea/Reference/Person Note), topic, and people,
-- open a thought for full text review,
-- capture a new thought and immediately persist it through MCP.
+# Production build
+npm run build
 
-If a value is missing in env, the app will show startup errors about missing `PUBLIC_SUPABASE_URL` / `PUBLIC_SUPABASE_ANON_KEY` or missing MCP credentials.
+# Preview production build locally
+npm run preview
+```
+
+### Configuration
+
+| File | Purpose |
+|------|---------|
+| `.env.example` | Template for required environment variables — copy to `.env.local` |
+| `svelte.config.js` | SvelteKit config — uses `@sveltejs/adapter-vercel` targeting Node 22 |
+| `vite.config.ts` | Vite build config |
+| `tsconfig.json` | TypeScript compiler options |
+
+### Prerequisites
+
+- Node.js 22.x (matches Vercel runtime configured in `svelte.config.js`)
+- A running Open Brain Supabase project with the MCP Edge Function deployed
+- Supabase project URL and anon key
+- MCP URL and access key
+
+## Common Tasks
+
+### Run the Dashboard Locally
+
+```bash
+cd dashboards/open-brain-dashboard
+cp .env.example .env.local
+# Edit .env.local with your real values
+npm install
+npm run dev
+# Open http://localhost:5173
+```
+
+### Deploy to Vercel
+
+```bash
+# From the dashboard directory
+npm run build
+# Then push to a Vercel-connected branch, or use:
+vercel --cwd dashboards/open-brain-dashboard
+```
+
+The adapter is pre-configured for Vercel (`@sveltejs/adapter-vercel`, Node 22). Set the four environment variables in your Vercel project settings before deploying.
+
+### Call an MCP Tool Programmatically
+
+The `/api/mcp` route accepts a JSON body with `name` (tool name) and optional `args` (arguments object). The server resolves credentials, calls the upstream MCP Edge Function via JSON-RPC 2.0, and returns the unwrapped result.
+
+```bash
+curl -X POST https://<your-vercel-domain>/api/mcp \
+  -H "Content-Type: application/json" \
+  -b "<session-cookie>" \
+  -d '{"name": "recall_memories", "args": {"query": "project alpha"}}'
+```
 
 ## Troubleshooting
 
-**Issue: `Missing PUBLIC_SUPABASE_URL or PUBLIC_SUPABASE_ANON_KEY`**
-Solution: Ensure `.env.local` exists, both variables are set, and SvelteKit has been restarted after editing env.
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| `Missing MCP_URL/MCP_KEY` error on `/api/mcp` | Env vars not set or not picked up | Confirm `.env.local` exists with values and restart `npm run dev` |
+| Redirected to `/signin` on every page load | Supabase session not established | Check `PUBLIC_SUPABASE_URL` and `PUBLIC_SUPABASE_ANON_KEY` are correct |
+| `MCP upstream HTTP 401` from the proxy | Wrong or missing `MCP_KEY` | Verify the key matches what was set when deploying the MCP Edge Function |
+| `MCP upstream HTTP 502` from the proxy | MCP Edge Function is unreachable or returned an error | Check `MCP_URL` points to the correct deployed function URL |
+| Env variable changes not reflected | SvelteKit caches env at startup | Restart `npm run dev` after editing `.env.local` |
+| Type errors on `svelte-check` | Svelte/TS types out of sync | Run `npm run prepare` (runs `svelte-kit sync`) then retry `npm run check` |
 
-**Issue: App keeps redirecting to sign-in**
-Solution: Confirm you have a valid Supabase user in the project and correct credentials; the app intentionally requires auth via `/signin`.
+## Related
 
-**Issue: MCP calls fail with `Unauthorized` or 401**
-Solution: Verify `MCP_URL` points to the Supabase Edge Function for this project, and `MCP_KEY` matches the function key expected by `open-brain-mcp`.
-
-**Issue: Search returns "No thoughts found" but stats show thoughts exist**
-Solution: Search uses semantic (vector) similarity, not keyword matching. Three things to check:
-
-1. **OpenRouter API key** — `search_thoughts` calls OpenRouter to generate a query embedding. If `OPENROUTER_API_KEY` is missing or invalid in your Supabase secrets, search silently returns nothing. Verify with: `supabase secrets list | grep OPENROUTER`
-2. **Embeddings exist** — Thoughts captured before embeddings were configured won't be searchable. Check in SQL Editor: `SELECT count(*) FROM thoughts WHERE embedding IS NULL`
-3. **Similarity threshold** — Short queries against long content may score below the default 0.5 threshold. Try a more specific search phrase, or pass a lower `threshold` value.
-
-**Issue: "Database error querying schema" on sign-in**
-Solution: Your user was likely created via OAuth and has no password set. Either send a password recovery email from the Supabase Dashboard user detail panel, or create a new email/password user.
+- [CONTEXT.md](CONTEXT.md) — Architecture context for this dashboard
+- [src/CONTEXT.md](src/CONTEXT.md) — Source layout context
+- [src/routes/CONTEXT.md](src/routes/CONTEXT.md) — Route architecture context
+- [src/lib/CONTEXT.md](src/lib/CONTEXT.md) — Library utilities context
+- [../open-brain-dashboard-next/README.md](../open-brain-dashboard-next/README.md) — Next-generation dashboard

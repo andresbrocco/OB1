@@ -1,210 +1,159 @@
-# Open Brain Dashboard (Next.js)
+# open-brain-dashboard-next
 
-<div align="center">
+> Next.js 14 admin dashboard for Open Brain — audit, dedup, kanban workflow, ingest pipeline UI, and semantic search over the thoughts table, protected by iron-session passphrase auth.
 
-![Community Contribution](https://img.shields.io/badge/OB1_COMMUNITY-Approved_Contribution-2ea44f?style=for-the-badge&logo=github)
+## Quick Reference
 
-**Created by [@alanshurafa](https://github.com/alanshurafa)**
+### Environment Variables
 
-*Reviewed and merged by the Open Brain maintainer team — thank you for building the future of AI memory!*
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `NEXT_PUBLIC_API_URL` | URL of your Open Brain REST API (Supabase Edge Function) | Yes |
+| `SESSION_SECRET` | 32+ character secret for iron-session cookie encryption | Yes |
+| `RESTRICTED_PASSPHRASE_HASH` | SHA-256 hash of passphrase to unlock restricted/sensitive content (requires sensitivity-tiers primitive) | No |
 
-</div>
-
-A full-featured web dashboard for your Open Brain second brain. Browse, search, capture, and manage thoughts through a modern dark-themed UI. Built with Next.js, React, TypeScript, and Tailwind CSS. Deploy to Vercel or any Node.js host.
-
-## What It Does
-
-Provides 9 pages for managing your thoughts:
-
-| Page | Description |
-|------|-------------|
-| **Dashboard** | Stats overview (total thoughts, type distribution, top topics), recent activity, quick capture, workflow summary widget |
-| **Workflow** | Kanban board for tasks and ideas with drag-and-drop status management (New → Planning → Active → Review → Done → Archived) |
-| **Browse** | Paginated thought table with filters for type, source, and importance |
-| **Detail** | Full thought view with inline editing, delete, linked reflections, and related connections |
-| **Search** | Semantic (vector similarity) and full-text search with match scores and pagination |
-| **Add to Brain** | Smart ingest with auto-routing — short text goes to single capture, long text to extraction with dry-run preview |
-| **Audit** | Quality review for low-score thoughts with bulk delete |
-| **Duplicates** | Semantic similarity detection with keep/delete/keep-both resolution |
-| **Login** | API key authentication via encrypted session cookie |
-
-## Prerequisites
-
-- A working Open Brain setup with the **REST API gateway** (`open-brain-rest`) deployed
-- **Node.js 18+** installed
-- A **Vercel account** (free tier works) or any Node.js hosting
-
-### Credential Tracker
-
-| Credential | Where to get it | Where it goes |
-|------------|----------------|---------------|
-| `NEXT_PUBLIC_API_URL` | Your Supabase project URL + `/functions/v1/open-brain-rest` | `.env` or hosting env vars |
-| `SESSION_SECRET` | Generate: `openssl rand -hex 32` | `.env` or hosting env vars |
-| `RESTRICTED_PASSPHRASE_HASH` | Optional. Generate: `echo -n "passphrase" \| shasum -a 256` | `.env` or hosting env vars |
-
-## Steps
-
-### Step 1: Clone the dashboard
+Generate values:
 
 ```bash
-# From the OB1 repo
-cd dashboards/open-brain-dashboard
+# SESSION_SECRET
+openssl rand -hex 32
+
+# RESTRICTED_PASSPHRASE_HASH
+echo -n "your-passphrase" | shasum -a 256
 ```
 
-Or copy the folder to your own project directory.
+Copy `.env.example` to `.env.local` and fill in the required values before starting.
 
-### Step 2: Install dependencies
+### API Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/audit` | Fetch thoughts for audit review |
+| POST | `/api/audit` | Submit audit action on a thought |
+| DELETE | `/api/audit/delete` | Delete a thought via audit |
+| GET | `/api/duplicates` | List detected duplicate thought pairs |
+| POST | `/api/duplicates/resolve` | Resolve a duplicate pair (keep/merge/dismiss) |
+| GET | `/api/ingest` | List ingest pipeline jobs |
+| GET | `/api/ingest/[id]` | Get a single ingest job by ID |
+| POST | `/api/ingest/[id]/execute` | Execute an ingest job |
+| GET | `/api/kanban` | Fetch kanban board state |
+| POST | `/api/kanban` | Create a kanban card |
+| DELETE | `/api/kanban` | Delete a kanban card |
+| DELETE | `/api/kanban/delete` | Bulk delete kanban cards |
+| POST | `/api/kanban/update` | Update a kanban card (move column, edit) |
+| POST | `/api/logout` | Destroy the iron-session cookie |
+| POST | `/api/restricted` | Verify passphrase and unlock restricted tier |
+| POST | `/api/search` | Semantic search over thoughts |
+| GET | `/api/thoughts/[id]/connections` | Fetch semantic connections for a thought |
+| POST | `/api/thoughts/[id]/reflection` | Generate a reflection for a thought |
+
+All API routes that modify data require an active iron-session (`open_brain_session` cookie). Unauthenticated requests receive `401`.
 
 ```bash
-npm install
+# Example: semantic search (session cookie required)
+curl -X POST http://localhost:3000/api/search \
+  -H "Content-Type: application/json" \
+  -b "open_brain_session=<your-session-cookie>" \
+  -d '{"query": "what did I learn about TypeScript last week"}'
+
+# Example: fetch kanban board
+curl -X GET http://localhost:3000/api/kanban \
+  -b "open_brain_session=<your-session-cookie>"
+
+# Example: resolve a duplicate pair
+curl -X POST http://localhost:3000/api/duplicates/resolve \
+  -H "Content-Type: application/json" \
+  -b "open_brain_session=<your-session-cookie>" \
+  -d '{"keep_id": "uuid-a", "delete_id": "uuid-b"}'
 ```
 
-### Step 3: Configure environment
+### Commands
 
 ```bash
-cp .env.example .env
-```
-
-Edit `.env` and set your values:
-
-```
-NEXT_PUBLIC_API_URL=https://YOUR-PROJECT-REF.supabase.co/functions/v1/open-brain-rest
-SESSION_SECRET=your-32-char-secret-here
-```
-
-### Step 4: Run locally
-
-```bash
+# Development — starts Next.js dev server on http://localhost:3000
 npm run dev
+
+# Build — production build
+npm run build
+
+# Start — run the production build
+npm run start
+
+# Lint — ESLint with Next.js rules
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000). You should see the login page.
+### Configuration
 
-Enter your Open Brain API key (the `MCP_ACCESS_KEY` from your Supabase Edge Function secrets). After login, the dashboard loads with your stats and recent thoughts.
+| File | Purpose |
+|------|---------|
+| `.env.example` | Template for required environment variables |
+| `.env.local` | Local environment overrides (gitignored) |
+| `next.config.ts` | Next.js configuration |
+| `middleware.ts` | Route-level session guard — redirects unauthenticated users to `/login` |
+| `tsconfig.json` | TypeScript configuration |
+| `eslint.config.mjs` | ESLint configuration |
 
-### Step 5: Deploy to Vercel (optional)
+### Prerequisites
+
+- Node.js 20+
+- A running Open Brain REST API (Supabase Edge Function) — set as `NEXT_PUBLIC_API_URL`
+- `SESSION_SECRET` of at least 32 characters
+- (Optional) sensitivity-tiers primitive deployed if using restricted content unlock
+
+## Common Tasks
+
+### Run Locally
 
 ```bash
-npx vercel --prod
+cd dashboards/open-brain-dashboard-next
+cp .env.example .env.local
+# Edit .env.local with your values
+npm install
+npm run dev
+# Open http://localhost:3000
 ```
 
-Or connect the folder to Vercel via the dashboard. Set the environment variables (`NEXT_PUBLIC_API_URL`, `SESSION_SECRET`) in your Vercel project settings.
+### Log In
 
-> [!TIP]
-> The free Vercel tier is sufficient. The dashboard makes server-side API calls to your Open Brain REST endpoint — there's no heavy compute.
+Navigate to `http://localhost:3000/login`. Enter your Open Brain API key (the Supabase service role key or anon key depending on your setup). The key is stored in an encrypted iron-session cookie valid for 24 hours.
 
-## Expected Outcome
+### Unlock Restricted Content
 
-When working correctly:
+If `RESTRICTED_PASSPHRASE_HASH` is set, a lock toggle appears in the UI. Submit the passphrase to unlock `sensitivity_tier = restricted` thoughts for the duration of the session.
 
-- **Login page** accepts your Open Brain API key and redirects to the dashboard
-- **Dashboard** shows thought count, type distribution chart, top topics, and recent thoughts
-- **Browse** displays a paginated table of all thoughts with working type/source/importance filters
-- **Search** returns results with similarity scores (semantic mode) or rank scores (full-text mode)
-- **Add to Brain** auto-routes short text (< 500 chars, single paragraph) to single capture, and long/structured text to extraction with dry-run preview
-- **Detail page** shows full thought content with metadata, inline edit for content/type/importance, and linked reflections
+### Deploy to Vercel
 
-## Workflow Board
-
-The Workflow page adds a visual kanban board for managing `task` and `idea` thoughts through status stages.
-
-### Features
-
-- **Drag-and-drop** between status columns using @dnd-kit (touch-friendly with 200ms hold delay)
-- **Collapsible columns** — click the arrow to collapse any column to a slim vertical bar (persisted in localStorage)
-- **Auto-adjusting widths** — expanded columns share available space equally, no horizontal scrollbar
-- **Inline editing** — tap a card to open the edit modal (status, priority, type, content)
-- **Priority dots** — click to change priority (Critical/High/Medium/Low mapped from importance 0-100)
-- **Dashboard widget** — summary of active workflow items on the main dashboard
-- **Mobile-first** — responsive layout, pinch-to-zoom enabled, full-screen edit modal on small screens
-
-### Status Flow
-
-```
-New → Planning → Active → Review → Done → (Archived)
+```bash
+# Push to your fork, then connect to Vercel
+# Set env vars in Vercel project settings:
+#   NEXT_PUBLIC_API_URL
+#   SESSION_SECRET
+#   RESTRICTED_PASSPHRASE_HASH  (optional)
+vercel --prod
 ```
 
-Cards auto-archive from Done after 30 days. Archived cards are hidden by default (toggle with "Show archived").
+### Generate a New SESSION_SECRET
 
-### Database Requirements
-
-The Workflow board requires two additional columns on the `thoughts` table. See the [workflow-status schema](../../schemas/workflow-status/) for the migration SQL.
-
-### MCP Integration
-
-The `progress_task` tool in the Open Brain MCP server allows AI assistants to update task status and priority conversationally:
-
+```bash
+openssl rand -hex 32
 ```
-"Move the API redesign task to active"
-"Set priority on thought 42 to high"
-```
-
-When a new task or idea is captured, the MCP server auto-assigns `status: "new"`.
-
-## REST API Endpoints Required
-
-The dashboard calls these endpoints on your Open Brain REST API:
-
-| Endpoint | Method | Used By |
-|----------|--------|---------|
-| `/health` | GET | Login validation |
-| `/thoughts` | GET | Browse page (paginated, filtered) |
-| `/thought/:id` | GET | Detail page |
-| `/thought/:id` | PUT | Inline edit (content, type, importance) |
-| `/thought/:id` | DELETE | Delete button |
-| `/search` | POST | Search page (semantic + full-text) |
-| `/stats` | GET | Dashboard stats widget |
-| `/capture` | POST | Quick capture (single thought) |
-| `/thought/:id/reflection` | GET | Detail page (linked reflections) |
-| `/ingest` | POST | Smart ingest (extraction) |
-| `/ingestion-jobs` | GET | Ingest page (job history) |
-| `/duplicates` | GET | Duplicates page |
-| `/thoughts?type=task` | GET | Workflow board (filtered by type) |
-| `/thought/:id` | PUT | Workflow board (status/priority updates) |
-
-> [!NOTE]
-> If your Open Brain instance doesn't have all these endpoints (e.g., no smart-ingest or duplicates), those pages will show errors but the core pages (dashboard, browse, search, detail) will still work.
-
-## Optional: Restricted Content
-
-If you've applied the [sensitivity-tiers](https://github.com/NateBJones-Projects/OB1/pull/110) primitive and want to control access to sensitive thoughts:
-
-1. Set `RESTRICTED_PASSPHRASE_HASH` in your environment
-2. A lock/unlock toggle appears in the sidebar
-3. When locked (default), restricted thoughts are filtered from all views
-4. Enter your passphrase to temporarily unlock restricted content for the session
-
-If `RESTRICTED_PASSPHRASE_HASH` is not set, the toggle is hidden — no action needed.
-
-## Authentication
-
-The dashboard uses **iron-session** for encrypted HTTP-only session cookies:
-
-1. User enters their Open Brain API key once at login
-2. Key is validated against the `/health` endpoint
-3. Key is stored in an encrypted session cookie (not in client-side JS or localStorage)
-4. All server-side API calls use the key from the session
-5. Sessions expire after 24 hours
-
-No API key is stored in environment variables or exposed to the browser.
-
-## Tech Stack
-
-- **Next.js 16** (App Router)
-- **React 19** with TypeScript
-- **Tailwind CSS 4** (dark theme)
-- **iron-session 8** (encrypted cookies)
-- **@dnd-kit** (drag-and-drop for workflow board)
-- Zero external runtime dependencies beyond these
 
 ## Troubleshooting
 
-1. **"Could not reach API" on login** — Verify `NEXT_PUBLIC_API_URL` is correct and your REST API gateway (`open-brain-rest`) is deployed. Test with: `curl https://YOUR-REF.supabase.co/functions/v1/open-brain-rest/health -H "x-brain-key: YOUR_KEY"`.
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| Server crashes on startup with `SESSION_SECRET env var is required` | `SESSION_SECRET` is missing or fewer than 32 characters | Set a 32+ character value in `.env.local` |
+| All pages redirect to `/login` | Session cookie is missing or expired (24h TTL) | Log in again at `/login` |
+| API returns `401 Unauthorized` | Request made without a valid session cookie | Ensure the `open_brain_session` cookie is present and not expired |
+| `NEXT_PUBLIC_API_URL` not reaching Supabase | Env var not set or Edge Function not deployed | Verify the URL in `.env.local` and that the `open-brain-rest` Edge Function is live |
+| Restricted thoughts not visible | `RESTRICTED_PASSPHRASE_HASH` not set, or passphrase not entered | Set the hash env var and unlock via the UI toggle |
+| Duplicate detection returns no results | Embeddings not generated for thoughts | Run the embedding backfill recipe before using the duplicates view |
 
-2. **"SESSION_SECRET env var is required"** — The app requires a 32+ character secret for cookie encryption. Generate one with `openssl rand -hex 32`.
+## Related
 
-3. **Build fails with SWC error** — This happens when `node_modules` was installed on a different platform (e.g., Windows modules on Linux). Delete `node_modules` and `package-lock.json`, then run `npm install` on your target platform.
-
-4. **Search returns no results** — Ensure your thoughts have embeddings. Semantic search requires the `embedding` column to be populated. Run an embedding backfill if needed.
-
-5. **Ingest page shows "extracting" forever** — Check that the `smart-ingest` Edge Function is deployed. The ingest feature depends on a separate Edge Function for document extraction.
+- [CONTEXT.md](CONTEXT.md) — Architecture context for this dashboard
+- [app/api/CONTEXT.md](app/api/CONTEXT.md) — API route architecture details
+- [lib/CONTEXT.md](lib/CONTEXT.md) — Auth and utility library context
+- [components/CONTEXT.md](components/CONTEXT.md) — Component architecture context
+- [../open-brain-dashboard/README.md](../open-brain-dashboard/README.md) — SvelteKit predecessor dashboard

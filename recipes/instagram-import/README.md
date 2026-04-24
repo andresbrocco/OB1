@@ -1,109 +1,134 @@
 # Instagram Import
 
-<div align="center">
+> Import Instagram data exports — DM conversations, comments, and post captions — into Open Brain as searchable thoughts.
 
-![Community Contribution](https://img.shields.io/badge/OB1_COMMUNITY-Approved_Contribution-2ea44f?style=for-the-badge&logo=github)
+## Quick Reference
 
-**Created by [@alanshurafa](https://github.com/alanshurafa)**
+### Environment Variables
 
-*Reviewed and merged by the Open Brain maintainer team — thank you for building the future of AI memory!*
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `SUPABASE_URL` | Your Supabase project URL | — | Yes |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (bypass RLS) | — | Yes |
+| `OPENROUTER_API_KEY` | OpenRouter API key for embedding generation | — | Yes |
+| `EMBEDDING_MODEL` | Embedding model override via OpenRouter | `openai/text-embedding-3-small` | No |
 
-</div>
+Copy `.env.example` to `.env` and fill in values before running.
 
-> Import your Instagram data — DMs, comments, and post captions — into Open Brain.
+### Commands
 
-## What It Does
+```bash
+# Preview what would be imported without writing to the database
+npm run dry-run -- /path/to/instagram-export
 
-Parses Instagram's data export and imports three types of content as searchable thoughts:
-- **Messages** — DM conversations (minimum 3 messages per conversation)
-- **Comments** — Your comments on posts, batched together
-- **Posts** — Your post captions, batched together
+# Run a full import
+npm run import -- /path/to/instagram-export
 
-Handles Meta's double-encoded UTF-8 text (latin1 → UTF-8 conversion).
+# Import only specific content types
+node import-instagram.mjs /path/to/instagram-export --types messages,comments
 
-## Prerequisites
+# Skip the first N items and limit total items processed
+node import-instagram.mjs /path/to/instagram-export --skip 50 --limit 100
 
-- Working Open Brain setup ([guide](../../docs/01-getting-started.md))
-- **Instagram data export** — download from Instagram Settings
-- **Node.js 18+** installed
-- **OpenRouter API key** for embedding generation
-
-## Credential Tracker
-
-```text
-INSTAGRAM IMPORT -- CREDENTIAL TRACKER
---------------------------------------
-
-FROM YOUR OPEN BRAIN SETUP
-  Supabase URL:          ____________
-  Service Role Key:      ____________
-
-FROM OPENROUTER
-  API Key:               ____________
-
---------------------------------------
+# Combine flags
+node import-instagram.mjs /path/to/instagram-export --types posts --dry-run
 ```
 
-## Steps
+#### CLI Flags
 
-1. **Request your Instagram data:**
-   - Go to Instagram → Settings → Accounts Center → Your information and permissions → Download your information
-   - Select **JSON** format
-   - Download and extract the archive
-   - Look for the `your_instagram_activity/` folder
+| Flag | Description |
+|------|-------------|
+| `--dry-run` | Preview import without writing any records |
+| `--types <list>` | Comma-separated content types: `messages`, `comments`, `posts` (default: all three) |
+| `--skip N` | Skip the first N items |
+| `--limit N` | Process at most N items |
 
-2. **Copy this recipe folder** and install dependencies:
+### Configuration
 
-   ```bash
-   cd instagram-import
-   npm install
-   ```
+| File | Purpose |
+|------|---------|
+| `.env` | Runtime credentials and model override (created from `.env.example`) |
+| `.env.example` | Template showing all supported variables |
+| `package.json` | Node.js dependencies and `import`/`dry-run` script shortcuts |
 
-3. **Create `.env`** with your credentials (see `.env.example`):
+### Database Tables
 
-   ```env
-   SUPABASE_URL=https://your-project.supabase.co
-   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-   OPENROUTER_API_KEY=sk-or-v1-your-key
-   ```
+| Table | Purpose |
+|-------|---------|
+| `thoughts` | Destination for all imported records via `upsert_thought` RPC |
 
-4. **Preview what will be imported** (dry run):
+Records are inserted with `source_type: "instagram_import"`, `sensitivity_tier: "personal"`, and a SHA-256 content fingerprint to prevent duplicate imports.
 
-   ```bash
-   node import-instagram.mjs /path/to/instagram-export --dry-run
-   ```
+### Prerequisites
 
-5. **Import specific types only** (optional):
+- Node.js 18+
+- An Instagram data export folder (request from Instagram: Settings → Your activity → Download your information). The script expects the `your_instagram_activity/` directory to exist somewhere within the export folder (searched up to 3 levels deep).
+- A running Open Brain Supabase instance with the `upsert_thought` RPC available.
+- An OpenRouter API key with access to an embedding model.
 
-   ```bash
-   node import-instagram.mjs /path/to/instagram-export --types messages
-   node import-instagram.mjs /path/to/instagram-export --types comments,posts
-   ```
+## Common Tasks
 
-6. **Run the full import:**
+### Request Your Instagram Export
 
-   ```bash
-   node import-instagram.mjs /path/to/instagram-export
-   ```
+1. Open Instagram → Settings → Your activity → Download your information.
+2. Select **JSON format** (not HTML).
+3. Request the download and wait for the email link.
+4. Unzip the archive to a local folder (e.g., `~/Downloads/instagram-export`).
 
-## Expected Outcome
+### Run a Dry Run First
 
-After running the import:
-- DM conversations become thoughts tagged with `source_type: instagram_import`
-- Long conversations are capped at 200 messages per thought
-- Comments and captions are batched (50 comments or 30 captions per thought)
-- All content with `sensitivity_tier: personal`
-- Running `search_thoughts { query: "that restaurant recommendation" }` finds relevant DMs
+```bash
+cp .env.example .env
+# Edit .env with your credentials
 
-**Scale reference:** Tested with 502 Instagram items imported successfully.
+npm run dry-run -- ~/Downloads/instagram-export
+```
+
+The dry run prints what would be imported without touching the database, so you can verify item counts and titles before committing.
+
+### Full Import
+
+```bash
+npm run import -- ~/Downloads/instagram-export
+```
+
+Output per record:
+
+```
+[12/47] inserted: #1045 "Instagram DM: alice (82 messages)"
+[13/47] updated:  #1046 "Instagram comments (batch 1)"
+```
+
+### Import Only One Content Type
+
+```bash
+# Only DM conversations
+node import-instagram.mjs ~/Downloads/instagram-export --types messages
+
+# Only post captions
+node import-instagram.mjs ~/Downloads/instagram-export --types posts
+```
+
+### Resume a Partial Import
+
+Use `--skip` to pick up where a previous run left off:
+
+```bash
+node import-instagram.mjs ~/Downloads/instagram-export --skip 200
+```
 
 ## Troubleshooting
 
-**Issue: "Could not find your_instagram_activity directory"**
-The export structure varies by download method. Look inside your extracted archive for a folder named `your_instagram_activity`. If it's nested deeper, point the script at the parent folder.
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| `Could not find 'your_instagram_activity' directory` | Export path is wrong or export is in HTML format | Re-request export in JSON format; point the script at the unzipped folder root |
+| `Embedding failed: 401` | `OPENROUTER_API_KEY` is missing or invalid | Check `.env` and verify the key at openrouter.ai |
+| `upsert_thought failed: ...` | Supabase credentials wrong or `upsert_thought` RPC not installed | Verify `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`; confirm Open Brain schema is applied |
+| Garbled characters in names/text | Meta encodes text as latin1-interpreted UTF-8 | The script applies `fixMetaEncoding` automatically; no action needed |
+| Import exits with 0 items | Export has no messages with 3+ messages, no comments over 10 chars, no post captions over 10 chars | Verify the export contains actual activity data |
 
-**Issue: Garbled text (wrong characters)**
-Meta exports encode text as latin1-interpreted UTF-8. The script fixes this automatically with `fixMetaEncoding()`. If text still looks wrong, the file may use a different encoding.
+## Related
 
-**Issue: No messages found**
-DMs are in `your_instagram_activity/messages/inbox/`. Each conversation is in its own folder with `message_1.json`, `message_2.json`, etc. Check that this structure exists in your export.
+- [CONTEXT.md](CONTEXT.md) — Architecture context for this recipe
+- [../recipes/](../) — Other available recipes
+

@@ -1,186 +1,148 @@
-# Extension 2: Home Maintenance Tracker
+# Home Maintenance Tracker
 
-## Why This Matters
+> Extension 2 of the Open Brain learning path: deploys a Supabase Edge Function MCP server for tracking recurring maintenance tasks, logging completed work, and surfacing upcoming items.
 
-The HVAC tech mentioned the pump was showing wear 18 months ago. The warranty on the water heater expires next month. The gutters haven't been cleaned since... when exactly? Without a system, these connections never get made — you just get expensive surprises. Your agent can track every maintenance task, remind you what's coming due, and keep a complete history so nothing slips through.
+## Quick Reference
 
-## Learning Path: Extension 2 of 6
+### Environment Variables
 
-| Extension | Name | Status |
-|-----------|------|--------|
-| 1 | Household Knowledge Base | Complete |
-| **2** | **Home Maintenance Tracker** | **<-- You are here** |
-| 3 | Family Calendar | Not started |
-| 4 | Meal Planning & Recipes | Not started |
-| 5 | Professional CRM | Not started |
-| 6 | Job Hunt Pipeline | Not started |
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `SUPABASE_URL` | Your Supabase project URL (`https://<project-ref>.supabase.co`) | Yes |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key — set automatically on Edge Function deploy | Yes |
+| `MCP_ACCESS_KEY` | Secret key used to authenticate MCP requests — must be set manually | Yes |
+| `DEFAULT_USER_ID` | UUID of the user whose data this function operates on | Yes |
 
-## What It Does
+`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected automatically when you deploy via the Supabase CLI. You must set `MCP_ACCESS_KEY` and `DEFAULT_USER_ID` as Edge Function secrets.
 
-A maintenance scheduling and history system. Track recurring tasks, log completed work, and let your agent surface what needs attention before it becomes an emergency.
+### API Endpoints
 
-## What You'll Learn
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/*` | MCP protocol handler — receives all tool calls from Claude Desktop |
+| `GET` | `/*` | Health check — returns service name and version |
 
-- Date handling and scheduling logic in PostgreSQL
-- One-to-many relationships (task → multiple log entries)
-- Automatic timestamp updates with triggers
-- Time-based queries (upcoming tasks, date ranges)
-- Computed fields (calculating next_due based on frequency)
-- Historical logging patterns
-
-## Prerequisites
-
-- Working Open Brain setup
-- Supabase project configured
-- Supabase CLI installed and linked to your project
-- Extension 1 recommended but not required
-
-## Credential Tracker
-
-You'll reference these values during setup. Copy this block into a text editor and fill it in as you go.
-
-> **Already have your Supabase credentials from the [Setup Guide](../../docs/01-getting-started.md)?** You just need the same Project URL and Secret key.
-
-```text
-HOME MAINTENANCE -- CREDENTIAL TRACKER
---------------------------------------
-
-SUPABASE (from your Open Brain setup)
-  Project URL:           ____________
-  Secret key:            ____________
-  Project ref:           ____________
-
-GENERATED DURING SETUP
-  Default User ID:       ____________
-  MCP Access Key:        ____________  (same key for all extensions)
-  MCP Server URL:        ____________
-  MCP Connection URL:    ____________
-
---------------------------------------
-```
-
-## Steps
-
-### 1. Set Up the Database Schema
-
-Run the SQL in `schema.sql` in your Supabase SQL Editor:
+Authentication: pass your `MCP_ACCESS_KEY` as either the `key` query parameter or the `x-access-key` header.
 
 ```bash
-# Navigate to your Supabase project SQL editor
-# https://supabase.com/dashboard/project/YOUR_PROJECT_ID/sql/new
+# Health check
+curl https://<project-ref>.supabase.co/functions/v1/home-maintenance
+
+# MCP tool call (example — Claude Desktop sends this automatically)
+curl -X POST \
+  "https://<project-ref>.supabase.co/functions/v1/home-maintenance?key=YOUR_MCP_ACCESS_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"get_upcoming_maintenance","arguments":{"days_ahead":30}},"id":1}'
 ```
 
-Copy and paste the contents of `schema.sql` and click Run.
+### MCP Tools
 
-### 2. Generate Your User ID
+| Tool | Description |
+|------|-------------|
+| `add_maintenance_task` | Create a recurring or one-time maintenance task |
+| `log_maintenance` | Record that a task was completed; auto-updates `last_completed` and `next_due` |
+| `get_upcoming_maintenance` | List tasks due within the next N days (default 30) |
+| `search_maintenance_history` | Search logs by task name, category, or date range |
 
-The extension needs a user ID to scope your data. Generate a UUID and save it in your credential tracker:
+### Commands
 
 ```bash
-# macOS / Linux
-uuidgen | tr '[:upper:]' '[:lower:]'
+# Apply the schema to your Supabase database
+supabase db push
+# or run schema.sql directly in the Supabase SQL editor
 
-# Or use any UUID generator — the value just needs to be unique to you
+# Deploy the Edge Function
+supabase functions deploy home-maintenance
+
+# Set required secrets (run once after deploying)
+supabase secrets set MCP_ACCESS_KEY=your-secret-key
+supabase secrets set DEFAULT_USER_ID=your-user-uuid
+
+# Serve locally for testing (requires Supabase CLI)
+supabase functions serve home-maintenance --env-file .env
 ```
 
-Set it as an environment variable for your Edge Function:
+### Configuration
+
+| File | Purpose |
+|------|---------|
+| `.env.example` | Template for required environment variables |
+| `deno.json` | Deno import map — pins all npm dependencies |
+| `schema.sql` | Database schema — run once before deploying the function |
+
+### Database Tables
+
+| Table | Purpose |
+|-------|---------|
+| `maintenance_tasks` | Recurring and one-time maintenance items with scheduling fields (`frequency_days`, `next_due`, `last_completed`) |
+| `maintenance_logs` | Immutable history of completed work, including cost, performer, and contractor notes |
+
+Both tables have Row Level Security (RLS) enabled. A database trigger on `maintenance_logs` automatically recalculates `next_due` on the parent `maintenance_tasks` row after each log insert.
+
+### Prerequisites
+
+- Supabase project with the core Open Brain `thoughts` table already set up
+- Supabase CLI installed and linked to your project (`supabase login`, `supabase link`)
+- Deno runtime (used by Supabase Edge Functions)
+- Claude Desktop with a custom connector configured
+
+## Common Tasks
+
+### Deploy for the first time
 
 ```bash
-supabase secrets set DEFAULT_USER_ID=your-generated-uuid-here
+# 1. Apply the schema
+supabase db push
+# or paste schema.sql into the Supabase SQL editor and run it
+
+# 2. Deploy the function
+supabase functions deploy home-maintenance
+
+# 3. Set secrets
+supabase secrets set MCP_ACCESS_KEY=your-secret-key
+supabase secrets set DEFAULT_USER_ID=your-supabase-user-uuid
+
+# 4. Get your function URL
+# Format: https://<project-ref>.supabase.co/functions/v1/home-maintenance
 ```
 
-> If you already set `DEFAULT_USER_ID` for a previous extension, you can skip this step — all extensions share the same user ID.
+### Connect to Claude Desktop
 
-### 3. Deploy the MCP Server
+1. Open Claude Desktop → Settings → Connectors → Add custom connector
+2. Enter your function URL with your access key appended: `https://<project-ref>.supabase.co/functions/v1/home-maintenance?key=YOUR_MCP_ACCESS_KEY`
+3. Save. Claude will now have access to all four maintenance tools.
 
-Follow the [Deploy an Edge Function](../../primitives/deploy-edge-function/) guide using these values:
+### Add a recurring task via Claude
 
-| Setting | Value |
-|---------|-------|
-| Function name | `home-maintenance-mcp` |
-| Download path | `extensions/home-maintenance` |
+Ask Claude: "Add a quarterly HVAC filter replacement task, due in 90 days, medium priority."
 
-### 4. Connect to Your AI
+Claude will call `add_maintenance_task` with `frequency_days: 90`.
 
-Follow the [Remote MCP Connection](../../primitives/remote-mcp/) guide to connect this extension to Claude Desktop, ChatGPT, Claude Code, or any other MCP client.
+### Log completed work and update schedule
 
-| Setting | Value |
-|---------|-------|
-| Connector name | `Home Maintenance` |
-| URL | Your **MCP Connection URL** from the credential tracker |
+Ask Claude: "Log that I just replaced the HVAC filter. Cost was $18, done by myself."
 
-### 5. Test the Extension
+Claude will call `log_maintenance`. The database trigger fires and sets the next due date automatically based on `frequency_days`.
 
-Try these commands with Claude:
+### Check what is coming up
 
-```
-Add a maintenance task: HVAC filter replacement, every 90 days, next due April 15th
-```
+Ask Claude: "What home maintenance do I have due in the next 60 days?"
 
-```
-Log maintenance: I just changed the HVAC filter, cost $45, did it myself
-```
-
-```
-What maintenance is coming up in the next 30 days?
-```
-
-```
-Show me the history for HVAC maintenance
-```
-
-## Cross-Extension Integration
-
-The maintenance tracker introduces patterns you'll see throughout the remaining extensions:
-
-- **Task → Log entries pattern**: A parent record (maintenance_task) with multiple child records (maintenance_logs). This same one-to-many pattern appears in:
-  - Extension 5 (Professional CRM): contact → interaction logs
-  - Extension 6 (Job Hunt Pipeline): application → interview logs
-
-- **Auto-calculated dates**: The `log_maintenance` tool automatically updates `last_completed` and calculates `next_due` based on `frequency_days`. This computed field pattern shows how your database can maintain derived state without manual updates.
-
-- **Time-based queries**: The `get_upcoming_maintenance` tool demonstrates how to query for records in a date range — essential for calendar systems (Extension 3) and deadline tracking (Extension 6).
-
-- **Historical search**: The `search_maintenance_history` tool shows how to search across both parent and child tables with date filtering.
-
-### Connection to Extension 1
-
-If you built Extension 1 (Household Knowledge Base), you can reference your `household_vendors` when logging maintenance. The `performed_by` field in maintenance logs can store vendor names, creating an informal link between systems. In a production setup, you might add a foreign key to make this relationship explicit.
-
-## Expected Outcome
-
-After completing this extension, you should be able to:
-
-1. Create recurring and one-time maintenance tasks
-2. Log completed maintenance with cost and notes
-3. Automatically calculate next due dates based on frequency
-4. Query upcoming maintenance within a time window
-5. Search maintenance history by task, category, or date range
-
-Your agent will be able to answer questions like:
-- "What maintenance is due this month?"
-- "When did we last service the HVAC?"
-- "How much have we spent on plumbing maintenance this year?"
-- "What did the electrician recommend last time?"
+Claude will call `get_upcoming_maintenance` with `days_ahead: 60`.
 
 ## Troubleshooting
 
-For common issues (connection errors, 401s, deployment problems), see [Common Troubleshooting](../../primitives/troubleshooting/).
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| `401 Unauthorized` on all requests | `MCP_ACCESS_KEY` missing or mismatch | Run `supabase secrets set MCP_ACCESS_KEY=...` and redeploy |
+| `500 DEFAULT_USER_ID not configured` | `DEFAULT_USER_ID` secret not set | Run `supabase secrets set DEFAULT_USER_ID=<uuid>` |
+| Tools not appearing in Claude | Connector URL wrong or function not deployed | Verify the URL returns `{"status":"ok"}` via `curl`, then re-add connector |
+| `next_due` not updating after logging | Trigger not created | Re-run `schema.sql` — the trigger `update_task_after_log` must exist |
+| RLS blocking queries | Service role key not in use | Confirm `SUPABASE_SERVICE_ROLE_KEY` is set (not the anon key) |
 
-**Extension-specific issues:**
+## Related
 
-**"next_due not updating after logging maintenance"**
-- Verify that the task has a `frequency_days` value set
-- Check that the `log_maintenance` tool completed successfully
-- For one-time tasks (frequency_days = null), next_due remains null
-
-**"Date parsing errors"**
-- Ensure dates are in ISO 8601 format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`
-
-## Next Steps
-
-**Extension 3: Family Calendar** — Build on your date-handling skills to create a shared calendar system with event reminders and conflict detection. The calendar extends the time-based query patterns you learned here and introduces more complex date logic (recurring events, all-day vs. timed events, timezone handling).
-
-[Continue to Extension 3 →](../family-calendar/README.md)
-
-> **Tip:** You now have two MCP servers connected. As you add more, consider which ones to keep active per conversation. The [MCP Tool Audit & Optimization Guide](../../docs/05-tool-audit.md) covers strategies for managing your tool surface area.
+- [CONTEXT.md](CONTEXT.md) — Architecture and design context
+- [../README.md](../README.md) — Extensions category overview
+- [../../primitives/deploy-edge-function/README.md](../../primitives/deploy-edge-function/README.md) — Edge Function deployment pattern
+- [../../primitives/remote-mcp/README.md](../../primitives/remote-mcp/README.md) — Remote MCP connection pattern

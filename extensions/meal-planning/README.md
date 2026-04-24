@@ -1,288 +1,216 @@
-# Extension 4: Meal Planning
+# Meal Planning
 
-## Why This Matters
+> Extension 4 of the Open Brain learning path: adds recipe tracking, weekly meal planning, and shared household shopping lists via a Supabase Edge Function MCP server.
 
-Your agent can reason across five datasets — what you've cooked before, what's in the pantry, who's home this week (from your family calendar), what people actually liked, and what you need to buy. That's meal planning that actually works. And your spouse needs access too — not to your whole brain, just to the meal plan and the shopping list. This is where you learn to share specific parts of your system with someone else.
+## Quick Reference
 
-## Learning Path: Extension 4 of 6
+### Environment Variables
 
-| Extension | Name | Status |
-|-----------|------|--------|
-| 1 | Household Knowledge Base | Complete |
-| 2 | Home Maintenance Tracker | Complete |
-| 3 | Family Calendar | Complete |
-| **4** | **Meal Planning** | **<-- You are here** |
-| 5 | Professional CRM | Not started |
-| 6 | Job Hunt Pipeline | Not started |
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `SUPABASE_URL` | Supabase project URL | — | Yes (auto-set by Supabase) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service role key for the primary MCP server | — | Yes (auto-set by Supabase) |
+| `MCP_ACCESS_KEY` | Secret key for authenticating Claude Desktop requests to the primary server | — | Yes (set manually) |
+| `DEFAULT_USER_ID` | UUID of the owner user; scopes all writes to this account | — | Yes (set manually) |
+| `SUPABASE_HOUSEHOLD_KEY` | Separate service role key for the shared household server | — | Yes, for `shared-server.ts` |
+| `MCP_HOUSEHOLD_ACCESS_KEY` | Secret key for authenticating household member requests | — | Yes, for `shared-server.ts` |
 
-## What You'll Learn
+> `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected automatically when you deploy via the Supabase CLI. You must set `MCP_ACCESS_KEY`, `DEFAULT_USER_ID`, `SUPABASE_HOUSEHOLD_KEY`, and `MCP_HOUSEHOLD_ACCESS_KEY` as Edge Function secrets manually.
 
-- Row Level Security (first introduction to multi-user access)
-- Shared MCP server (separate server with limited, scoped access)
-- JSONB for complex data (ingredients, instructions)
-- Auto-generating derivative data (shopping lists from meal plans)
-- Cross-extension queries (checking who's home this week from the family calendar)
+### MCP Tools — Primary Server (`index.ts`)
 
-## What It Does
+The primary server exposes 6 tools over a single `POST *` route, secured by `MCP_ACCESS_KEY`.
 
-A complete meal planning system with recipes, weekly meal plans, and auto-generated shopping lists. Includes a separate shared MCP server so your partner can view plans and check off grocery items without accessing your full Open Brain.
+| Tool | Description |
+|------|-------------|
+| `add_recipe` | Add a recipe with ingredients, instructions, tags, and rating |
+| `search_recipes` | Search recipes by name, cuisine, tag, or ingredient |
+| `update_recipe` | Update any field of an existing recipe by UUID |
+| `create_meal_plan` | Plan meals for a full week (breakfast/lunch/dinner/snack per day) |
+| `get_meal_plan` | Retrieve a week's meal plan with joined recipe details |
+| `generate_shopping_list` | Auto-aggregate ingredients from a week's recipes into a shopping list |
 
-**Tables:**
-- `recipes` — Your recipe collection with JSONB ingredients and instructions
-- `meal_plans` — Weekly meal planning linked to recipes
-- `shopping_lists` — Auto-generated grocery lists from meal plans
+### MCP Tools — Shared Server (`shared-server.ts`)
 
-**Primary MCP Tools (full access):**
-- `add_recipe` — Add a recipe with ingredients and instructions
-- `search_recipes` — Search by name, cuisine, tags, or ingredient
-- `update_recipe` — Update an existing recipe
-- `create_meal_plan` — Plan meals for a week
-- `get_meal_plan` — View the meal plan for a given week
-- `generate_shopping_list` — Auto-generate shopping list from meal plan
+The shared server exposes 4 read-focused tools over `POST /mcp`, secured by `MCP_HOUSEHOLD_ACCESS_KEY`.
 
-**Shared MCP Tools (household access):**
-- `view_meal_plan` — View meal plans (read-only)
-- `view_recipes` — Browse recipes (read-only)
-- `view_shopping_list` — View shopping list
-- `mark_item_purchased` — Toggle item purchased status
+| Tool | Description |
+|------|-------------|
+| `view_meal_plan` | View a week's meal plan (read-only) |
+| `view_recipes` | Browse or search recipes (read-only) |
+| `view_shopping_list` | View the shopping list for a given week |
+| `mark_item_purchased` | Toggle an item's purchased status on a shopping list |
 
-## Prerequisites
+### Health Endpoints
 
-- Working Open Brain setup
-- Extensions 1-3 recommended (Extension 3's family_members table is referenced for cross-extension integration)
-- Supabase CLI installed and linked to your project
-- **Required reading:** [Row Level Security](../../primitives/rls/) primitive
-- **Required reading:** [Shared MCP Server](../../primitives/shared-mcp/) primitive
-
-## Credential Tracker
-
-You'll reference these values during setup. Copy this block into a text editor and fill it in as you go.
-
-> **Already have your Supabase credentials from the [Setup Guide](../../docs/01-getting-started.md)?** You just need the same Project URL and Secret key.
-
-```text
-MEAL PLANNING -- CREDENTIAL TRACKER
---------------------------------------
-
-SUPABASE (from your Open Brain setup)
-  Project URL:           ____________
-  Secret key:            ____________
-  Project ref:           ____________
-
-GENERATED DURING SETUP
-  Default User ID:             ____________
-  MCP Access Key:              ____________  (same key for all extensions)
-  MCP Server URL:              ____________
-  MCP Connection URL:          ____________
-
-FOR SHARED SERVER
-  Household Access Key:        ____________
-  Household Key (Supabase):    ____________
-  Shared Server URL:           ____________
-  Shared Connection URL:       ____________
-
-NOTE: This extension uses TWO Edge Functions:
-  1. Primary (meal-planning-mcp) — your full access
-  2. Shared (meal-planning-shared-mcp) — household read + shopping list
-
---------------------------------------
-```
-
-## Steps
-
-> **No JSON config files. No local Node.js server. Same pattern as your core Open Brain setup.**
-
-### 1. Create the Database Schema
-
-Run the SQL in `schema.sql` against your Supabase database. This creates three RLS-enabled tables:
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `*` | Primary server health check — returns `{ status: "ok", service: "Meal Planning", version: "1.0.0" }` |
+| `GET` | `/` | Shared server health check — returns `{ status: "ok", service: "Meal Planning (Shared)", version: "1.0.0" }` |
 
 ```bash
-# Using Supabase SQL Editor (recommended)
-# 1. Open https://supabase.com/dashboard/project/YOUR_PROJECT_ID/sql/new
-# 2. Paste the contents of schema.sql
-# 3. Click "Run"
+# Verify primary server is live
+curl https://<project-ref>.supabase.co/functions/v1/meal-planning
+
+# Verify shared server is live (if deployed as a separate function)
+curl https://<project-ref>.supabase.co/functions/v1/meal-planning-shared/
 ```
 
-**Important:** The schema includes Row Level Security policies. Make sure you understand what RLS does before proceeding (see the [RLS primitive](../../primitives/rls/)).
+### Authentication
 
-### 2. Generate Your User ID
-
-The extension needs a user ID to scope your data. Generate a UUID and save it in your credential tracker:
+All MCP requests require the access key passed as either a query parameter or a header:
 
 ```bash
-# macOS / Linux
-uuidgen | tr '[:upper:]' '[:lower:]'
+# Query parameter
+curl -X POST "https://<project-ref>.supabase.co/functions/v1/meal-planning?key=<MCP_ACCESS_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"tools/list","id":1}'
 
-# Or use any UUID generator — the value just needs to be unique to you
+# Header
+curl -X POST "https://<project-ref>.supabase.co/functions/v1/meal-planning" \
+  -H "x-access-key: <MCP_ACCESS_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"tools/list","id":1}'
 ```
 
-Set it as an environment variable for your Edge Function:
+### Commands
 
 ```bash
-supabase secrets set DEFAULT_USER_ID=your-generated-uuid-here
+# Deploy the primary MCP server
+supabase functions deploy meal-planning
+
+# Deploy the shared household server (deploy as a separate function name)
+supabase functions deploy meal-planning-shared --file extensions/meal-planning/shared-server.ts
+
+# Set required secrets
+supabase secrets set MCP_ACCESS_KEY=your-secret-key
+supabase secrets set DEFAULT_USER_ID=your-supabase-user-uuid
+supabase secrets set MCP_HOUSEHOLD_ACCESS_KEY=your-household-secret-key
+supabase secrets set SUPABASE_HOUSEHOLD_KEY=your-household-service-role-key
+
+# Apply the schema to your Supabase project
+supabase db push
+# or run schema.sql directly in the Supabase SQL editor
 ```
 
-> If you already set `DEFAULT_USER_ID` for a previous extension, you can skip this step — all extensions share the same user ID.
+### Configuration
 
-### 3. Deploy the Primary MCP Server
+| File | Purpose |
+|------|---------|
+| `deno.json` | Deno import map — pins npm package versions for Hono, MCP SDK, Supabase JS, Zod |
+| `.env.example` | Documents the three required env vars for local reference |
+| `schema.sql` | Creates `recipes`, `meal_plans`, and `shopping_lists` tables with RLS policies |
 
-Follow the [Deploy an Edge Function](../../primitives/deploy-edge-function/) guide using these values:
+### Database Tables
 
-| Setting | Value |
-|---------|-------|
-| Function name | `meal-planning-mcp` |
-| Download path | `extensions/meal-planning` |
+| Table | Purpose |
+|-------|---------|
+| `recipes` | Stores recipe records: name, cuisine, times, JSONB ingredients + instructions, tags, rating |
+| `meal_plans` | One row per meal slot per day per week; references `recipes` via `recipe_id` |
+| `shopping_lists` | One record per week; stores aggregated items as JSONB with `purchased` flag per item |
 
-### 4. Connect to Your AI
+All three tables have Row Level Security enabled. The primary owner can CRUD their own rows. Household members (JWT role `household_member`) can SELECT from all tables and UPDATE `shopping_lists`.
 
-Follow the [Remote MCP Connection](../../primitives/remote-mcp/) guide to connect this extension to Claude Desktop, ChatGPT, Claude Code, or any other MCP client.
+### Prerequisites
 
-| Setting | Value |
-|---------|-------|
-| Connector name | `Meal Planning` |
-| URL | Your **MCP Connection URL** from the credential tracker |
+- Supabase project with the core Open Brain `thoughts` table already set up
+- Supabase CLI installed and linked to your project (`supabase link`)
+- Primitives read/understood: `deploy-edge-function`, `remote-mcp`, `rls`, `shared-mcp`
+- Claude Desktop configured to connect via Settings → Connectors → Add custom connector
 
-### 5. Test the Primary Server
+## Common Tasks
 
-Try these prompts in Claude Desktop:
+### Add a Recipe
 
-```
-Add a recipe: Chicken Stir-Fry. Ingredients: 1 lb chicken breast, 2 cups broccoli, 1 cup bell peppers, 3 tbsp soy sauce, 2 tbsp oil. Instructions: 1) Cut chicken into cubes. 2) Heat oil in wok. 3) Cook chicken 5 min. 4) Add vegetables, cook 3 min. 5) Add soy sauce, toss well. Tags: quick, healthy, asian. Prep 10 min, cook 15 min, serves 4.
+Ask Claude (with the connector active):
 
-Plan meals for the week of March 17: Monday dinner is the chicken stir-fry, Tuesday dinner is pasta night (custom meal, no recipe), Wednesday dinner is tacos.
+> "Add a recipe for spaghetti bolognese — Italian, 15 min prep, 45 min cook, serves 4. Ingredients: 400g pasta, 500g beef mince, 1 can tomatoes. Instructions: boil pasta, brown meat, simmer sauce, combine."
 
-Generate a shopping list for the week of March 17.
-```
+Or call the tool directly in an MCP test client:
 
-## Setting Up the Shared Server
-
-The shared server gives household members limited access — they can view meal plans, browse recipes, and manage the shopping list without accessing your full Open Brain.
-
-### 1. Create a Household Member Role in Supabase
-
-The RLS policies check for `auth.jwt() ->> 'role' = 'household_member'`. You need to create a JWT with this claim:
-
-**Option A: Create a separate Supabase user for your spouse**
-1. Go to Supabase Dashboard → Authentication → Users
-2. Create a new user with your spouse's email
-3. In the SQL Editor, grant the household_member role:
-
-```sql
--- Create a custom claim for this user
-UPDATE auth.users
-SET raw_app_meta_data = jsonb_set(
-  COALESCE(raw_app_meta_data, '{}'),
-  '{role}',
-  '"household_member"'
-)
-WHERE email = 'spouse@example.com';
-```
-
-**Option B: Use a shared service account**
-1. Create a new Supabase API key in Settings → API with limited permissions
-2. This is simpler but less granular than per-user authentication
-
-For this guide, we'll use Option B (shared service account).
-
-### 2. Deploy the Shared Edge Function
-
-Follow the [Deploy an Edge Function](../../primitives/deploy-edge-function/) guide with these differences:
-
-| Setting | Value |
-|---------|-------|
-| Function name | `meal-planning-shared-mcp` |
-| Download path | `extensions/meal-planning` |
-| Server file | `shared-server.ts` (not `index.ts`) |
-| Access key secret name | `MCP_HOUSEHOLD_ACCESS_KEY` (not `MCP_ACCESS_KEY`) |
-
-You'll also need to set the household Supabase key:
-
-```bash
-supabase secrets set SUPABASE_HOUSEHOLD_KEY=household-scoped-api-key
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "params": {
+    "name": "add_recipe",
+    "arguments": {
+      "name": "Spaghetti Bolognese",
+      "cuisine": "Italian",
+      "prep_time_minutes": 15,
+      "cook_time_minutes": 45,
+      "servings": 4,
+      "ingredients": [
+        { "name": "pasta", "quantity": "400", "unit": "g" },
+        { "name": "beef mince", "quantity": "500", "unit": "g" },
+        { "name": "canned tomatoes", "quantity": "1", "unit": "can" }
+      ],
+      "instructions": ["Boil pasta", "Brown the meat", "Simmer sauce 30 min", "Combine and serve"]
+    }
+  },
+  "id": 1
+}
 ```
 
-### 3. Connect Your Household Member
+### Plan a Week of Meals
 
-Your spouse/partner follows the [Remote MCP Connection](../../primitives/remote-mcp/) guide on their device:
-
-| Setting | Value |
-|---------|-------|
-| Connector name | `Meal Planning (Shared)` |
-| URL | The shared server's MCP Connection URL |
-
-They can view meal plans and check off grocery items. They cannot create recipes, modify meal plans, or access other parts of your Open Brain.
-
-### 4. Test the Shared Server
-
-Your spouse can now use prompts like:
-
-```
-What's for dinner this week?
-Show me the shopping list for this week.
-Mark "chicken breast" as purchased.
-Search recipes tagged "quick".
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "params": {
+    "name": "create_meal_plan",
+    "arguments": {
+      "week_start": "2026-04-27",
+      "meals": [
+        { "day_of_week": "monday", "meal_type": "dinner", "recipe_id": "<uuid>", "servings": 4 },
+        { "day_of_week": "tuesday", "meal_type": "dinner", "custom_meal": "Takeout", "notes": "Pizza night" }
+      ]
+    }
+  },
+  "id": 2
+}
 ```
 
-## Cross-Extension Integration
+### Generate a Shopping List from the Week's Plan
 
-**With Family Calendar (Extension 3):**
-Your agent can check who's home this week via the `family_members` and `activities` tables to adjust serving sizes. Example prompt:
-
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "params": {
+    "name": "generate_shopping_list",
+    "arguments": { "week_start": "2026-04-27" }
+  },
+  "id": 3
+}
 ```
-Who's home for dinner this week? Adjust the meal plan servings accordingly.
-```
 
-**With Household Knowledge Base (Extension 1):**
-Cross-reference pantry inventory: "Do we have the ingredients for chicken stir-fry?" queries both the recipe's ingredients and your knowledge base entries about pantry stock.
+This aggregates ingredients from all recipe-linked meals into a single `shopping_lists` row. Calling it again on the same week updates the existing record.
 
-**Pattern reuse:**
-The RLS patterns you learn here apply directly to Extensions 5 (Professional CRM) and 6 (Job Hunt Pipeline). The shared MCP server pattern is reusable for any future extension where you want to give someone else partial access.
+### Connect the Shared Server for a Household Member
 
-## Expected Outcome
-
-Your agent can now:
-
-- Store and search your recipe collection
-- Plan weekly meals with a mix of recipes and custom entries
-- Auto-generate shopping lists by aggregating recipe ingredients
-- Let your spouse view plans and check off grocery items without full system access
-
-The shared server demonstrates a key Open Brain principle: your data, your rules. You control exactly what someone else can see and do.
+1. Deploy `shared-server.ts` as its own Edge Function (e.g., `meal-planning-shared`).
+2. Set `MCP_HOUSEHOLD_ACCESS_KEY` and `SUPABASE_HOUSEHOLD_KEY` as secrets on that function.
+3. Give the household member the function URL and the `MCP_HOUSEHOLD_ACCESS_KEY` value.
+4. They add it as a custom connector in their Claude Desktop.
 
 ## Troubleshooting
 
-For common issues (connection errors, 401s, deployment problems), see [Common Troubleshooting](../../primitives/troubleshooting/).
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| `401 Unauthorized` on every request | `MCP_ACCESS_KEY` secret not set, or key value mismatch | Run `supabase secrets set MCP_ACCESS_KEY=...` and redeploy |
+| `500 DEFAULT_USER_ID not configured` | `DEFAULT_USER_ID` secret missing | Run `supabase secrets set DEFAULT_USER_ID=<your-uuid>` and redeploy |
+| `relation "recipes" does not exist` | `schema.sql` has not been applied | Run `schema.sql` in the Supabase SQL editor or via `supabase db push` |
+| Shopping list not updating ingredients | `generate_shopping_list` finds no recipe-linked meals | Ensure `create_meal_plan` entries use `recipe_id`, not only `custom_meal` |
+| Household member gets empty results | RLS policy not matching JWT claims | Verify the household Supabase key grants the `household_member` JWT role claim |
+| Claude Desktop connector silently fails | Missing `Accept: text/event-stream` header | Already handled in `index.ts` via the header-patching workaround; confirm you are using the deployed version |
 
-**Extension-specific issues:**
+## Related
 
-**RLS policies blocking queries on the shared server**
-- Verify your user has the `household_member` role set in `raw_app_meta_data`
-- Check the RLS policies match the schema.sql
-- Test with service role key first to confirm it's not an RLS issue
-
-**JSONB ingredient search not working**
-- The `search_recipes` tool uses `.cs.` (contains) operator for JSONB — ingredient names must match exactly (case-insensitive)
-- For more flexible search, consider adding a GIN index on the ingredients JSONB column
-
-**Shopping list aggregation is wrong**
-- The current implementation does simple string concatenation for quantities (e.g., "1 cup + 2 cups")
-- For production use, you'd want smarter quantity aggregation
-
-**Shared server can see all data**
-- Double-check that RLS policies are enabled (`ALTER TABLE ... ENABLE ROW LEVEL SECURITY`)
-- Verify the `household_member` role is set correctly in the JWT claims
-- Test by trying to insert/delete from the shared server (should fail)
-
-## Next Steps
-
-**Extension 5: Professional CRM** — You'll apply the RLS skills you just learned to protect professional contact data. The shared server pattern isn't needed here (your work contacts are private), but the multi-entity relationship (contacts → interactions) is the same pattern you used in Extension 3 (family members → activities).
-
-**Key concepts in Extension 5:**
-- Contact management with interaction history
-- Relationship tracking and follow-up reminders
-- RLS for sensitive professional data
-- Integration with calendar (Extension 3) for scheduling follow-ups
-
-Continue to [Extension 5: Professional CRM](../professional-crm/)
-
-> **Tool surface area:** This extension introduced the concept of scoped servers — a primary server with full access and a shared server with limited tools. That same principle applies to how you organize all your MCP tools. With ~25 tools across 4 extensions now, consider running the [MCP Tool Audit & Optimization Guide](../../docs/05-tool-audit.md) to identify which servers to connect per workflow and whether any tools can be consolidated.
+- [CONTEXT.md](CONTEXT.md) — Architecture context for this extension
+- [../../primitives/deploy-edge-function/README.md](../../primitives/deploy-edge-function/README.md) — How to deploy Edge Functions
+- [../../primitives/remote-mcp/README.md](../../primitives/remote-mcp/README.md) — Remote MCP server pattern
+- [../../primitives/rls/README.md](../../primitives/rls/README.md) — Row Level Security pattern
+- [../../primitives/shared-mcp/README.md](../../primitives/shared-mcp/README.md) — Shared household MCP pattern
+- [../README.md](../README.md) — Extensions learning path overview

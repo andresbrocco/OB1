@@ -1,186 +1,156 @@
-# Extension 3: Family Calendar
+# Family Calendar
 
-## Why This Matters
+> Extension 3 of the Open Brain learning path: multi-person family scheduling via an MCP Edge Function, covering activities, important dates, and household roster management.
 
-Two kids, two parents, overlapping schedules. Soccer practice conflicts with the dentist appointment. Nobody bought the birthday present. The haircut hasn't been scheduled in months. The chaos isn't from lack of caring — it's from lack of a system that can reason across everyone's schedule at once. Your agent can cross-reference both parents' schedules against all kids' events and surface what's falling through the cracks.
+## Quick Reference
 
-## Learning Path: Extension 3 of 6
+### Environment Variables
 
-| Extension | Name | Status |
-|-----------|------|--------|
-| 1 | Household Knowledge Base | Complete |
-| 2 | Home Maintenance Tracker | Complete |
-| **3** | **Family Calendar** | **<-- You are here** |
-| 4 | Meal Planning | Not started |
-| 5 | Professional CRM | Not started |
-| 6 | Job Hunt Pipeline | Not started |
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `SUPABASE_URL` | Your Supabase project URL | Yes |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (set automatically on Edge Function deploy) | Yes |
+| `MCP_ACCESS_KEY` | Shared secret sent by Claude Desktop to authenticate MCP requests | Yes |
+| `DEFAULT_USER_ID` | UUID of the Supabase user whose data this function operates on | Yes |
 
-## What You'll Learn
+`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected automatically when you deploy a Supabase Edge Function. You must set `MCP_ACCESS_KEY` and `DEFAULT_USER_ID` manually via the Supabase dashboard or CLI.
 
-- Multi-entity data models (family members → activities relationship)
-- Time-based queries and date handling
-- Recurring events (weekly activities with day_of_week)
-- Nullable foreign keys (activities can belong to one person or the whole family)
-- Querying across date ranges
+### MCP Endpoint
 
-> **Note:** This extension doesn't use Row Level Security. RLS is introduced in Extension 4 (Meal Planning), where shared household access makes it necessary. Extensions 1-3 are single-user systems.
+The function exposes a single HTTP route that handles all MCP traffic.
 
-## What It Does
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/*` | MCP JSON-RPC endpoint (all tool calls) |
+| `GET` | `/*` | Health check — returns `{"status":"ok","service":"Family Calendar","version":"1.0.0"}` |
 
-A multi-person family scheduling system. Track activities, important dates, and family members so your agent can spot conflicts, surface upcoming events, and make sure nothing gets forgotten.
+Authentication: pass `MCP_ACCESS_KEY` either as the `key` query parameter or the `x-access-key` header.
 
-**Tables:**
-- `family_members` — People in your household
-- `activities` — Scheduled events and recurring activities (soccer every Tuesday, one-time dentist appointment)
-- `important_dates` — Birthdays, anniversaries, deadlines with optional yearly recurrence
+```bash
+# Health check
+curl https://<project-ref>.supabase.co/functions/v1/family-calendar
 
-**MCP Tools:**
-- `add_family_member` — Add a person to your household roster
-- `add_activity` — Schedule a one-time or recurring activity
-- `get_week_schedule` — See everyone's schedule for a given week
-- `search_activities` — Find activities by title, type, or family member
-- `add_important_date` — Track birthdays, anniversaries, deadlines
-- `get_upcoming_dates` — Surface dates in the next N days
+# Example: invoke add_family_member via MCP (key as query param)
+curl -X POST \
+  "https://<project-ref>.supabase.co/functions/v1/family-calendar?key=<MCP_ACCESS_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/call",
+    "params": {
+      "name": "add_family_member",
+      "arguments": {"name": "Alice", "relationship": "child"}
+    }
+  }'
+```
 
-## Prerequisites
+### MCP Tools
 
-- Working Open Brain setup
-- Extensions 1-2 recommended but not required
+| Tool | Description |
+|------|-------------|
+| `add_family_member` | Add a person to the household roster |
+| `add_activity` | Schedule a one-time or recurring activity |
+| `get_week_schedule` | Retrieve all activities for a given week, grouped by day |
+| `search_activities` | Search activities by title, type, or family member |
+| `add_important_date` | Track a birthday, anniversary, or deadline |
+| `get_upcoming_dates` | List important dates in the next N days (default 30) |
+
+### Commands
+
+```bash
+# Deploy the Edge Function
+supabase functions deploy family-calendar
+
+# Set required secrets (run once per project)
+supabase secrets set MCP_ACCESS_KEY=<your-secret>
+supabase secrets set DEFAULT_USER_ID=<your-user-uuid>
+
+# Serve locally for development
+supabase functions serve family-calendar --env-file .env.example
+
+# Apply the schema to your database
+supabase db push
+# or run schema.sql directly in the Supabase SQL editor
+```
+
+### Configuration
+
+| File | Purpose |
+|------|---------|
+| `.env.example` | Template for required environment variables |
+| `deno.json` | Deno import map — pins all npm dependencies |
+| `schema.sql` | Database table definitions and indexes |
+
+### Database Tables
+
+| Table | Purpose |
+|-------|---------|
+| `family_members` | Household roster — names, relationships, birth dates |
+| `activities` | One-time and recurring scheduled events |
+| `important_dates` | Birthdays, anniversaries, and deadlines with optional yearly recurrence |
+
+All tables are scoped by `user_id`. `activities` and `important_dates` optionally reference a `family_members` row; a `null` foreign key means the event applies to the whole family.
+
+### Prerequisites
+
+- Open Brain core setup complete (Supabase project with `thoughts` table)
 - Supabase CLI installed and linked to your project
+- [`deploy-edge-function`](../../primitives/deploy-edge-function/) primitive reviewed
+- [`remote-mcp`](../../primitives/remote-mcp/) primitive reviewed
+- Claude Desktop with a custom connector configured
 
-## Credential Tracker
+## Common Tasks
 
-You'll reference these values during setup. Copy this block into a text editor and fill it in as you go.
+### Add the connector to Claude Desktop
 
-> **Already have your Supabase credentials from the [Setup Guide](../../docs/01-getting-started.md)?** You just need the same Project URL and Secret key.
+After deploying, add the Edge Function URL as a custom connector in Claude Desktop:
 
-```text
-FAMILY CALENDAR -- CREDENTIAL TRACKER
---------------------------------------
+1. Open Claude Desktop → Settings → Connectors → Add custom connector
+2. Enter: `https://<project-ref>.supabase.co/functions/v1/family-calendar?key=<MCP_ACCESS_KEY>`
+3. Save. The six MCP tools will appear in your tool list.
 
-SUPABASE (from your Open Brain setup)
-  Project URL:           ____________
-  Secret key:            ____________
-  Project ref:           ____________
+### Register your household
 
-GENERATED DURING SETUP
-  Default User ID:       ____________
-  MCP Access Key:        ____________  (same key for all extensions)
-  MCP Server URL:        ____________
-  MCP Connection URL:    ____________
-
---------------------------------------
-```
-
-## Steps
-
-### 1. Create the Database Schema
-
-Run the SQL in `schema.sql` against your Supabase database:
-
-```bash
-# Option A: Using Supabase SQL Editor (recommended)
-# 1. Open https://supabase.com/dashboard/project/YOUR_PROJECT_ID/sql/new
-# 2. Paste the contents of schema.sql
-# 3. Click "Run"
-
-# Option B: Using psql (if available)
-psql $DATABASE_URL -f extensions/family-calendar/schema.sql
-```
-
-### 2. Generate Your User ID
-
-The extension needs a user ID to scope your data. Generate a UUID and save it in your credential tracker:
-
-```bash
-# macOS / Linux
-uuidgen | tr '[:upper:]' '[:lower:]'
-
-# Or use any UUID generator — the value just needs to be unique to you
-```
-
-Set it as an environment variable for your Edge Function:
-
-```bash
-supabase secrets set DEFAULT_USER_ID=your-generated-uuid-here
-```
-
-> If you already set `DEFAULT_USER_ID` for a previous extension, you can skip this step — all extensions share the same user ID.
-
-### 3. Deploy the MCP Server
-
-Follow the [Deploy an Edge Function](../../primitives/deploy-edge-function/) guide using these values:
-
-| Setting | Value |
-|---------|-------|
-| Function name | `family-calendar-mcp` |
-| Download path | `extensions/family-calendar` |
-
-### 4. Connect to Your AI
-
-Follow the [Remote MCP Connection](../../primitives/remote-mcp/) guide to connect this extension to Claude Desktop, ChatGPT, Claude Code, or any other MCP client.
-
-| Setting | Value |
-|---------|-------|
-| Connector name | `Family Calendar` |
-| URL | Your **MCP Connection URL** from the credential tracker |
-
-### 5. Test It
-
-Try these prompts:
+Ask Claude to call `add_family_member` for each person in your household before scheduling activities. Example prompt:
 
 ```
-Add my family members: me (Jonathan), spouse (Sarah), and two kids (Emma age 8, Noah age 5).
-
-Add a recurring activity: Emma has soccer practice every Tuesday from 5-6pm at Lincoln Park, starting March 18.
-
-Show me our schedule for the week of March 17.
-
-Add an important date: Emma's birthday is May 15, remind me 7 days before.
-
-What important dates are coming up in the next 30 days?
+Add my family: myself (self), partner Alex (spouse), and daughter Maya (child, born 2018-04-10).
 ```
 
-## Cross-Extension Integration
+### Schedule a recurring activity
 
-The family calendar sets up the `family_members` table that Meal Planning (Extension 4) depends on — knowing who's home this week determines how many meals to plan.
+```
+Add Maya's soccer practice: every Tuesday and Thursday, 4:00–5:30 PM, at Riverside Fields,
+starting 2026-09-02.
+```
 
-The multi-entity pattern (family_member → activities) is the same pattern you'll use for contacts → interactions in the Professional CRM (Extension 5).
+### Get this week's schedule
 
-When you build the Household Knowledge Base (Extension 1), you can cross-reference it here: "Who was Emma's pediatrician again?" can query Extension 1's knowledge base, then "Schedule Emma's checkup" uses this calendar.
+```
+What does our family schedule look like for the week of 2026-04-27?
+```
 
-## Expected Outcome
+### Track upcoming birthdays
 
-Your agent can now:
-
-1. Track everyone's schedule in one place
-2. Surface upcoming events and important dates
-3. Spot scheduling conflicts (if two activities overlap)
-4. Answer questions like "What does Emma have this week?" or "When is Noah's birthday?"
-5. Remind you about important dates before they arrive
+```
+What important dates do we have in the next 60 days?
+```
 
 ## Troubleshooting
 
-For common issues (connection errors, 401s, deployment problems), see [Common Troubleshooting](../../primitives/troubleshooting/).
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| `{"error":"Unauthorized"}` on every request | `MCP_ACCESS_KEY` mismatch or missing `key` param / `x-access-key` header | Confirm the secret value with `supabase secrets list` and re-check the connector URL |
+| `DEFAULT_USER_ID not configured` (500) | `DEFAULT_USER_ID` secret not set | Run `supabase secrets set DEFAULT_USER_ID=<uuid>` and redeploy |
+| Tool calls return empty arrays | Schema not applied | Run `schema.sql` against your Supabase project in the SQL editor |
+| Claude Desktop shows no tools | Connector URL not saved or function not deployed | Re-deploy with `supabase functions deploy family-calendar` and verify the health check endpoint returns `{"status":"ok"}` |
+| `activities` query returns stale data | `end_date` filter logic | Recurring events with `end_date = null` are treated as ongoing; pass an explicit `end_date` to stop them |
 
-**Extension-specific issues:**
+## Related
 
-**Activities not showing up in get_week_schedule**
-- Check that `start_date` and `end_date` are set correctly
-- For recurring activities, make sure `day_of_week` is lowercase ('monday', not 'Monday')
-- The week_start date should be a Monday in YYYY-MM-DD format
-
-## Next Steps
-
-**Extension 4: Meal Planning** — This is where things get interesting. You'll combine what you've learned about scheduling with Row Level Security and a shared MCP server. Your spouse will be able to view meal plans and check off grocery items without accessing your full Open Brain.
-
-**Key concepts in Extension 4:**
-- Row Level Security (first introduction to multi-user access)
-- Shared MCP server (separate server with limited, scoped access)
-- JSONB for complex data (ingredients, instructions)
-- Auto-generating derivative data (shopping lists from meal plans)
-- Cross-extension queries (checking who's home this week from the family calendar)
-
-Continue to [Extension 4: Meal Planning](../meal-planning/)
-
-> **Context check:** With 3 extensions connected, you're now exposing ~15 MCP tools to your AI. This is still manageable, but Extension 4 adds 10 more. Now is a good time to read the [MCP Tool Audit & Optimization Guide](../../docs/05-tool-audit.md) — it covers when to scope your servers, how to audit your tool surface, and patterns for keeping your AI sharp as you add complexity.
+- [CONTEXT.md](CONTEXT.md) — Architecture context for this extension
+- [../../primitives/deploy-edge-function/](../../primitives/deploy-edge-function/) — How to deploy Supabase Edge Functions
+- [../../primitives/remote-mcp/](../../primitives/remote-mcp/) — Remote MCP pattern used here
+- [../household-knowledge/](../household-knowledge/) — Extension 2: household knowledge base (prerequisite)
+- [../home-maintenance/](../home-maintenance/) — Extension 4: home maintenance tracking

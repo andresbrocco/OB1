@@ -1,108 +1,124 @@
 # X/Twitter Import
 
-<div align="center">
+> Parse and import a Twitter/X data export archive — tweets, DMs, and Grok chats — into Open Brain as embedded thoughts.
 
-![Community Contribution](https://img.shields.io/badge/OB1_COMMUNITY-Approved_Contribution-2ea44f?style=for-the-badge&logo=github)
+## Quick Reference
 
-**Created by [@alanshurafa](https://github.com/alanshurafa)**
+### Environment Variables
 
-*Reviewed and merged by the Open Brain maintainer team — thank you for building the future of AI memory!*
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `SUPABASE_URL` | Your Supabase project URL | — | Yes |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key for DB writes | — | Yes |
+| `OPENROUTER_API_KEY` | OpenRouter API key used for embedding generation | — | Yes |
+| `EMBEDDING_MODEL` | Embedding model passed to OpenRouter | `openai/text-embedding-3-small` | No |
 
-</div>
+Copy `.env.example` to `.env` and fill in values before running.
 
-> Import your X (Twitter) data export — tweets, DMs, and Grok chats — into Open Brain.
+### Commands
 
-## What It Does
+```bash
+# Preview what would be imported without writing to the database
+npm run dry-run -- /path/to/twitter-export
 
-Parses X (formerly Twitter) data exports and imports three types of content as searchable thoughts:
-- **Tweets** — your original tweets (retweets filtered out), batched by date
-- **DMs** — direct message conversations (minimum 3 messages)
-- **Grok chats** — conversations with X's Grok AI assistant
+# Run the full import
+npm run import -- /path/to/twitter-export
 
-## Prerequisites
+# Import only specific content types
+node import-x-twitter.mjs /path/to/twitter-export --types tweets,dms
 
-- Working Open Brain setup ([guide](../../docs/01-getting-started.md))
-- **X/Twitter data export** — request from X Settings → Your Account → Download an archive
-- **Node.js 18+** installed
-- **OpenRouter API key** for embedding generation
-
-## Credential Tracker
-
-```text
-X/TWITTER IMPORT -- CREDENTIAL TRACKER
---------------------------------------
-
-FROM YOUR OPEN BRAIN SETUP
-  Supabase URL:          ____________
-  Service Role Key:      ____________
-
-FROM OPENROUTER
-  API Key:               ____________
-
---------------------------------------
+# Skip the first N items and import up to a limit
+node import-x-twitter.mjs /path/to/twitter-export --skip 100 --limit 50
 ```
 
-## Steps
+### CLI Flags
 
-1. **Request your X data export:**
-   - Go to X Settings → Your Account → Download an archive of your data
-   - Wait for the email notification (can take 24-48 hours)
-   - Download and extract the archive
-   - You should see a `data/` folder containing `tweets.js`, `direct-messages.js`, etc.
+| Flag | Description |
+|------|-------------|
+| `--dry-run` | Print what would be imported without writing |
+| `--types tweets,dms,grok` | Comma-separated list of content types to import (default: all three) |
+| `--skip N` | Skip the first N resolved items |
+| `--limit N` | Cap the number of items processed |
 
-2. **Copy this recipe folder** and install dependencies:
+### Expected Archive Structure
 
-   ```bash
-   cd x-twitter-import
-   npm install
-   ```
+```
+twitter-export/
+└── data/
+    ├── tweets.js          # or tweet.js
+    ├── direct-messages.js # or direct-message.js
+    └── grok-conversations.js
+```
 
-3. **Create `.env`** with your credentials (see `.env.example`):
+Files can also be placed in the archive root if no `data/` subdirectory is present.
 
-   ```env
-   SUPABASE_URL=https://your-project.supabase.co
-   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-   OPENROUTER_API_KEY=sk-or-v1-your-key
-   ```
+### Database Tables
 
-4. **Preview what will be imported** (dry run):
+| Table | Purpose |
+|-------|---------|
+| `thoughts` | Destination for all imported records; written via the `upsert_thought` RPC |
 
-   ```bash
-   node import-x-twitter.mjs /path/to/twitter-export --dry-run
-   ```
+### Prerequisites
 
-5. **Import specific types only** (optional):
+- Node.js 18+ (ESM support required)
+- A Twitter/X data export downloaded from your account settings
+- `npm install` run in this directory
+- `.env` file populated from `.env.example`
 
-   ```bash
-   node import-x-twitter.mjs /path/to/twitter-export --types tweets
-   node import-x-twitter.mjs /path/to/twitter-export --types dms,grok
-   ```
+## Common Tasks
 
-6. **Run the full import:**
+### Run a dry run first
 
-   ```bash
-   node import-x-twitter.mjs /path/to/twitter-export
-   ```
+Always preview before a live import to confirm item counts and titles look correct.
 
-## Expected Outcome
+```bash
+cp .env.example .env
+# edit .env with real credentials
+npm install
+npm run dry-run -- /path/to/twitter-export
+```
 
-After running the import:
-- Tweets are grouped into batches of 20, each becoming one thought
-- DM conversations become individual thoughts
-- Grok chats are grouped by chat ID
-- All tagged with `source_type: x_twitter_import`
-- Retweets are automatically excluded
-- Short DM conversations (<3 messages) are filtered out
+### Import tweets only
 
-**Scale reference:** Tested with 1,000+ tweets and DMs imported successfully.
+```bash
+node import-x-twitter.mjs /path/to/twitter-export --types tweets
+```
+
+### Import DMs and Grok chats, skip tweets
+
+```bash
+node import-x-twitter.mjs /path/to/twitter-export --types dms,grok
+```
+
+### Resume a partial import
+
+Use `--skip` to resume from where a previous run left off.
+
+```bash
+# If a previous run processed 200 items, resume from item 201
+node import-x-twitter.mjs /path/to/twitter-export --skip 200
+```
+
+### Override the embedding model
+
+Set `EMBEDDING_MODEL` in `.env` to any model available on OpenRouter.
+
+```bash
+EMBEDDING_MODEL=openai/text-embedding-3-large node import-x-twitter.mjs /path/to/twitter-export
+```
 
 ## Troubleshooting
 
-**Issue: "file not found" for tweets.js**
-X data exports use different filenames across versions. The script tries both `tweets.js` and `tweet.js`. Check your `data/` folder for the actual filename.
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| `Missing required env vars` on startup | `.env` not loaded or missing keys | Confirm `.env` exists and all three required vars are set |
+| `Embedding failed: 401` | Invalid or expired `OPENROUTER_API_KEY` | Regenerate the key in your OpenRouter dashboard |
+| `upsert_thought failed` | `upsert_thought` RPC not present in your database | Apply the base Open Brain schema; see `docs/01-getting-started.md` |
+| `Total items: 0` after running | Archive path wrong or files not found | Confirm the path contains a `data/` folder with `.js` files |
+| Retweets not imported | Intentional — retweets (`RT @`) are filtered out | Only original tweets are stored |
+| Tweets shorter than 30 characters skipped | Intentional minimum-length filter | Short tweets are excluded to avoid low-signal noise |
 
-**Issue: Twitter JS file won't parse**
-Twitter wraps JSON in a `window.YTD.tweets.part0 = [...]` prefix. The script strips this automatically. If parsing fails, the file may be corrupted — re-download from X.
+## Related
 
-**Issue: All tweets showing as "skipped"**
-Tweets under 30 characters and retweets (starting with "RT @") are filtered out. If all your tweets are short, lower the threshold in the `processTweets()` function.
+- [CONTEXT.md](CONTEXT.md) — Architecture context for this recipe
+- [../recipes/](../) — Other Open Brain recipes
