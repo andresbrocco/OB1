@@ -1,0 +1,27 @@
+{
+  "status": "created",
+  "directory": "recipes/adaptive-capture-classification",
+  "context_file": "recipes/adaptive-capture-classification/CONTEXT.md",
+  "reasoning": "Contains a multi-stage pipeline with non-obvious design decisions: two-phase processCapture/completeCapture split to interpose user confirmation UI, per-type adaptive threshold learning loop driven by user feedback, dual-LLM consistency check with confidence penalty, and hintType override that bypasses gating entirely. Domain-specific concepts (confidence gating, threshold nudging, consistency penalty) would not be obvious from filenames alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "LLM-based capture classification with confidence gating and per-type adaptive threshold learning",
+    "key_concepts": [
+      "Confidence gating",
+      "Per-type thresholds",
+      "Consistency check",
+      "Two-phase pipeline",
+      "hintType override"
+    ],
+    "exports": ["processCapture", "completeCapture"],
+    "depends_on": ["@supabase/supabase-js", "OpenRouter (or any OpenAI-compatible gateway)"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY"],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": true
+    }
+  }
+}

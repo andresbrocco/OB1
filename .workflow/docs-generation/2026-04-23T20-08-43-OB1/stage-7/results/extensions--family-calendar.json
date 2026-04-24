@@ -1,0 +1,26 @@
+{
+  "status": "created",
+  "directory": "extensions/family-calendar",
+  "readme_file": "extensions/family-calendar/README.md",
+  "reasoning": "MCP Edge Function with 6 domain tools, 4 environment variables (including a manually-set access key and user ID), 3 database tables, deployment commands, and a health check endpoint — clear operational surface warranting a README.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "api_endpoints",
+    "mcp_tools",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 2,
+    "env_var_count": 4,
+    "command_count": 5,
+    "has_health_check": true,
+    "mcp_tool_count": 6,
+    "database_table_count": 3
+  }
+}

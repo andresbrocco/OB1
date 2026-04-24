@@ -1,0 +1,28 @@
+{
+  "status": "created",
+  "directory": "recipes/repo-learning-coach/src",
+  "context_file": "recipes/repo-learning-coach/src/CONTEXT.md",
+  "reasoning": "The directory contains domain-specific concepts (BrainBridge gating, UnderstandingState taxonomy, LearningArtifactKind), a non-obvious two-panel architecture (Learning Studio vs. Research Vault), a bootstrap pattern that pre-loads all navigation state in one call, and subtle behavioral details like startTransition usage and conditional artifact validation. These are not obvious from file or function names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "React frontend for the Repo Learning Coach: lesson navigation, quiz submission, understanding-tagged notes, and selective artifact capture into Open Brain thoughts",
+    "key_concepts": [
+      "BrainBridge",
+      "UnderstandingState",
+      "LearningArtifactKind",
+      "Bootstrap",
+      "LessonStatus",
+      "RelatedThoughts"
+    ],
+    "exports": ["App (default)"],
+    "depends_on": ["src/lib/api.ts", "src/lib/types.ts", "react", "react-markdown"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "skills/auto-capture",
+  "reasoning": "This directory contains only two files: a self-documenting SKILL.md behavioral protocol and a metadata.json. The purpose is immediately obvious from the file names and frontmatter. There is no code logic, domain-specific terminology, or non-obvious responsibility boundaries — it is a plain-language prompt pack with trigger conditions and a numbered process. No CONTEXT.md is warranted.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Behavioral skill protocol for automatically capturing ACT NOW items and a session summary to Open Brain at session close",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

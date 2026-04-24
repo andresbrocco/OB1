@@ -1,0 +1,25 @@
+{
+  "status": "created",
+  "directory": "recipes/vercel-neon-telegram",
+  "readme_file": "recipes/vercel-neon-telegram/README.md",
+  "reasoning": "Full operational surface: 4 API endpoints including a health check, 6 env vars, 6 npm scripts (including migrate, generate-key, set-telegram-webhook), 2 SQL migrations, MCP tools, and Telegram bot commands. High-value reference content for deployers.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "api_endpoints",
+    "commands",
+    "configuration",
+    "database_tables",
+    "mcp_tools",
+    "telegram_bot_commands",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 4,
+    "env_var_count": 6,
+    "command_count": 7,
+    "has_health_check": true
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "status": "created",
+  "directory": "integrations/entity-extraction-worker",
+  "readme_file": "integrations/entity-extraction-worker/README.md",
+  "reasoning": "Edge Function with 9 environment variables, HTTP endpoint with query-param API surface (limit, dry_run), 5 database tables (entity_extraction_queue, entities, thought_entities, edges, thoughts), and deployment commands. Clear operational surface warrants a README.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "api_endpoints",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 1,
+    "env_var_count": 9,
+    "command_count": 4,
+    "has_health_check": false
+  }
+}

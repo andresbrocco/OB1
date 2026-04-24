@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "skills/competitive-analysis",
+  "reasoning": "The directory contains only SKILL.md and metadata.json. SKILL.md is a self-documenting workflow specification that already explains purpose, audience, process, evidence rules, and output format in detail. No code, no domain abstractions, no non-obvious design decisions — the skill pack is a plain prompt/workflow guide with self-evident structure.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Standalone AI skill pack for competitor profiling, pricing comparisons, market mapping, SWOT generation, and operator-ready strategic recommendations",
+    "key_concepts": ["operator-first framing", "evidence labeling (fact vs. inference)", "decision-support brief"],
+    "exports": ["SKILL.md prompt workflow"],
+    "depends_on": ["open_brain (optional search and capture)"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["skills/competitive-analysis/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

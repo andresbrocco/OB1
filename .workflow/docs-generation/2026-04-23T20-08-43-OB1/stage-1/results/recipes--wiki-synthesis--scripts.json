@@ -1,0 +1,41 @@
+{
+  "status": "created",
+  "directory": "recipes/wiki-synthesis/scripts",
+  "context_file": "recipes/wiki-synthesis/scripts/CONTEXT.md",
+  "reasoning": "Both scripts contain non-obvious domain logic: a named synthesizer plugin catalogue, life-date bucketing across multiple metadata keys, a compound eligibility gate with deduplication-aware word counting, a resume-safe JSONL state machine with partial-edge retry semantics, prompt injection defenses using XML delimiters, sensitivity-tier inheritance, and a conditional RPC/fallback insert pattern. None of these are inferable from file or function names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Executable scripts that synthesize wiki articles from atomic thoughts — one general topic-scoped synthesizer with a plugin architecture, one Gmail-thread-specific backfill with resume-safe state tracking and graph edge writing",
+    "key_concepts": [
+      "Synthesizer catalogue (plugin map)",
+      "Life-date bucketing",
+      "Thread eligibility gate",
+      "Resume-safe JSONL state log",
+      "derived_from edges",
+      "Prompt injection defense"
+    ],
+    "exports": [],
+    "depends_on": [
+      "Supabase PostgREST (thoughts, thought_edges, upsert_thought RPC)",
+      "OpenAI-compatible Chat Completions endpoint",
+      "recipes/email-history-import (upstream Gmail data)"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": [
+        "OPEN_BRAIN_URL",
+        "OPEN_BRAIN_SERVICE_KEY",
+        "LLM_BASE_URL",
+        "LLM_API_KEY",
+        "LLM_MODEL",
+        "SUBJECT_NAME",
+        "SOURCE_TYPE_FILTER",
+        "WIKI_OUTPUT_DIR"
+      ],
+      "config_files": [".env.local (loaded at runtime from cwd)"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "status": "created",
+  "directory": "schemas/enhanced-thoughts",
+  "context_file": "schemas/enhanced-thoughts/CONTEXT.md",
+  "reasoning": "Contains non-obvious domain logic: a two-phase GIN+ILIKE full-text search strategy, a composite rank formula blending text relevance with importance and quality_score signals, a sensitivity_tier access control pattern used across all three RPCs, and a thought-connection algorithm based purely on metadata array overlap rather than vector similarity. None of these design decisions are self-evident from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Extends the thoughts table with structured classification columns and installs utility RPCs for full-text search, aggregate statistics, and thought-connection discovery",
+    "key_concepts": [
+      "sensitivity_tier",
+      "importance/quality_score ranking signals",
+      "two-phase GIN+ILIKE full-text search",
+      "metadata-overlap thought connections",
+      "idempotent schema migration"
+    ],
+    "exports": [
+      "search_thoughts_text",
+      "brain_stats_aggregate",
+      "get_thought_connections"
+    ],
+    "depends_on": [
+      "thoughts table (core Open Brain schema)"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": true
+    }
+  }
+}

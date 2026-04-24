@@ -1,0 +1,26 @@
+{
+  "status": "created",
+  "directory": "extensions/professional-crm",
+  "readme_file": "extensions/professional-crm/README.md",
+  "reasoning": "Supabase Edge Function MCP server with 8 domain tools, 4 env vars (including DEFAULT_USER_ID found in source), 3 database tables with triggers and RLS, deployment commands, and a health-check endpoint.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "api_endpoints",
+    "mcp_tools",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 2,
+    "env_var_count": 4,
+    "command_count": 3,
+    "has_health_check": true,
+    "mcp_tool_count": 8,
+    "database_table_count": 3
+  }
+}

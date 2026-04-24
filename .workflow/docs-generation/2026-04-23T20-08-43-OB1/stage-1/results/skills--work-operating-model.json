@@ -1,0 +1,31 @@
+{
+  "status": "created",
+  "directory": "skills/work-operating-model",
+  "context_file": "skills/work-operating-model/CONTEXT.md",
+  "reasoning": "Contains a multi-phase structured interview protocol with non-obvious behavioral constraints (source_confidence semantics, mandatory contradiction pass, lean memory discipline, tentative-hint rule), a per-layer canonical entry contract with distinct sub-shapes, and a dependency on paired recipe MCP tools that must be discovered at runtime. Purpose and rules are not self-evident from directory or file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Structured AI skill for interviewing users about how their work actually runs, saving approved results into Open Brain via paired recipe MCP tools, and generating agent-ready operating model exports",
+    "key_concepts": [
+      "Five fixed interview layers",
+      "source_confidence (confirmed vs synthesized)",
+      "Canonical entry contract",
+      "Lean memory discipline",
+      "Contradiction pass",
+      "Export artifacts (USER.md, SOUL.md, HEARTBEAT.md)"
+    ],
+    "exports": ["SKILL.md (prompt pack loaded by AI client)"],
+    "depends_on": [
+      "Work Operating Model recipe MCP tools",
+      "Base Open Brain search_thoughts and capture_thought tools"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["skills/work-operating-model/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

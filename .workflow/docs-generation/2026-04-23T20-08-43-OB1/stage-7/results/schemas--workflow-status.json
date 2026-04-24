@@ -1,0 +1,20 @@
+{
+  "status": "created",
+  "directory": "schemas/workflow-status",
+  "readme_file": "schemas/workflow-status/README.md",
+  "reasoning": "SQL migration schema with database table modifications (2 columns added to thoughts table), a partial index, and a backfill operation — all with direct operational instructions required for apply and usage.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "database_tables",
+    "configuration",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 0,
+    "env_var_count": 0,
+    "command_count": 2,
+    "has_health_check": false
+  }
+}

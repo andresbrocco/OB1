@@ -1,0 +1,25 @@
+{
+  "status": "created",
+  "directory": "recipes/local-ollama-embeddings",
+  "context_file": "recipes/local-ollama-embeddings/CONTEXT.md",
+  "reasoning": "The module contains non-obvious gotchas (silent 8000-char input truncation, embedding dimension mismatch between Ollama models and the default vector(1536) schema, a --batch-size flag that is parsed but unused) and domain-specific workflow context (local vs cloud embedding tradeoffs, RLS bypass via service role key) that warrant documentation beyond what file names convey.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "CLI tool for ingesting thoughts into Open Brain using locally-run Ollama embedding models instead of cloud APIs",
+    "key_concepts": [
+      "Local embedding via Ollama",
+      "Embedding dimension mismatch",
+      "Multi-format input (stdin, positional args, .txt, .jsonl)"
+    ],
+    "exports": ["embed-local.py"],
+    "depends_on": ["Ollama /api/embed endpoint", "Supabase REST API (thoughts table)"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OLLAMA_BASE_URL"],
+      "config_files": [".env.example"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "status": "created",
+  "directory": "integrations",
+  "context_file": "integrations/CONTEXT.md",
+  "reasoning": "The directory contains multiple sub-modules with non-obvious responsibilities: an async queue-draining worker with optimistic locking, per-cold-start cost caps, and prompt-injection defenses; a Kubernetes variant that replaces the Supabase client with a raw PostgreSQL pool and runs as a persistent HTTP server rather than a serverless function; message-capture bots (Slack, Discord); and a shared config module with domain-specific classification constants, PII regex patterns, and a 0-6 importance scale. None of this is obvious from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "External connection points that bring data into Open Brain or replace its infrastructure layer, including message-capture bots, async LLM queue workers, and a Kubernetes self-hosted deployment variant",
+    "key_concepts": [
+      "Capture integration",
+      "entity_extraction_queue",
+      "Async worker with cost cap",
+      "Symmetric relation canonical ordering",
+      "Kubernetes self-hosted MCP server",
+      "Shared config with sensitivity tiers"
+    ],
+    "exports": [
+      "entity-extraction-worker (Edge Function)",
+      "kubernetes-deployment (Hono HTTP server)",
+      "slack-capture",
+      "discord-capture"
+    ],
+    "depends_on": [
+      "schemas/knowledge-graph",
+      "schemas/enhanced-thoughts"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "MCP_ACCESS_KEY",
+        "OPENROUTER_API_KEY",
+        "OPENAI_API_KEY",
+        "ANTHROPIC_API_KEY",
+        "ENTITY_EXTRACTION_MAX_CALLS",
+        "FETCH_TIMEOUT_MS",
+        "DB_HOST",
+        "DB_PORT",
+        "DB_NAME",
+        "DB_USER",
+        "DB_PASSWORD",
+        "EMBEDDING_API_BASE",
+        "EMBEDDING_API_KEY",
+        "EMBEDDING_MODEL",
+        "CHAT_API_BASE",
+        "CHAT_API_KEY",
+        "CHAT_MODEL",
+        "PORT"
+      ],
+      "config_files": [
+        "integrations/entity-extraction-worker/_shared/config.ts",
+        "integrations/entity-extraction-worker/deno.json",
+        "integrations/kubernetes-deployment/deno.json",
+        "integrations/kubernetes-deployment/k8s/secrets.yml.example"
+      ],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

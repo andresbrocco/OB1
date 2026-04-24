@@ -1,0 +1,27 @@
+{
+  "status": "created",
+  "directory": "recipes",
+  "context_file": "recipes/CONTEXT.md",
+  "reasoning": "The recipes directory has non-obvious responsibility boundaries — the distinction between recipes, skills, extensions, and primitives is a domain-specific taxonomy not inferrable from directory names alone. The _template folder, the skill coupling pattern (local vs. canonical), and the metadata.json contract all represent non-obvious details worth documenting. The variety of sub-module types (importers, dedup utilities, skill packs, graph generators) and their shared structural contract justify a CONTEXT.md.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Standalone community capability builds that extend Open Brain without belonging to the curated learning path",
+    "key_concepts": [
+      "Recipe vs. Skill distinction",
+      "Recipe vs. Extension distinction",
+      "metadata.json contribution contract",
+      "_template skeleton",
+      "requires_skills delegation pattern"
+    ],
+    "exports": [],
+    "depends_on": ["extensions", "primitives", "skills", "schemas", "integrations"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["recipes/_template/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "status": "skipped",
+  "directory": "recipes/vercel-neon-telegram/src/lib/__tests__",
+  "reasoning": "Standard Vitest test directory. Three test files cover auth.ts, rate-limit.ts, and types.ts with straightforward unit tests. Purpose is entirely self-evident from the directory name and file names. No domain concepts, design decisions, or non-obvious logic exist here beyond what is already expressed in the tests themselves.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Unit tests for the lib utilities (auth, rate-limit, types)",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": [
+      "recipes/vercel-neon-telegram/src/lib/auth",
+      "recipes/vercel-neon-telegram/src/lib/rate-limit",
+      "recipes/vercel-neon-telegram/src/lib/types"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": ["BRAIN_ACCESS_KEY"],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "status": "created",
+  "directory": "recipes/typed-edge-classifier",
+  "context_file": "recipes/typed-edge-classifier/CONTEXT.md",
+  "reasoning": "Complex LLM pipeline recipe with a two-stage hybrid filter+classify architecture, a typed relation vocabulary with specific semantic boundaries, a hard cost-cap enforcement mechanism using proactive parallelism clamping, idempotent upsert via RPC, directional edge semantics, and several non-obvious gotchas around reclassification eligibility, best-effort mirroring, and unknown-model pricing refusal.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Two-stage Haiku/Opus hybrid classifier that populates thought_edges with typed semantic reasoning relations between thought pairs",
+    "key_concepts": [
+      "Hybrid filter+classify pipeline",
+      "Typed relation vocabulary (supports, contradicts, evolved_into, supersedes, depends_on, related_to)",
+      "Edge direction (A_to_B, B_to_A, symmetric)",
+      "Hard cost cap with proactive parallelism clamping",
+      "Idempotent upsert via thought_edges_upsert RPC",
+      "Candidate sampling via thought_entities shared-entity overlap"
+    ],
+    "exports": ["classify-edges.mjs (CLI script)"],
+    "depends_on": [
+      "schemas/typed-reasoning-edges",
+      "schemas/entity-extraction",
+      "Anthropic API (Haiku + Opus)",
+      "Supabase REST API"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": ["OPEN_BRAIN_URL", "OPEN_BRAIN_SERVICE_KEY", "ANTHROPIC_API_KEY"],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "status": "created",
+  "directory": "extensions/household-knowledge",
+  "context_file": "extensions/household-knowledge/CONTEXT.md",
+  "reasoning": "This extension contains several non-obvious implementation details worth documenting: the Accept-header patch workaround for Claude Desktop, the DEFAULT_USER_ID injection pattern for single-user auth, the freeform JSONB details field, and the asymmetry between household_items and household_vendors regarding the updated_at trigger. It also serves as learning-order 1 in the extensions path, making its role in the broader ecosystem worth stating explicitly.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Beginner-level Open Brain extension deploying a remote MCP server for home-management structured storage: household items and vendor contacts",
+    "key_concepts": [
+      "details JSONB freeform metadata field",
+      "DEFAULT_USER_ID environment injection",
+      "Accept-header patch for Claude Desktop compatibility",
+      "MCP_ACCESS_KEY pre-shared key authentication"
+    ],
+    "exports": [
+      "add_household_item",
+      "search_household_items",
+      "get_item_details",
+      "add_vendor",
+      "list_vendors"
+    ],
+    "depends_on": [
+      "primitives/deploy-edge-function",
+      "primitives/remote-mcp"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "MCP_ACCESS_KEY",
+        "DEFAULT_USER_ID"
+      ],
+      "config_files": [
+        "extensions/household-knowledge/.env.example",
+        "extensions/household-knowledge/deno.json"
+      ],
+      "has_health_endpoints": true,
+      "has_database_models": true
+    }
+  }
+}

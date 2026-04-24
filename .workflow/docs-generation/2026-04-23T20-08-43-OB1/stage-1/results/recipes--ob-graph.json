@@ -1,0 +1,51 @@
+{
+  "status": "created",
+  "directory": "recipes/ob-graph",
+  "context_file": "recipes/ob-graph/CONTEXT.md",
+  "reasoning": "Contains non-obvious architectural decisions: optional thought_id linkage pattern that overlays the core thoughts table without modifying it, a Claude Desktop Accept header workaround, DEFAULT_USER_ID-based auth separate from RLS auth.uid(), ON DELETE CASCADE reliance in delete_node, property merge semantics in update_node, and the behavioral distinction between traverse_graph (outgoing-only recursive CTE) and find_shortest_path (bidirectional BFS recursive CTE).",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Knowledge graph MCP server that adds nodes-and-edges relationship modeling over PostgreSQL on top of Open Brain",
+    "key_concepts": [
+      "graph_nodes",
+      "graph_edges",
+      "thought_id linkage",
+      "traverse_graph (outgoing recursive CTE)",
+      "find_shortest_path (bidirectional BFS recursive CTE)",
+      "edge weight",
+      "relationship_type"
+    ],
+    "exports": [
+      "create_node",
+      "create_edge",
+      "search_nodes",
+      "get_neighbors",
+      "traverse_graph",
+      "find_path",
+      "update_node",
+      "delete_node",
+      "delete_edge",
+      "list_edge_types"
+    ],
+    "depends_on": [
+      "Supabase (graph_nodes, graph_edges tables)",
+      "Open Brain thoughts table (optional linkage)"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "MCP_ACCESS_KEY",
+        "DEFAULT_USER_ID"
+      ],
+      "config_files": [
+        "recipes/ob-graph/deno.json",
+        "recipes/ob-graph/.env.example"
+      ],
+      "has_health_endpoints": true,
+      "has_database_models": true
+    }
+  }
+}

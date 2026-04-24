@@ -1,0 +1,56 @@
+{
+  "status": "created",
+  "directory": "dashboards/open-brain-dashboard-next/components",
+  "context_file": "dashboards/open-brain-dashboard-next/components/CONTEXT.md",
+  "reasoning": "Multiple non-obvious design decisions: optimistic update rollback pattern using useRef snapshots, client-side auto-archive logic that does not persist to the database, two-phase dry-run/execute ingestion flow in AddToBrain, KANBAN_TYPES eligibility boundary that nulls status on type change, React portal usage for modal stacking context, ThoughtEditor's server action prop pattern, and the passphrase-gated RestrictedToggle that self-hides when unconfigured.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "UI component library for browsing, editing, ingesting, and organizing thoughts in the Open Brain dashboard",
+    "key_concepts": [
+      "KANBAN_TYPES eligibility boundary",
+      "Ingestion modes (auto/single/extract)",
+      "Dry-run two-phase ingestion",
+      "Reflection types (decision_trace, lesson_trace, retrospective, hypothesis)",
+      "Restricted content passphrase gating"
+    ],
+    "exports": [
+      "AddToBrain",
+      "ConnectionsPanel",
+      "DeleteModal",
+      "FormattedDate",
+      "KanbanBoard",
+      "KanbanCard",
+      "KanbanCardModal",
+      "KanbanColumn",
+      "KanbanSummary",
+      "PriorityDot",
+      "ReflectionComposer",
+      "RestrictedToggle",
+      "SearchBar",
+      "Sidebar",
+      "SidebarShell",
+      "StatsWidget",
+      "ThoughtCard",
+      "TypeBadge",
+      "ThoughtDeleteButton",
+      "ThoughtEditor",
+      "ThoughtsFilter"
+    ],
+    "depends_on": [
+      "@/lib/types",
+      "/api/kanban",
+      "/api/ingest",
+      "/api/thoughts",
+      "/api/restricted",
+      "@dnd-kit/core"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

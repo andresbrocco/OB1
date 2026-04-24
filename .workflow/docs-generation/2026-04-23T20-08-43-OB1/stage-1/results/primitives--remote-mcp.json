@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "primitives/remote-mcp",
+  "reasoning": "Directory contains only metadata.json (README.md has been deleted). No source code, logic, or domain concepts to document. The metadata itself clearly describes the purpose: a beginner-level guide for connecting remote MCP servers (Supabase Edge Functions) to AI clients. No non-obvious complexity exists.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Conceptual guide for connecting remote MCP servers to AI clients",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["primitives/remote-mcp/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

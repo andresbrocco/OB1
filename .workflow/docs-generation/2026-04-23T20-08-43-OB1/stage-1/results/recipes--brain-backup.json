@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "recipes/brain-backup",
+  "reasoning": "Single-file script with a self-documenting header comment that fully describes usage, environment variables, and output format. No domain-specific terminology, no complex business logic, and no non-obvious responsibility boundaries. The pagination approach via PostgREST is standard and the table list is self-evident from the Open Brain schema.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Export all Open Brain Supabase tables to dated local JSON files for offline backup",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": ["Supabase PostgREST API"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

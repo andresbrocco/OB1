@@ -1,0 +1,37 @@
+{
+  "status": "created",
+  "directory": "recipes/life-engine",
+  "context_file": "recipes/life-engine/CONTEXT.md",
+  "reasoning": "Complex orchestration recipe with multi-step loop logic, time-windowed behavior, domain-specific concepts (anchor date, briefing deduplication, self-improvement protocol, dynamic cron rescheduling), non-obvious design decisions (user_id as chat_id TEXT, RLS without permissive policies, single-instance state table), and explicit prompt injection guards. Multiple interacting subsystems across 3 files warrant documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Time-aware, self-improving personal assistant loop that delivers proactive briefings via Telegram or Discord based on calendar events and Open Brain knowledge",
+    "key_concepts": [
+      "Anchor date/time",
+      "Briefing deduplication",
+      "Dynamic loop rescheduling",
+      "Self-improvement protocol",
+      "External before internal enrichment",
+      "user_id as channel chat_id"
+    ],
+    "exports": [
+      "life-engine-skill.md",
+      "schema.sql"
+    ],
+    "depends_on": [
+      "supabase-mcp",
+      "google-calendar-mcp",
+      "telegram-channel-plugin",
+      "discord-channel-plugin",
+      "open-brain"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": true
+    }
+  }
+}

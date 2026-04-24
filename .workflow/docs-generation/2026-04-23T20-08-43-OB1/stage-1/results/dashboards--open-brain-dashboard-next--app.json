@@ -1,0 +1,28 @@
+{
+  "status": "skipped",
+  "directory": "dashboards/open-brain-dashboard-next/app",
+  "reasoning": "Standard Next.js App Router directory containing only the four conventional files: layout.tsx, page.tsx, globals.css, and favicon.ico. The layout wraps content in a SidebarShell and establishes global fonts and CSS variables. The page.tsx is a straightforward server component dashboard page. Any Next.js developer would immediately recognize the structure and purpose without additional documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Next.js App Router root — global layout, root dashboard page, and design-token CSS",
+    "key_concepts": [],
+    "exports": ["RootLayout", "DashboardPage"],
+    "depends_on": [
+      "dashboards/open-brain-dashboard-next/components/SidebarShell",
+      "dashboards/open-brain-dashboard-next/components/StatsWidget",
+      "dashboards/open-brain-dashboard-next/components/KanbanSummary",
+      "dashboards/open-brain-dashboard-next/components/ThoughtCard",
+      "dashboards/open-brain-dashboard-next/components/AddToBrain",
+      "dashboards/open-brain-dashboard-next/lib/api",
+      "dashboards/open-brain-dashboard-next/lib/auth"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["dashboards/open-brain-dashboard-next/app/globals.css"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

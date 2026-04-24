@@ -1,0 +1,24 @@
+{
+  "status": "created",
+  "directory": "recipes/repo-learning-coach",
+  "readme_file": "recipes/repo-learning-coach/README.md",
+  "reasoning": "Express API with 7 endpoints, 6 environment variables (5 required), 5 npm commands, 10 Supabase tables, and a configurable curriculum sync workflow — strong operational surface warrants a full README.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "ports",
+    "api_endpoints",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 7,
+    "env_var_count": 6,
+    "command_count": 5,
+    "has_health_check": false
+  }
+}

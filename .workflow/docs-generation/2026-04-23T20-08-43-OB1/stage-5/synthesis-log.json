@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-04-23T22:30:00-0300",
+  "target_path": "/Users/asbrocco/Documents/REPOS/OB1",
+  "output_file": "CONTEXT.md",
+  "inputs_read": {
+    "context_files": 79,
+    "root_docs": 6
+  },
+  "summary": {
+    "project_type": "community-monorepo / persistent-ai-memory-system",
+    "tech_stack": ["Deno", "TypeScript", "Supabase", "PostgreSQL", "pgvector", "MCP", "Next.js", "SvelteKit", "OpenRouter", "Anthropic Claude", "GitHub Actions"],
+    "entry_points": 5,
+    "documented_modules": 79,
+    "key_modules_highlighted": 8
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "status": "created",
+  "directory": ".github/workflows",
+  "context_file": ".github/workflows/CONTEXT.md",
+  "reasoning": "The directory contains a non-obvious two-stage CI/CD pipeline with domain-specific design decisions: a deterministic gate workflow that passes structured artifacts to a follow-up workflow, a contributor trust and quota policy governing when Claude auto-review fires, a manual dispatch path for secondary LLM review, idempotent PR comment management, and intentional security boundaries between pull_request and pull_request_target triggers. The non-consecutive rule numbering and security-blocked label behavior are additional gotchas that benefit from documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "GitHub Actions automation for the full OB1 contribution lifecycle: PR gating, AI-assisted quality review, issue triage, contributor onboarding, labeling, Discord announcements, markdown linting, and release drafting",
+    "key_concepts": [
+      "Two-stage review pipeline",
+      "Artifact handoff between workflows",
+      "Contributor trust and quota policy",
+      "Idempotent PR comments",
+      "pull_request vs pull_request_target security split"
+    ],
+    "exports": [],
+    "depends_on": [
+      ".github/metadata.schema.json",
+      ".github/.markdownlint.jsonc",
+      "CONTRIBUTING.md",
+      "CLAUDE.md"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": ["ANTHROPIC_API_KEY", "DISCORD_WEBHOOK_URL", "GITHUB_TOKEN"],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

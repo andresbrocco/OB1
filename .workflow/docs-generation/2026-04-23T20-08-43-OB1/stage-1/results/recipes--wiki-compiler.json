@@ -1,0 +1,40 @@
+{
+  "status": "created",
+  "directory": "recipes/wiki-compiler",
+  "context_file": "recipes/wiki-compiler/CONTEXT.md",
+  "reasoning": "Single-file orchestrator with non-trivial pipeline sequencing logic: four delegated recipe phases, per-phase skip/require toggles, best-effort error handling, remote HTTP trigger for entity extraction, manifest artifact generation, and layered env-var merging. The concepts of 'compiled wiki', 'phase toggles', and 'best-effort mode' are domain-specific and not obvious from filenames alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Multi-phase pipeline orchestrator that sequences entity extraction, typed-edge classification, entity wiki generation, and topic wiki synthesis into a single compiled wiki run",
+    "key_concepts": [
+      "Compiled wiki",
+      "Phase toggles",
+      "Best-effort mode",
+      "Compile manifest",
+      "Topic"
+    ],
+    "exports": [],
+    "depends_on": [
+      "recipes/typed-edge-classifier",
+      "recipes/entity-wiki",
+      "recipes/wiki-synthesis"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": [
+        "OPEN_BRAIN_URL",
+        "OPEN_BRAIN_SERVICE_KEY",
+        "ENTITY_EXTRACTION_WORKER_URL",
+        "ENTITY_EXTRACTION_MCP_ACCESS_KEY",
+        "MCP_ACCESS_KEY",
+        "LLM_API_KEY",
+        "LLM_MODEL",
+        "WIKI_OUTPUT_DIR"
+      ],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

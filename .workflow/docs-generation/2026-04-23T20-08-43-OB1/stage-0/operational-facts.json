@@ -1,0 +1,765 @@
+{
+  "status": "success",
+  "target_path": "/Users/asbrocco/Documents/REPOS/OB1",
+  "operational_facts": {
+    "ports": [
+      {
+        "port": 8000,
+        "service": "open-brain-mcp (MCP server / Deno Edge Function)",
+        "source": "integrations/kubernetes-deployment/Dockerfile + k8s/openbrain.yml",
+        "description": "Main MCP server HTTP port. Used by Supabase Edge Function runtime and Kubernetes deployment. Deno.serve() binds to this port."
+      },
+      {
+        "port": 5432,
+        "service": "postgres (pgvector)",
+        "source": "integrations/kubernetes-deployment/k8s/openbrain.yml",
+        "description": "PostgreSQL with pgvector extension. Used in self-hosted (Kubernetes) deployments only; standard Supabase cloud deployments do not expose this port."
+      },
+      {
+        "port": 8787,
+        "service": "repo-learning-coach (Express dev server)",
+        "source": "recipes/repo-learning-coach/server/index.ts + .env.example",
+        "description": "Express API server for the Repo Learning Coach recipe. Default PORT env var value. Frontend served by Vite on a separate port during development."
+      }
+    ],
+    "environment_variables": [
+      {
+        "name": "SUPABASE_URL",
+        "description": "Supabase project URL (e.g. https://YOUR_PROJECT_REF.supabase.co). Auto-injected into Edge Functions; must be set manually for standalone scripts.",
+        "default": null,
+        "required": true,
+        "source": "server/index.ts, extensions/*/.env.example, recipes/*/.env.example"
+      },
+      {
+        "name": "SUPABASE_SERVICE_ROLE_KEY",
+        "description": "Supabase service role secret key. Grants full database access. Auto-injected into Edge Functions; set manually for scripts.",
+        "default": null,
+        "required": true,
+        "source": "server/index.ts, extensions/*/.env.example, recipes/*/.env.example"
+      },
+      {
+        "name": "MCP_ACCESS_KEY",
+        "description": "Shared secret used to authenticate MCP clients. Passed via x-brain-key header or ?key= query parameter.",
+        "default": null,
+        "required": true,
+        "source": "server/index.ts, extensions/*/.env.example, recipes/ob-graph/.env.example"
+      },
+      {
+        "name": "OPENROUTER_API_KEY",
+        "description": "OpenRouter API key for LLM inference and text-embedding-3-small embeddings.",
+        "default": null,
+        "required": true,
+        "source": "server/index.ts, recipes/*/.env.example"
+      },
+      {
+        "name": "NEXT_PUBLIC_API_URL",
+        "description": "URL of the Open Brain REST API (Supabase Edge Function). Required by open-brain-dashboard-next.",
+        "default": null,
+        "required": true,
+        "source": "dashboards/open-brain-dashboard-next/.env.example"
+      },
+      {
+        "name": "SESSION_SECRET",
+        "description": "32+ character secret for iron-session cookie encryption in open-brain-dashboard-next.",
+        "default": null,
+        "required": true,
+        "source": "dashboards/open-brain-dashboard-next/.env.example"
+      },
+      {
+        "name": "RESTRICTED_PASSPHRASE_HASH",
+        "description": "SHA-256 hash of passphrase to unlock restricted/sensitive content. Requires sensitivity-tiers primitive.",
+        "default": null,
+        "required": false,
+        "source": "dashboards/open-brain-dashboard-next/.env.example"
+      },
+      {
+        "name": "MCP_URL",
+        "description": "Full URL of the MCP server Edge Function. Used by open-brain-dashboard (SvelteKit) as a server-side secret.",
+        "default": null,
+        "required": true,
+        "source": "dashboards/open-brain-dashboard/.env.example"
+      },
+      {
+        "name": "MCP_KEY",
+        "description": "Access key matching MCP_ACCESS_KEY. Server-side secret in open-brain-dashboard (SvelteKit).",
+        "default": null,
+        "required": true,
+        "source": "dashboards/open-brain-dashboard/.env.example"
+      },
+      {
+        "name": "PUBLIC_SUPABASE_URL",
+        "description": "Supabase project URL exposed to browser bundle in open-brain-dashboard (SvelteKit).",
+        "default": null,
+        "required": true,
+        "source": "dashboards/open-brain-dashboard/.env.example"
+      },
+      {
+        "name": "PUBLIC_SUPABASE_ANON_KEY",
+        "description": "Supabase anonymous (public) key for browser-side Supabase Auth in open-brain-dashboard (SvelteKit).",
+        "default": null,
+        "required": true,
+        "source": "dashboards/open-brain-dashboard/.env.example"
+      },
+      {
+        "name": "DATABASE_URL",
+        "description": "PostgreSQL connection string for the Vercel+Neon+Telegram recipe variant.",
+        "default": null,
+        "required": true,
+        "source": "recipes/vercel-neon-telegram/.env.example"
+      },
+      {
+        "name": "OPENAI_API_KEY",
+        "description": "OpenAI API key used by the Vercel+Neon+Telegram recipe for embeddings and AI SDK.",
+        "default": null,
+        "required": true,
+        "source": "recipes/vercel-neon-telegram/.env.example"
+      },
+      {
+        "name": "BRAIN_ACCESS_KEY",
+        "description": "Access key for API and MCP auth in the Vercel+Neon+Telegram recipe. Generate with: npm run generate-key.",
+        "default": null,
+        "required": true,
+        "source": "recipes/vercel-neon-telegram/.env.example"
+      },
+      {
+        "name": "TELEGRAM_BOT_TOKEN",
+        "description": "Telegram bot token from @BotFather. Optional — only required if using the Telegram capture feature.",
+        "default": null,
+        "required": false,
+        "source": "recipes/vercel-neon-telegram/.env.example"
+      },
+      {
+        "name": "TELEGRAM_WEBHOOK_SECRET",
+        "description": "Secret for validating Telegram webhook payloads.",
+        "default": null,
+        "required": false,
+        "source": "recipes/vercel-neon-telegram/.env.example"
+      },
+      {
+        "name": "APP_URL",
+        "description": "Deployed URL of the Vercel+Neon+Telegram app (set after first Vercel deploy).",
+        "default": null,
+        "required": true,
+        "source": "recipes/vercel-neon-telegram/.env.example"
+      },
+      {
+        "name": "GOOGLE_TAKEOUT_PATH",
+        "description": "Filesystem path to extracted Google Takeout folder containing 'My Activity' subdirectories.",
+        "default": "./Takeout/My Activity",
+        "required": true,
+        "source": "recipes/google-activity-import/.env.example"
+      },
+      {
+        "name": "EMBEDDING_MODEL",
+        "description": "Override the embedding model. Used by several import recipes.",
+        "default": "openai/text-embedding-3-small",
+        "required": false,
+        "source": "recipes/grok-export-import/.env.example, recipes/x-twitter-import/.env.example, recipes/instagram-import/.env.example"
+      },
+      {
+        "name": "OPENROUTER_EMBEDDING_MODEL",
+        "description": "Embedding model override for repo-learning-coach.",
+        "default": "openai/text-embedding-3-small",
+        "required": false,
+        "source": "recipes/repo-learning-coach/.env.example"
+      },
+      {
+        "name": "PORT",
+        "description": "HTTP port for the repo-learning-coach Express server.",
+        "default": "8787",
+        "required": false,
+        "source": "recipes/repo-learning-coach/.env.example"
+      },
+      {
+        "name": "OLLAMA_BASE_URL",
+        "description": "Base URL for local Ollama instance. Used by local-ollama-embeddings recipe.",
+        "default": "http://localhost:11434",
+        "required": false,
+        "source": "recipes/local-ollama-embeddings/.env.example"
+      },
+      {
+        "name": "DEFAULT_USER_ID",
+        "description": "UUID of the user for multi-tenant RLS contexts. Required by ob-graph recipe.",
+        "default": null,
+        "required": false,
+        "source": "recipes/ob-graph/.env.example"
+      },
+      {
+        "name": "INGEST_URL",
+        "description": "Custom ingest endpoint URL (alternative to direct Supabase writes). Used with --ingest-endpoint flag.",
+        "default": null,
+        "required": false,
+        "source": "recipes/chatgpt-conversation-import/.env.example"
+      },
+      {
+        "name": "INGEST_KEY",
+        "description": "Access key for custom ingest endpoint.",
+        "default": null,
+        "required": false,
+        "source": "recipes/chatgpt-conversation-import/.env.example"
+      },
+      {
+        "name": "ANTHROPIC_API_KEY",
+        "description": "Anthropic API key for entity extraction worker when using Anthropic as classifier backend.",
+        "default": null,
+        "required": false,
+        "source": "integrations/entity-extraction-worker/"
+      },
+      {
+        "name": "EMBEDDING_API_BASE",
+        "description": "Base URL for embedding API provider in Kubernetes / self-hosted deployments.",
+        "default": "https://openrouter.ai/api/v1",
+        "required": false,
+        "source": "integrations/kubernetes-deployment/k8s/openbrain.yml"
+      },
+      {
+        "name": "EMBEDDING_API_KEY",
+        "description": "API key for the embedding provider in self-hosted deployments.",
+        "default": null,
+        "required": true,
+        "source": "integrations/kubernetes-deployment/k8s/secrets.yml.example"
+      },
+      {
+        "name": "CHAT_API_BASE",
+        "description": "Base URL for chat completions API in self-hosted deployments.",
+        "default": "https://openrouter.ai/api/v1",
+        "required": false,
+        "source": "integrations/kubernetes-deployment/k8s/openbrain.yml"
+      },
+      {
+        "name": "CHAT_API_KEY",
+        "description": "API key for the chat completions provider in self-hosted deployments.",
+        "default": null,
+        "required": true,
+        "source": "integrations/kubernetes-deployment/k8s/secrets.yml.example"
+      },
+      {
+        "name": "CHAT_MODEL",
+        "description": "Chat/completion model name in self-hosted deployments.",
+        "default": "openai/gpt-4o-mini",
+        "required": false,
+        "source": "integrations/kubernetes-deployment/k8s/openbrain.yml"
+      },
+      {
+        "name": "MCP_HOUSEHOLD_ACCESS_KEY",
+        "description": "Separate access key for the Household Knowledge extension when running alongside other extensions.",
+        "default": null,
+        "required": false,
+        "source": "extensions/household-knowledge/"
+      },
+      {
+        "name": "SUPABASE_HOUSEHOLD_KEY",
+        "description": "Separate Supabase key for the Household Knowledge extension.",
+        "default": null,
+        "required": false,
+        "source": "extensions/household-knowledge/"
+      }
+    ],
+    "commands": {
+      "dev": [
+        {
+          "command": "npm run dev",
+          "description": "Start Next.js development server for open-brain-dashboard-next",
+          "source": "dashboards/open-brain-dashboard-next/package.json"
+        },
+        {
+          "command": "npm run dev",
+          "description": "Start SvelteKit development server (Vite) for open-brain-dashboard",
+          "source": "dashboards/open-brain-dashboard/package.json"
+        },
+        {
+          "command": "npm run dev",
+          "description": "Start repo-learning-coach (concurrent Express + Vite dev servers)",
+          "source": "recipes/repo-learning-coach/package.json"
+        },
+        {
+          "command": "npm run dev",
+          "description": "Start Next.js development server for vercel-neon-telegram",
+          "source": "recipes/vercel-neon-telegram/package.json"
+        },
+        {
+          "command": "deno run --allow-net --allow-env --allow-read index.ts",
+          "description": "Run the MCP server locally with Deno",
+          "source": "integrations/kubernetes-deployment/Dockerfile CMD"
+        }
+      ],
+      "build": [
+        {
+          "command": "npm run build",
+          "description": "Build open-brain-dashboard-next for production (Next.js)",
+          "source": "dashboards/open-brain-dashboard-next/package.json"
+        },
+        {
+          "command": "npm run build",
+          "description": "Build open-brain-dashboard for production (SvelteKit + Vite)",
+          "source": "dashboards/open-brain-dashboard/package.json"
+        },
+        {
+          "command": "npm run build",
+          "description": "Build repo-learning-coach (TypeScript compile + Vite bundle)",
+          "source": "recipes/repo-learning-coach/package.json"
+        },
+        {
+          "command": "npm run build",
+          "description": "Build vercel-neon-telegram for production (Next.js)",
+          "source": "recipes/vercel-neon-telegram/package.json"
+        },
+        {
+          "command": "docker build -t openbrain-mcp-server .",
+          "description": "Build the MCP server Docker image from integrations/kubernetes-deployment/",
+          "source": "integrations/kubernetes-deployment/Dockerfile"
+        }
+      ],
+      "test": [
+        {
+          "command": "npm run test",
+          "description": "Run vitest test suite for vercel-neon-telegram",
+          "source": "recipes/vercel-neon-telegram/package.json"
+        }
+      ],
+      "db": [
+        {
+          "command": "npm run migrate",
+          "description": "Run database migrations for vercel-neon-telegram (Neon Postgres)",
+          "source": "recipes/vercel-neon-telegram/package.json"
+        },
+        {
+          "command": "supabase secrets set MCP_ACCESS_KEY=<key>",
+          "description": "Set the MCP access key as a Supabase Edge Function secret",
+          "source": "docs/01-getting-started.md"
+        },
+        {
+          "command": "supabase secrets set OPENROUTER_API_KEY=<key>",
+          "description": "Set the OpenRouter API key as a Supabase Edge Function secret",
+          "source": "docs/01-getting-started.md"
+        }
+      ],
+      "deploy": [
+        {
+          "command": "supabase functions deploy open-brain-mcp --no-verify-jwt",
+          "description": "Deploy the MCP server as a Supabase Edge Function",
+          "source": "docs/01-getting-started.md"
+        },
+        {
+          "command": "kubectl apply -f k8s/secrets.yml -f k8s/openbrain.yml",
+          "description": "Deploy Open Brain to a Kubernetes cluster (self-hosted path)",
+          "source": "integrations/kubernetes-deployment/k8s/openbrain.yml"
+        }
+      ],
+      "import": [
+        {
+          "command": "npm run import",
+          "description": "Run the ChatGPT conversation import script",
+          "source": "recipes/chatgpt-conversation-import/ (Python)"
+        },
+        {
+          "command": "npm run import",
+          "description": "Run the Google Activity import script",
+          "source": "recipes/google-activity-import/package.json"
+        },
+        {
+          "command": "npm run import",
+          "description": "Run the Grok export import script",
+          "source": "recipes/grok-export-import/package.json"
+        },
+        {
+          "command": "npm run import",
+          "description": "Run the Instagram import script",
+          "source": "recipes/instagram-import/package.json"
+        },
+        {
+          "command": "npm run import",
+          "description": "Run the Blogger/Journals import script",
+          "source": "recipes/journals-blogger-import/package.json"
+        },
+        {
+          "command": "npm run import",
+          "description": "Run the X/Twitter import script",
+          "source": "recipes/x-twitter-import/package.json"
+        }
+      ],
+      "utility": [
+        {
+          "command": "npm run backfill",
+          "description": "Backfill content fingerprints on existing thoughts",
+          "source": "recipes/fingerprint-dedup-backfill/package.json"
+        },
+        {
+          "command": "npm run cleanup",
+          "description": "Delete duplicate thoughts identified by fingerprint",
+          "source": "recipes/fingerprint-dedup-backfill/package.json"
+        },
+        {
+          "command": "npm run report",
+          "description": "Report-only mode: list duplicate thoughts without deleting",
+          "source": "recipes/fingerprint-dedup-backfill/package.json"
+        },
+        {
+          "command": "npm run generate-key",
+          "description": "Generate a random access key for vercel-neon-telegram",
+          "source": "recipes/vercel-neon-telegram/package.json"
+        },
+        {
+          "command": "npm run set-telegram-webhook",
+          "description": "Register the Telegram webhook URL with BotFather API",
+          "source": "recipes/vercel-neon-telegram/package.json"
+        },
+        {
+          "command": "npm run sync",
+          "description": "Sync curriculum content into the repo-learning-coach database",
+          "source": "recipes/repo-learning-coach/package.json"
+        },
+        {
+          "command": "npm run check",
+          "description": "Type-check open-brain-dashboard (SvelteKit) with svelte-check",
+          "source": "dashboards/open-brain-dashboard/package.json"
+        },
+        {
+          "command": "npm run lint",
+          "description": "Run ESLint on repo-learning-coach",
+          "source": "recipes/repo-learning-coach/package.json"
+        }
+      ]
+    },
+    "docker_services": [
+      {
+        "name": "mcp-server",
+        "image": "openbrain-mcp-server:latest (Deno 2.3.3 base)",
+        "ports": ["8000:8000"],
+        "depends_on": ["db"],
+        "environment": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "MCP_ACCESS_KEY", "OPENROUTER_API_KEY"],
+        "health_check": "tcpSocket port 8000 (Kubernetes readinessProbe)",
+        "deployment": "Kubernetes StatefulSet (integrations/kubernetes-deployment) or Supabase Edge Functions (primary path)"
+      },
+      {
+        "name": "db",
+        "image": "ankane/pgvector:v0.5.1",
+        "ports": ["5432"],
+        "volumes": ["/var/openbrain/db:/var/lib/postgresql/data"],
+        "environment": ["POSTGRES_USER=postgres", "POSTGRES_PASSWORD (from secret)", "POSTGRES_DB=openbrain"],
+        "health_check": "tcpSocket port 5432 (Kubernetes readinessProbe)",
+        "deployment": "Kubernetes StatefulSet only — standard path uses Supabase-managed Postgres"
+      }
+    ],
+    "health_endpoints": [
+      {
+        "path": "/health",
+        "method": "GET",
+        "source": "recipes/vercel-neon-telegram/src/app/api/health/route.ts",
+        "description": "Returns {status: 'ok', timestamp: ISO string}. Next.js API route in the Vercel+Neon+Telegram recipe.",
+        "checks": []
+      },
+      {
+        "path": "/health",
+        "method": "GET",
+        "source": "recipes/work-operating-model-activation/index.ts:830",
+        "description": "Returns {status: 'ok', service: 'Work Operating Model Activation MCP', version: '1.0.0'}. Hono GET handler on the Edge Function.",
+        "checks": []
+      },
+      {
+        "path": "GET *",
+        "method": "GET",
+        "source": "extensions/*/index.ts (all 6 extensions)",
+        "description": "All extension Edge Functions return a JSON status object on any GET request: {status: 'ok', service: '<name>', version: '1.0.0'}. Acts as a liveness probe.",
+        "checks": []
+      },
+      {
+        "path": "GET *",
+        "method": "GET",
+        "source": "recipes/ob-graph/index.ts:535",
+        "description": "OB-Graph MCP returns {status: 'ok', service: 'OB-Graph MCP', version: '1.0.0'} on any GET.",
+        "checks": []
+      }
+    ],
+    "api_routes": {
+      "base_path": "/functions/v1/open-brain-mcp",
+      "routes": [
+        {
+          "method": "OPTIONS",
+          "path": "*",
+          "handler": "server/index.ts (Hono CORS preflight)",
+          "description": "CORS preflight handler for browser-based MCP clients"
+        },
+        {
+          "method": "POST/GET/DELETE",
+          "path": "*",
+          "handler": "server/index.ts (MCP StreamableHTTP transport)",
+          "description": "MCP protocol endpoint — all MCP tool calls (search_thoughts, list_thoughts, thought_stats, capture_thought) route through here. Auth via x-brain-key header or ?key= param."
+        }
+      ],
+      "mcp_tools": [
+        {
+          "tool": "search_thoughts",
+          "description": "Semantic vector search over the thoughts table using pgvector",
+          "inputs": ["query (string)", "limit (number, default 10)", "threshold (number, default 0.5)"]
+        },
+        {
+          "tool": "list_thoughts",
+          "description": "List recent thoughts with optional filters",
+          "inputs": ["limit", "type", "topic", "person", "days"]
+        },
+        {
+          "tool": "thought_stats",
+          "description": "Aggregate statistics: total count, types breakdown, top topics, people",
+          "inputs": []
+        },
+        {
+          "tool": "capture_thought",
+          "description": "Save a new thought — auto-generates embedding and extracts metadata via OpenRouter",
+          "inputs": ["content (string)"]
+        }
+      ],
+      "vercel_neon_telegram_routes": [
+        {"method": "GET", "path": "/api/health", "source": "recipes/vercel-neon-telegram/src/app/api/health/route.ts"},
+        {"method": "POST", "path": "/api/capture", "source": "recipes/vercel-neon-telegram/src/app/api/capture/route.ts"},
+        {"method": "POST/GET", "path": "/api/mcp", "source": "recipes/vercel-neon-telegram/src/app/api/mcp/route.ts"},
+        {"method": "POST", "path": "/api/telegram", "source": "recipes/vercel-neon-telegram/src/app/api/telegram/route.ts"}
+      ],
+      "repo_learning_coach_routes": [
+        {"method": "GET", "path": "/api/bootstrap", "source": "recipes/repo-learning-coach/server/index.ts"},
+        {"method": "GET", "path": "/api/lessons/:slug", "source": "recipes/repo-learning-coach/server/index.ts"},
+        {"method": "POST", "path": "/api/lessons/:slug/progress", "source": "recipes/repo-learning-coach/server/index.ts"},
+        {"method": "POST", "path": "/api/lessons/:slug/comments", "source": "recipes/repo-learning-coach/server/index.ts"},
+        {"method": "POST", "path": "/api/lessons/:slug/capture", "source": "recipes/repo-learning-coach/server/index.ts"},
+        {"method": "POST", "path": "/api/quizzes/:quizId/submit", "source": "recipes/repo-learning-coach/server/index.ts"},
+        {"method": "GET", "path": "/api/research/:slug", "source": "recipes/repo-learning-coach/server/index.ts"}
+      ],
+      "dashboard_next_api_routes": [
+        {"method": "GET/POST", "path": "/api/audit", "source": "dashboards/open-brain-dashboard-next/app/api/audit/route.ts"},
+        {"method": "DELETE", "path": "/api/audit/delete", "source": "dashboards/open-brain-dashboard-next/app/api/audit/delete/route.ts"},
+        {"method": "GET", "path": "/api/duplicates", "source": "dashboards/open-brain-dashboard-next/app/api/duplicates/route.ts"},
+        {"method": "POST", "path": "/api/duplicates/resolve", "source": "dashboards/open-brain-dashboard-next/app/api/duplicates/resolve/route.ts"},
+        {"method": "GET", "path": "/api/ingest", "source": "dashboards/open-brain-dashboard-next/app/api/ingest/route.ts"},
+        {"method": "GET", "path": "/api/ingest/[id]", "source": "dashboards/open-brain-dashboard-next/app/api/ingest/[id]/route.ts"},
+        {"method": "POST", "path": "/api/ingest/[id]/execute", "source": "dashboards/open-brain-dashboard-next/app/api/ingest/[id]/execute/route.ts"},
+        {"method": "GET/POST/DELETE", "path": "/api/kanban", "source": "dashboards/open-brain-dashboard-next/app/api/kanban/route.ts"},
+        {"method": "DELETE", "path": "/api/kanban/delete", "source": "dashboards/open-brain-dashboard-next/app/api/kanban/delete/route.ts"},
+        {"method": "POST", "path": "/api/kanban/update", "source": "dashboards/open-brain-dashboard-next/app/api/kanban/update/route.ts"},
+        {"method": "POST", "path": "/api/logout", "source": "dashboards/open-brain-dashboard-next/app/api/logout/route.ts"},
+        {"method": "POST", "path": "/api/restricted", "source": "dashboards/open-brain-dashboard-next/app/api/restricted/route.ts"},
+        {"method": "POST", "path": "/api/search", "source": "dashboards/open-brain-dashboard-next/app/api/search/route.ts"},
+        {"method": "GET", "path": "/api/thoughts/[id]/connections", "source": "dashboards/open-brain-dashboard-next/app/api/thoughts/[id]/connections/route.ts"},
+        {"method": "POST", "path": "/api/thoughts/[id]/reflection", "source": "dashboards/open-brain-dashboard-next/app/api/thoughts/[id]/reflection/route.ts"}
+      ],
+      "source_files": [
+        "server/index.ts",
+        "recipes/repo-learning-coach/server/index.ts",
+        "recipes/vercel-neon-telegram/src/app/api/",
+        "dashboards/open-brain-dashboard-next/app/api/"
+      ]
+    },
+    "database_info": {
+      "type": "postgresql + pgvector",
+      "primary_platform": "Supabase (cloud-managed)",
+      "self_hosted_alternative": "ankane/pgvector:v0.5.1 via Kubernetes or Docker",
+      "core_table": "thoughts (id BIGSERIAL, content TEXT, embedding vector(1536), metadata JSONB, created_at TIMESTAMPTZ)",
+      "core_functions": ["match_thoughts (vector similarity search)", "upsert_thought (dedup by content hash)"],
+      "migrations_path": "schemas/*/schema.sql and schemas/*/migration.sql",
+      "extension_schemas": [
+        "schemas/enhanced-thoughts/schema.sql — adds type, importance, source_type columns + search_thoughts_text(), brain_stats_aggregate(), get_thought_connections() functions",
+        "schemas/entity-extraction/schema.sql — adds entities, edges, thought_entities, entity_extraction_queue, consolidation_log tables",
+        "schemas/typed-reasoning-edges/schema.sql — adds thought_edges table with temporal edge support",
+        "schemas/workflow-status/migration.sql — adds status column to thoughts"
+      ],
+      "recipe_schemas": [
+        "recipes/chatgpt-conversation-import/schema.sql — chatgpt_conversations table",
+        "recipes/life-engine/schema.sql",
+        "recipes/ob-graph/schema.sql",
+        "recipes/repo-learning-coach/schema.sql",
+        "recipes/work-operating-model-activation/schema.sql",
+        "recipes/vercel-neon-telegram/sql/001-create-thoughts.sql, 002-match-thoughts.sql"
+      ],
+      "models_path": "Defined in SQL schemas (no ORM); types inferred in TypeScript from Supabase client",
+      "embedding_dimensions": 1536,
+      "embedding_model": "openai/text-embedding-3-small (via OpenRouter)"
+    }
+  },
+  "by_directory": {
+    "server": {
+      "has_routes": true,
+      "route_count": 2,
+      "mcp_tools": 4,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "MCP_ACCESS_KEY"],
+      "readme_eligible": true,
+      "notes": "Core MCP server — primary deployable artifact as a Supabase Edge Function"
+    },
+    "extensions/family-calendar": {
+      "has_routes": true,
+      "route_count": 2,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "MCP_ACCESS_KEY"],
+      "has_schema": true,
+      "readme_eligible": true
+    },
+    "extensions/home-maintenance": {
+      "has_routes": true,
+      "route_count": 2,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "MCP_ACCESS_KEY"],
+      "has_schema": true,
+      "readme_eligible": true
+    },
+    "extensions/household-knowledge": {
+      "has_routes": true,
+      "route_count": 2,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "MCP_ACCESS_KEY", "MCP_HOUSEHOLD_ACCESS_KEY", "SUPABASE_HOUSEHOLD_KEY"],
+      "has_schema": true,
+      "readme_eligible": true
+    },
+    "extensions/job-hunt": {
+      "has_routes": true,
+      "route_count": 2,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "MCP_ACCESS_KEY"],
+      "has_schema": true,
+      "readme_eligible": true
+    },
+    "extensions/meal-planning": {
+      "has_routes": true,
+      "route_count": 3,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "MCP_ACCESS_KEY"],
+      "has_schema": true,
+      "readme_eligible": true
+    },
+    "extensions/professional-crm": {
+      "has_routes": true,
+      "route_count": 2,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "MCP_ACCESS_KEY"],
+      "has_schema": true,
+      "readme_eligible": true
+    },
+    "dashboards/open-brain-dashboard-next": {
+      "has_routes": true,
+      "route_count": 15,
+      "env_vars_used": ["NEXT_PUBLIC_API_URL", "SESSION_SECRET", "RESTRICTED_PASSPHRASE_HASH"],
+      "commands": ["npm run dev", "npm run build", "npm run start", "npm run lint"],
+      "readme_eligible": true
+    },
+    "dashboards/open-brain-dashboard": {
+      "has_routes": true,
+      "route_count": 1,
+      "env_vars_used": ["MCP_URL", "MCP_KEY", "PUBLIC_MCP_URL", "PUBLIC_MCP_KEY", "PUBLIC_SUPABASE_URL", "PUBLIC_SUPABASE_ANON_KEY"],
+      "commands": ["npm run dev", "npm run build", "npm run check"],
+      "readme_eligible": true
+    },
+    "integrations/kubernetes-deployment": {
+      "has_routes": false,
+      "has_docker": true,
+      "has_k8s": true,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "MCP_ACCESS_KEY", "EMBEDDING_API_BASE", "EMBEDDING_API_KEY", "EMBEDDING_MODEL", "CHAT_API_BASE", "CHAT_API_KEY", "CHAT_MODEL", "DB_HOST", "DB_PORT", "DB_NAME", "DB_USER", "DB_PASSWORD", "PORT"],
+      "readme_eligible": true
+    },
+    "integrations/entity-extraction-worker": {
+      "has_routes": false,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "ANTHROPIC_API_KEY", "ANTHROPIC_CLASSIFIER_MODEL", "OPENAI_CLASSIFIER_MODEL", "OPENROUTER_CLASSIFIER_MODEL", "ENTITY_EXTRACTION_MAX_CALLS", "FETCH_TIMEOUT_MS"],
+      "readme_eligible": true
+    },
+    "recipes/vercel-neon-telegram": {
+      "has_routes": true,
+      "route_count": 4,
+      "env_vars_used": ["DATABASE_URL", "OPENAI_API_KEY", "BRAIN_ACCESS_KEY", "TELEGRAM_BOT_TOKEN", "TELEGRAM_WEBHOOK_SECRET", "APP_URL"],
+      "commands": ["npm run dev", "npm run build", "npm run migrate", "npm run generate-key", "npm run set-telegram-webhook", "npm run test"],
+      "readme_eligible": true
+    },
+    "recipes/repo-learning-coach": {
+      "has_routes": true,
+      "route_count": 7,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "OPENROUTER_EMBEDDING_MODEL", "PORT", "NODE_ENV"],
+      "commands": ["npm run dev", "npm run build", "npm run serve", "npm run sync"],
+      "readme_eligible": true
+    },
+    "recipes/chatgpt-conversation-import": {
+      "has_routes": false,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "INGEST_URL", "INGEST_KEY"],
+      "has_schema": true,
+      "readme_eligible": true
+    },
+    "recipes/google-activity-import": {
+      "has_routes": false,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "GOOGLE_TAKEOUT_PATH"],
+      "commands": ["npm run import", "npm run dry-run"],
+      "readme_eligible": true
+    },
+    "recipes/grok-export-import": {
+      "has_routes": false,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "EMBEDDING_MODEL"],
+      "commands": ["npm run import", "npm run dry-run"],
+      "readme_eligible": true
+    },
+    "recipes/instagram-import": {
+      "has_routes": false,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "EMBEDDING_MODEL"],
+      "commands": ["npm run import", "npm run dry-run"],
+      "readme_eligible": true
+    },
+    "recipes/journals-blogger-import": {
+      "has_routes": false,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "EMBEDDING_MODEL"],
+      "commands": ["npm run import", "npm run dry-run"],
+      "readme_eligible": true
+    },
+    "recipes/x-twitter-import": {
+      "has_routes": false,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "EMBEDDING_MODEL"],
+      "commands": ["npm run import", "npm run dry-run"],
+      "readme_eligible": true
+    },
+    "recipes/fingerprint-dedup-backfill": {
+      "has_routes": false,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"],
+      "commands": ["npm run backfill", "npm run report", "npm run cleanup"],
+      "readme_eligible": true
+    },
+    "recipes/local-ollama-embeddings": {
+      "has_routes": false,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OLLAMA_BASE_URL"],
+      "readme_eligible": true
+    },
+    "recipes/ob-graph": {
+      "has_routes": true,
+      "route_count": 2,
+      "env_vars_used": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "MCP_ACCESS_KEY", "DEFAULT_USER_ID"],
+      "has_schema": true,
+      "readme_eligible": true
+    },
+    "schemas/enhanced-thoughts": {
+      "has_routes": false,
+      "has_migrations": true,
+      "env_vars_used": [],
+      "readme_eligible": true
+    },
+    "schemas/entity-extraction": {
+      "has_routes": false,
+      "has_migrations": true,
+      "env_vars_used": [],
+      "readme_eligible": true
+    },
+    "schemas/typed-reasoning-edges": {
+      "has_routes": false,
+      "has_migrations": true,
+      "env_vars_used": [],
+      "readme_eligible": true
+    },
+    "schemas/workflow-status": {
+      "has_routes": false,
+      "has_migrations": true,
+      "env_vars_used": [],
+      "readme_eligible": true
+    },
+    "docs": {
+      "has_routes": false,
+      "env_vars_used": [],
+      "readme_eligible": false,
+      "notes": "Documentation directory — contains setup guides, FAQ, companion prompts"
+    },
+    "skills": {
+      "has_routes": false,
+      "env_vars_used": [],
+      "readme_eligible": false,
+      "notes": "Skill packs and prompt templates — no runnable code"
+    },
+    "primitives": {
+      "has_routes": false,
+      "env_vars_used": [],
+      "readme_eligible": false,
+      "notes": "Concept guides referenced by extensions — no runnable code"
+    }
+  }
+}

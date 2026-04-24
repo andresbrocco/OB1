@@ -1,0 +1,44 @@
+{
+  "status": "created",
+  "directory": "dashboards",
+  "context_file": "dashboards/CONTEXT.md",
+  "reasoning": "Contains two full frontend applications with non-obvious architectural differences: one uses REST+iron-session auth, the other uses MCP JSON-RPC proxy + Supabase Auth. Non-obvious details include text-scraping MCP responses, middleware auth exemptions for API routes, smart ingest heuristics, and kanban type restrictions. The directory name alone does not convey these distinctions.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Frontend dashboard templates for browsing, searching, capturing, and managing Open Brain thoughts via a browser UI",
+    "key_concepts": [
+      "REST API connection pattern (Next.js dashboard)",
+      "MCP JSON-RPC proxy connection pattern (SvelteKit dashboard)",
+      "iron-session cookie auth",
+      "Supabase Auth",
+      "Smart ingest auto-routing heuristic",
+      "Kanban workflow (task/idea types only)",
+      "sensitivity_tier restricted content gating"
+    ],
+    "exports": [],
+    "depends_on": ["open-brain-rest Edge Function", "open-brain-mcp Edge Function", "Supabase Auth"],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "NEXT_PUBLIC_API_URL",
+        "SESSION_SECRET",
+        "RESTRICTED_PASSPHRASE_HASH",
+        "MCP_URL",
+        "MCP_KEY",
+        "PUBLIC_MCP_URL",
+        "PUBLIC_MCP_KEY",
+        "PUBLIC_SUPABASE_URL",
+        "PUBLIC_SUPABASE_ANON_KEY"
+      ],
+      "config_files": [
+        "dashboards/open-brain-dashboard-next/.env.example",
+        "dashboards/open-brain-dashboard/.env.example",
+        "dashboards/open-brain-dashboard-next/next.config.ts",
+        "dashboards/open-brain-dashboard/svelte.config.js"
+      ],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

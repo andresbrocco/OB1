@@ -1,0 +1,40 @@
+{
+  "status": "created",
+  "directory": "recipes/entity-wiki",
+  "context_file": "recipes/entity-wiki/CONTEXT.md",
+  "reasoning": "Single-file recipe with substantial non-obvious complexity: three distinct output modes with different trade-off implications, a two-layer prompt-injection defense (pre-scrub + structural message split), a dossier idempotency scheme that must avoid content-fingerprint dedup pitfalls, an embedding dimension preflight guard, an alias-resolution gap with a documented workaround, a slug collision resolution algorithm, and a noted N+1 batch heuristic with guidance on when to add an RPC. None of this is inferrable from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Auto-generate per-entity structured markdown wiki pages from linked thoughts and typed relationship edges via LLM synthesis",
+    "key_concepts": [
+      "Emergent cached view",
+      "Output modes (file / entity-metadata / thought)",
+      "Dossier thought",
+      "Semantic expansion",
+      "co_occurs_with exclusion",
+      "Slug collision resolution",
+      "Prompt injection defense"
+    ],
+    "exports": ["generate-wiki.mjs (CLI script)"],
+    "depends_on": ["Supabase PostgREST (entities, thoughts, thought_entities, edges tables)", "match_thoughts RPC", "upsert_thought RPC", "OpenAI-compatible Chat Completions API", "OpenAI-compatible Embeddings API (optional)"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": [
+        "OPEN_BRAIN_URL",
+        "OPEN_BRAIN_SERVICE_KEY",
+        "LLM_API_KEY",
+        "LLM_BASE_URL",
+        "LLM_MODEL",
+        "OB_WIKI_OUT_DIR",
+        "OB_WIKI_APP_NAME",
+        "EMBEDDING_API_KEY",
+        "EMBEDDING_BASE_URL",
+        "EMBEDDING_MODEL"
+      ],
+      "config_files": [".env.local", ".env"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

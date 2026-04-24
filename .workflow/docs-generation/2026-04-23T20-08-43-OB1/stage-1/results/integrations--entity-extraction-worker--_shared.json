@@ -1,0 +1,66 @@
+{
+  "status": "created",
+  "directory": "integrations/entity-extraction-worker/_shared",
+  "context_file": "integrations/entity-extraction-worker/_shared/CONTEXT.md",
+  "reasoning": "Contains the canonical 14-step thought ingestion pipeline (prepareThoughtPayload), multi-provider LLM extraction with retry/fallback logic, structured-capture format parsing, escalation-only sensitivity tier resolution, a 0–6 importance scale with enforced cap at 5 for auto-assignment, and non-obvious precedence rules across four layers of metadata override. None of this is self-evident from file or function names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Shared pipeline for transforming raw thought text into an enriched, classified, and embedding-ready Supabase payload",
+    "key_concepts": [
+      "prepareThoughtPayload",
+      "Structured capture format",
+      "Importance scale (0-6, 6 is user-only)",
+      "Sensitivity tier escalation",
+      "Multi-provider LLM fallback (OpenRouter > OpenAI > Anthropic)",
+      "_enrichment_status"
+    ],
+    "exports": [
+      "prepareThoughtPayload",
+      "extractMetadata",
+      "embedText",
+      "detectSensitivity",
+      "resolveSensitivityTier",
+      "parseStructuredCapture",
+      "normalizeTypeHint",
+      "sanitizeMetadata",
+      "fallbackMetadata",
+      "computeContentFingerprint",
+      "applyEvergreenTag",
+      "tableExists",
+      "asString",
+      "asNumber",
+      "asInteger",
+      "asBoolean",
+      "asOptionalInteger",
+      "isRecord",
+      "normalizeStringArray",
+      "mergeUniqueStrings",
+      "safeEmbedding",
+      "ThoughtMetadata",
+      "SensitivityResult",
+      "PreparedPayload",
+      "PrepareThoughtOpts",
+      "StructuredCapture"
+    ],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "OPENROUTER_API_KEY",
+        "OPENAI_API_KEY",
+        "ANTHROPIC_API_KEY",
+        "OPENROUTER_EMBEDDING_MODEL",
+        "OPENAI_EMBEDDING_MODEL",
+        "OPENROUTER_CLASSIFIER_MODEL",
+        "OPENAI_CLASSIFIER_MODEL",
+        "ANTHROPIC_CLASSIFIER_MODEL"
+      ],
+      "config_files": [
+        "integrations/entity-extraction-worker/_shared/config.ts"
+      ],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

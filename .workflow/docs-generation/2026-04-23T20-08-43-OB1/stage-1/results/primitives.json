@@ -1,0 +1,21 @@
+{
+  "status": "created",
+  "directory": "primitives",
+  "context_file": "primitives/CONTEXT.md",
+  "reasoning": "The primitives directory has a non-obvious curation policy (requires 2+ extension references before acceptance), a distinct role from the open-contribution categories, and contains domain-specific terminology ('primitive' as a concept guide rather than code). The boundary between primitives and recipes/extensions is not self-evident from directory names alone, and the gating rules are important for contributors and agents to understand.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Maintainer-curated reusable concept guides for foundational patterns shared across two or more extensions",
+    "key_concepts": ["Primitive", "Curation gate", "Concept vs. code"],
+    "exports": ["deploy-edge-function", "remote-mcp", "rls", "shared-mcp", "troubleshooting"],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

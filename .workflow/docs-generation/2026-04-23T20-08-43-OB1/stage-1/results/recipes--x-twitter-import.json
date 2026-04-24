@@ -1,0 +1,21 @@
+{
+  "status": "created",
+  "directory": "recipes/x-twitter-import",
+  "context_file": "recipes/x-twitter-import/CONTEXT.md",
+  "reasoning": "The script has several non-obvious implementation details: Twitter's JS-wrapped export format requires stripping a window assignment prefix before JSON parsing, tweets are batched in groups of 20 for embedding density, DM conversations below 3 messages are silently dropped, and all thoughts receive hardcoded importance/quality values regardless of engagement. These details are not apparent from file names alone and warrant documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "One-time import of a Twitter/X data export archive into Open Brain as searchable thoughts with embeddings",
+    "key_concepts": ["Twitter JS export format", "Tweet batching", "Content fingerprinting"],
+    "exports": [],
+    "depends_on": ["@supabase/supabase-js", "dotenv", "OpenRouter embeddings API", "upsert_thought RPC"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "EMBEDDING_MODEL"],
+      "config_files": [".env.example"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

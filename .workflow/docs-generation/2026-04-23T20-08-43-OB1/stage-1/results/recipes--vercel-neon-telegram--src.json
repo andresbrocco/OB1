@@ -1,0 +1,47 @@
+{
+  "status": "created",
+  "directory": "recipes/vercel-neon-telegram/src",
+  "context_file": "recipes/vercel-neon-telegram/src/CONTEXT.md",
+  "reasoning": "Complex application source with multiple intake surfaces (REST API, Telegram bot, MCP protocol), a shared AI-powered capture pipeline, custom timing-safe auth, in-memory rate limiting, and Neon pgvector integration. Contains multiple non-obvious design decisions including stateless MCP per-request instantiation, Vercel timeout overrides, grammY command guard, and mixed SQL query styles in db.ts.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Full Next.js application source for a multi-surface thought capture system (REST, Telegram, MCP) backed by OpenAI embeddings and a Neon pgvector database",
+    "key_concepts": [
+      "captureThought pipeline",
+      "ThoughtType",
+      "ThoughtMetadata",
+      "timingSafeEqual auth",
+      "in-memory sliding-window rate limiter",
+      "stateless MCP server",
+      "Telegram webhook singleton bot"
+    ],
+    "exports": [
+      "POST /api/capture",
+      "POST /api/telegram",
+      "POST /api/mcp",
+      "GET /api/health"
+    ],
+    "depends_on": [
+      "OpenAI (text-embedding-3-small, gpt-4o-mini)",
+      "@neondatabase/serverless",
+      "grammy",
+      "@modelcontextprotocol/sdk",
+      "@ai-sdk/openai",
+      "zod"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "BRAIN_ACCESS_KEY",
+        "DATABASE_URL",
+        "TELEGRAM_BOT_TOKEN",
+        "TELEGRAM_WEBHOOK_SECRET",
+        "OPENAI_API_KEY"
+      ],
+      "config_files": [],
+      "has_health_endpoints": true,
+      "has_database_models": false
+    }
+  }
+}

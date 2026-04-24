@@ -1,0 +1,21 @@
+{
+  "status": "created",
+  "directory": "skills/deal-memo-drafting",
+  "context_file": "skills/deal-memo-drafting/CONTEXT.md",
+  "reasoning": "Contains domain-specific investment terminology (IC memo, diligence packet, conviction state, decision-readiness), non-obvious responsibility boundaries with explicit sibling skill delegation, and an unusual epistemic honesty constraint that requires documentation — the skill intentionally produces weak-labeled or negative-recommendation memos rather than filling gaps with confident prose.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "AI skill for drafting structured deal, IC, partnership, or acquisition memos from pre-existing diligence materials",
+    "key_concepts": ["IC memo", "Deal memo", "Diligence packet", "Conviction state", "Decision-readiness"],
+    "exports": ["SKILL.md prompt/skill definition"],
+    "depends_on": ["skills/competitive-analysis", "skills/financial-model-review", "skills/research-synthesis", "skills/meeting-synthesis"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["skills/deal-memo-drafting/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

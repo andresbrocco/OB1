@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "recipes/source-filtering",
+  "reasoning": "Single Deno script with a narrow, well-documented purpose. The inline JSDoc header fully explains usage, context, options, and required env vars. No domain-specific abstractions, no non-obvious responsibility boundaries, and no multiple sub-modules requiring conceptual explanation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Retroactive LLM metadata backfill for thoughts that were imported directly into Supabase without going through the normal ingest endpoint",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": ["Supabase REST API", "OpenRouter (gpt-4o-mini)"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY"],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

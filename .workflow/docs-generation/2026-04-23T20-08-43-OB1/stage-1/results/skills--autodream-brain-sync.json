@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "skills/autodream-brain-sync",
+  "reasoning": "The directory contains only SKILL.md and metadata.json. SKILL.md is itself a well-structured, self-documenting specification that clearly explains the problem, trigger conditions, process, guardrails, and scope. There are no complex sub-modules, no non-obvious domain concepts, and no design decisions that require additional explanation beyond what the skill file already provides. The purpose is immediately apparent from both the directory name and file contents.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Skill definition for syncing Claude Code's local autodream/memory file writes to Open Brain so memories are accessible from all AI clients and devices",
+    "key_concepts": ["autodream", "dreaming", "memory sync", "multi-client memory"],
+    "exports": [],
+    "depends_on": ["mcp__open-brain__capture_thought"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["skills/autodream-brain-sync/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

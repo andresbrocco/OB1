@@ -1,0 +1,36 @@
+{
+  "status": "created",
+  "directory": "schemas/typed-reasoning-edges",
+  "context_file": "schemas/typed-reasoning-edges/CONTEXT.md",
+  "reasoning": "Contains multiple non-obvious domain concepts: a closed relation vocabulary with distinct semantic meanings, NULL-semantic temporal validity fields, a dual-table migration scope (new table + ALTER on an existing table from a different schema), mixed PK/FK types, an upsert function with NULL-wins conflict resolution logic, and RLS posture that must mirror a separate table for privacy reasons.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Database schema extension adding typed semantic reasoning edges between thoughts and temporal validity decay to entity edges",
+    "key_concepts": [
+      "Relation vocabulary (supports/contradicts/evolved_into/supersedes/depends_on/related_to)",
+      "Temporal validity with NULL semantics",
+      "decay_weight",
+      "support_count evidence accumulation",
+      "Upsert NULL-wins conflict resolution"
+    ],
+    "exports": [
+      "public.thought_edges",
+      "public.thought_edges_upsert (RPC)",
+      "public.edges.valid_from (column)",
+      "public.edges.valid_until (column)",
+      "public.edges.decay_weight (column)"
+    ],
+    "depends_on": [
+      "public.thoughts (docs/01-getting-started.md)",
+      "schemas/entity-extraction"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["schemas/typed-reasoning-edges/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": true
+    }
+  }
+}

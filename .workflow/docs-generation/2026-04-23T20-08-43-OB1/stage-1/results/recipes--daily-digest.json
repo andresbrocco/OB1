@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "recipes/daily-digest",
+  "reasoning": "Simple two-file recipe consisting of a skill prompt and metadata. The prompt itself is a linear, numbered workflow with no domain-specific terminology, no complex business logic, and no non-obvious design decisions. Purpose is entirely self-evident from filenames and content.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Automated daily summary of recent Open Brain thoughts delivered as a Gmail draft",
+    "key_concepts": [],
+    "exports": ["daily-digest-skill.md"],
+    "depends_on": ["Open Brain MCP (list_thoughts)", "Gmail MCP (gmail_create_draft)"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["recipes/daily-digest/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

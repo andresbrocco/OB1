@@ -1,0 +1,41 @@
+{
+  "status": "created",
+  "directory": "skills/heavy-file-ingestion",
+  "context_file": "skills/heavy-file-ingestion/CONTEXT.md",
+  "reasoning": "The directory implements a non-trivial tiered cost-escalation policy (deterministic → cheap model → expensive model), multiple format-specific converter strategies with fallback logic, a quality-flag system that drives automated next-step recommendations, and a multi-client variant/build pipeline. None of this is evident from file names alone, and several behaviors (openpyxl data_only semantics, PPTX deduplication, DOCX table truncation, scanned-PDF heuristic thresholds, .skill packaging format) are genuine gotchas for maintainers.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Converts heavyweight files into cheap agent-friendly artifacts (markdown, CSV, index) before any model tokens are spent on the original file",
+    "key_concepts": [
+      "Deterministic-first policy",
+      "Cost tier escalation",
+      "Quality flags",
+      "Converter preference (auto/native/markitdown)",
+      "Output directory convention (.ob1/)",
+      "Client variants and build exports"
+    ],
+    "exports": [
+      "convert_heavy_file.py (CLI script)",
+      "build_client_exports.py (build script)",
+      "variants/claude-code/SKILL.md",
+      "variants/claude-desktop/SKILL.md",
+      "variants/codex/SKILL.md",
+      "references/open-source-stack.md"
+    ],
+    "depends_on": [
+      "pdfplumber",
+      "python-docx",
+      "python-pptx",
+      "openpyxl",
+      "markitdown (optional)"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

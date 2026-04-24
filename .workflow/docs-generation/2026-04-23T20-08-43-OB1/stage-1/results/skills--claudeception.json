@@ -1,0 +1,28 @@
+{
+  "status": "created",
+  "directory": "skills/claudeception",
+  "context_file": "skills/claudeception/CONTEXT.md",
+  "reasoning": "Meta-skill with non-obvious domain concepts: self-referential skill extraction, a three-way deduplication decision tree against Open Brain, a two-step save requirement (file + brain capture), legacy naming inconsistency between directory and frontmatter, and a dual-scope storage model (.claude/skills/ vs ~/.claude/skills/). These are not self-evident from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Meta-skill that extracts reusable knowledge from AI work sessions and codifies it into new skill files, with Open Brain integration for duplicate detection and cross-session persistence",
+    "key_concepts": [
+      "Aiception/Claudeception (self-referential skill extraction)",
+      "Extraction threshold and quality gates",
+      "Open Brain deduplication workflow",
+      "Skill lifecycle (creation to archival)",
+      "Retrospective mode",
+      "Dual-scope skill storage"
+    ],
+    "exports": ["SKILL.md (aiception skill definition)"],
+    "depends_on": ["Open Brain (search_thoughts, capture_thought)", ".claude/skills/ or ~/.claude/skills/ (AI client skill storage)"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["skills/claudeception/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

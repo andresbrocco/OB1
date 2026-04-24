@@ -1,0 +1,23 @@
+{
+  "status": "created",
+  "directory": "recipes/grok-export-import",
+  "readme_file": "recipes/grok-export-import/README.md",
+  "reasoning": "Import recipe with 4 environment variables (3 required, 1 optional), 2 npm commands plus direct CLI flags, .env.example configuration file, and writes to the thoughts table via upsert_thought RPC. Clear operational surface warrants a README.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "commands",
+    "cli_flags",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 0,
+    "env_var_count": 4,
+    "command_count": 2,
+    "has_health_check": false
+  }
+}

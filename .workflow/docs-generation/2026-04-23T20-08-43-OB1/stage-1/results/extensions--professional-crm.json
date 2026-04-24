@@ -1,0 +1,44 @@
+{
+  "status": "created",
+  "directory": "extensions/professional-crm",
+  "context_file": "extensions/professional-crm/CONTEXT.md",
+  "reasoning": "Contains non-obvious responsibility boundaries (service-role bypassing RLS, denormalized cross-extension thought linking), a database-trigger-managed field (last_contacted), two distinct follow-up mechanisms that are not synchronized, and a stateless MCP transport with a request-header workaround. These details are not evident from filenames or function signatures alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "MCP server (Edge Function) for professional contact management, interaction logging, opportunity pipeline tracking, and cross-extension linking of Open Brain thoughts to contacts",
+    "key_concepts": [
+      "Interaction log vs. follow-up date (two separate follow-up signals)",
+      "Trigger-managed last_contacted field",
+      "Cross-extension bridge via denormalized note append",
+      "Fixed opportunity stage enum",
+      "Stateless MCP transport"
+    ],
+    "exports": [
+      "add_professional_contact",
+      "search_contacts",
+      "log_interaction",
+      "get_contact_history",
+      "create_opportunity",
+      "get_follow_ups_due",
+      "update_professional_contact",
+      "link_thought_to_contact"
+    ],
+    "depends_on": [
+      "core thoughts table (read)",
+      "Supabase Edge Function runtime",
+      "hono",
+      "@hono/mcp",
+      "@modelcontextprotocol/sdk",
+      "zod",
+      "@supabase/supabase-js"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "MCP_ACCESS_KEY", "DEFAULT_USER_ID"],
+      "config_files": [".env.example", "deno.json"],
+      "has_health_endpoints": true,
+      "has_database_models": true
+    }
+  }
+}

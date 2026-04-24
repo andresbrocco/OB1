@@ -1,0 +1,29 @@
+{
+  "status": "created",
+  "directory": "dashboards/open-brain-dashboard/src/routes",
+  "context_file": "dashboards/open-brain-dashboard/src/routes/CONTEXT.md",
+  "reasoning": "Contains non-obvious behavior: a server-side auth guard that depends on upstream hooks populating locals.user, an incremental result-merging strategy that accumulates rather than replaces search results, a composite dedup key based on created_at+content rather than a stable id, and a post-search filter extraction that overwrites global stats-derived filters with result-scoped values.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Top-level SvelteKit route tree providing the authenticated shell layout and single-page search/capture interface",
+    "key_concepts": [
+      "Auth guard via layout.server.ts",
+      "Incremental result merging",
+      "latestResultKey highlight",
+      "Post-search filter extraction"
+    ],
+    "exports": [],
+    "depends_on": [
+      "$lib/api",
+      "$lib/types"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

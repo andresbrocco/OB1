@@ -1,0 +1,23 @@
+{
+  "status": "created",
+  "directory": "recipes/google-activity-import",
+  "readme_file": "recipes/google-activity-import/README.md",
+  "reasoning": "Recipe with 4 environment variables, 2 npm scripts plus full CLI flag surface, a sync-log configuration artifact, and direct writes to the thoughts database table.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "commands",
+    "cli_options",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 0,
+    "env_var_count": 4,
+    "command_count": 2,
+    "has_health_check": false
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "status": "created",
+  "directory": "recipes/wiki-synthesis",
+  "context_file": "recipes/wiki-synthesis/CONTEXT.md",
+  "reasoning": "The recipe contains two non-trivial synthesis pipelines with domain-specific concepts (life-date bucketing, thread eligibility gating, synthesizer catalogue pattern, resume-safe JSONL state), a meaningful distinction from a sibling recipe (entity-wiki vs wiki-synthesis), and several non-obvious implementation choices (deduplication-by-thread-id deletion, selective RPC error swallowing, prompt injection defenses, env-var allowlisting in dashboard subprocess spawn).",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "LLM-driven wiki article synthesis from Open Brain atomic thoughts, with an autobiographical narrative synthesizer and a Gmail-thread summarizer",
+    "key_concepts": [
+      "Synthesizer catalogue",
+      "Life-date bucketing",
+      "Thread eligibility (content-weight gating)",
+      "Resume-safe JSONL state",
+      "wiki vs entity-wiki distinction"
+    ],
+    "exports": [
+      "scripts/synthesize-wiki.mjs",
+      "scripts/backfill-gmail-wikis.mjs",
+      "dashboard-snippets/components/GenerateAutobiographyButton.tsx",
+      "dashboard-snippets/app/wiki/page.tsx",
+      "dashboard-snippets/app/wiki/[slug]/page.tsx"
+    ],
+    "depends_on": [
+      "public.thoughts (core OB1 schema)",
+      "public.thought_edges (knowledge-graph schema)",
+      "public.upsert_thought RPC (optional)",
+      "OpenAI-compatible Chat Completions API"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": [
+        "OPEN_BRAIN_URL",
+        "OPEN_BRAIN_SERVICE_KEY",
+        "LLM_BASE_URL",
+        "LLM_API_KEY",
+        "LLM_MODEL",
+        "SUBJECT_NAME",
+        "SOURCE_TYPE_FILTER",
+        "WIKI_OUTPUT_DIR"
+      ],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "status": "created",
+  "directory": "extensions",
+  "context_file": "extensions/CONTEXT.md",
+  "reasoning": "The extensions directory has several non-obvious design characteristics: a curated learning path (learning_order 1-6) that is maintainer-gated and distinct from community contributions, a DEFAULT_USER_ID pattern that bypasses Supabase RLS by design, per-request MCP server instantiation required by the Edge Function execution model, a machine-readable AGENT_SPEC.md that defines the full 5-file generation contract, and an exception pattern (shared-server.ts in meal-planning) that signals the shared-mcp primitive usage. These are not obvious from directory or file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Curated domain-specific MCP servers that extend Open Brain with structured memory capabilities, organized as a gated learning path and open community contributions",
+    "key_concepts": [
+      "Learning path (learning_order 1-6)",
+      "DEFAULT_USER_ID single-tenant pattern",
+      "Per-request MCP server instantiation",
+      "5-file extension contract",
+      "AGENT_SPEC.md machine-readable generation spec"
+    ],
+    "exports": [
+      "family-calendar MCP server",
+      "home-maintenance MCP server",
+      "household-knowledge MCP server",
+      "job-hunt MCP server",
+      "meal-planning MCP server",
+      "professional-crm MCP server"
+    ],
+    "depends_on": [
+      "primitives/deploy-edge-function",
+      "primitives/remote-mcp",
+      "primitives/rls",
+      "primitives/shared-mcp"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "MCP_ACCESS_KEY",
+        "DEFAULT_USER_ID",
+        "OPENROUTER_API_KEY"
+      ],
+      "config_files": [
+        "extensions/family-calendar/deno.json",
+        "extensions/home-maintenance/deno.json",
+        "extensions/household-knowledge/deno.json",
+        "extensions/job-hunt/deno.json",
+        "extensions/meal-planning/deno.json",
+        "extensions/professional-crm/deno.json"
+      ],
+      "has_health_endpoints": true,
+      "has_database_models": true
+    }
+  }
+}

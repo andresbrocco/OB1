@@ -1,0 +1,26 @@
+{
+  "status": "created",
+  "directory": "recipes/instagram-import",
+  "context_file": "recipes/instagram-import/CONTEXT.md",
+  "reasoning": "Contains multiple non-obvious implementation details: Meta's latin1/UTF-8 double-encoding bug and its repair, a directory-walking heuristic to locate the export root, per-conversation message caps, comment/post batching strategies, embedding truncation limits, comment JSON schema variants across export versions, and hardcoded quality/sensitivity defaults applied at upsert time. None of these are deducible from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "CLI script that parses Instagram GDPR export archives and imports DM conversations, comments, and post captions into Open Brain as embedded thoughts",
+    "key_concepts": [
+      "Content fingerprint (SHA-256 deduplication)",
+      "Meta latin1/UTF-8 encoding repair",
+      "upsert_thought RPC",
+      "Batched thought grouping"
+    ],
+    "exports": [],
+    "depends_on": ["@supabase/supabase-js", "OpenRouter embeddings API"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "EMBEDDING_MODEL"],
+      "config_files": [".env.example"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

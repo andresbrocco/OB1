@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "primitives/rls",
+  "reasoning": "Directory contains only metadata.json. No implementation files, SQL, or code exist to analyze. The purpose is fully self-evident from the metadata: a guide to PostgreSQL Row Level Security for multi-user extensions. No domain concepts, non-obvious logic, or gotchas to document.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Guide to PostgreSQL Row Level Security for multi-user and shared-access Open Brain extensions",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

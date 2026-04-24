@@ -1,0 +1,32 @@
+{
+  "status": "created",
+  "directory": "recipes/infographic-generator",
+  "context_file": "recipes/infographic-generator/CONTEXT.md",
+  "reasoning": "The recipe implements a non-obvious two-phase pipeline where an AI client authors structured prompt markdown and a separate Python script executes image generation. There are several non-obvious details: the decoupled prompts file format with regex-based parsing, silent skip behavior on malformed sections, self-bootstrapping venv path injection, hardcoded model name strings, and a skill install path assumption. These warrant documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Two-phase pipeline converting research content into infographic images via AI-authored prompts and Gemini image generation API",
+    "key_concepts": [
+      "Two-phase pipeline",
+      "Prompts file format",
+      "Manifest file",
+      "--redo flag"
+    ],
+    "exports": [
+      "generate.py",
+      "infographic-generator.skill.md"
+    ],
+    "depends_on": [
+      "Google Gemini API",
+      "google-genai Python package"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": ["GEMINI_API_KEY"],
+      "config_files": ["recipes/infographic-generator/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

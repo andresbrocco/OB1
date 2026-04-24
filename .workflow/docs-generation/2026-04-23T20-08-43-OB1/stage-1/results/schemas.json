@@ -1,0 +1,43 @@
+{
+  "status": "created",
+  "directory": "schemas",
+  "context_file": "schemas/CONTEXT.md",
+  "reasoning": "Contains four distinct schema extensions with non-trivial dependency ordering, a two-tier edge model (entity-to-entity vs thought-to-thought) that is easy to conflate, domain-specific graph vocabulary (reasoning relation types, temporal validity semantics, sensitivity_tier filtering), hard prerequisite checks with fail-fast exceptions, diverging RLS postures across sub-schemas, and non-obvious NULL handling in the upsert RPC.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Community-contributed idempotent SQL migrations that extend the Open Brain Supabase database with knowledge-graph tables, enrichment columns, RPCs, triggers, and RLS policies",
+    "key_concepts": [
+      "Two-tier edge model (entity edges vs thought edges)",
+      "Reasoning relation vocabulary (supports, contradicts, evolved_into, supersedes, depends_on, related_to)",
+      "Temporal validity and decay_weight",
+      "Entity extraction queue with auto-trigger",
+      "sensitivity_tier access filtering",
+      "Two-phase full-text search (GIN tsvector + ILIKE fallback)"
+    ],
+    "exports": [
+      "search_thoughts_text",
+      "brain_stats_aggregate",
+      "get_thought_connections",
+      "thought_edges_upsert",
+      "queue_entity_extraction (trigger function)",
+      "thought_edges_set_updated_at (trigger function)",
+      "entities table",
+      "edges table",
+      "thought_entities table",
+      "entity_extraction_queue table",
+      "consolidation_log table",
+      "thought_edges table"
+    ],
+    "depends_on": [
+      "docs/01-getting-started.md (thoughts table + content_fingerprint column)"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": true
+    }
+  }
+}

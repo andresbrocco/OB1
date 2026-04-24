@@ -1,0 +1,25 @@
+{
+  "status": "created",
+  "directory": "integrations/kubernetes-deployment",
+  "readme_file": "integrations/kubernetes-deployment/README.md",
+  "reasoning": "Strong operational surface: Docker image build, Kubernetes StatefulSet with two containers, 15 environment variables (secrets + config), ports 8000 and 5432, health checks, deploy/dev commands, and a database table initialised via ConfigMap.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "ports",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 0,
+    "env_var_count": 15,
+    "command_count": 4,
+    "has_health_check": true,
+    "docker_services": ["mcp-server", "db"],
+    "k8s_resources": ["Namespace", "ConfigMap", "StatefulSet", "Service", "Ingress (optional)"]
+  }
+}

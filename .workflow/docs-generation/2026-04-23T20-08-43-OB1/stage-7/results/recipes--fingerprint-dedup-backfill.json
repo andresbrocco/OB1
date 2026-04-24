@@ -1,0 +1,22 @@
+{
+  "status": "created",
+  "directory": "recipes/fingerprint-dedup-backfill",
+  "readme_file": "recipes/fingerprint-dedup-backfill/README.md",
+  "reasoning": "Recipe has 3 npm commands (backfill, report, cleanup), 2 required environment variables (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY), direct database table access on thoughts, and resumable state files — clear operational surface warranting a README.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 0,
+    "env_var_count": 2,
+    "command_count": 3,
+    "has_health_check": false
+  }
+}

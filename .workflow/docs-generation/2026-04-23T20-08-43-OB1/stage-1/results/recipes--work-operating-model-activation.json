@@ -1,0 +1,43 @@
+{
+  "status": "created",
+  "directory": "recipes/work-operating-model-activation",
+  "context_file": "recipes/work-operating-model-activation/CONTEXT.md",
+  "reasoning": "Complex domain module with a five-layer operating model interview workflow, versioned session/checkpoint/entry data model, layer-specific Zod detail validators, multi-artifact export rendering (USER.md, SOUL.md, HEARTBEAT.md, JSON exports), and non-obvious version resolution and finalization semantics. Purpose is not obvious from directory name alone and contains several gotchas worth documenting.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Remote MCP server that elicits a user's work operating model across five structured layers and renders versioned, agent-ready export artifacts",
+    "key_concepts": [
+      "Five Layers (operating_rhythms, recurring_decisions, dependencies, institutional_knowledge, friction)",
+      "Session Versioning",
+      "Checkpoint + Entry Separation",
+      "source_confidence",
+      "Export Artifacts (USER.md, SOUL.md, HEARTBEAT.md)",
+      "Layer Detail Validators"
+    ],
+    "exports": [
+      "start_operating_model_session (MCP tool)",
+      "save_operating_model_layer (MCP tool)",
+      "query_operating_model (MCP tool)",
+      "generate_operating_model_exports (MCP tool)"
+    ],
+    "depends_on": [
+      "Supabase (operating_model_profiles, operating_model_sessions, operating_model_layer_checkpoints, operating_model_entries, operating_model_exports)",
+      "skills/work-operating-model"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "MCP_ACCESS_KEY",
+        "DEFAULT_USER_ID"
+      ],
+      "config_files": [
+        "recipes/work-operating-model-activation/deno.json"
+      ],
+      "has_health_endpoints": true,
+      "has_database_models": true
+    }
+  }
+}

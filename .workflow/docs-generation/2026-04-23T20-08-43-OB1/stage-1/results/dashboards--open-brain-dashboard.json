@@ -1,0 +1,21 @@
+{
+  "status": "created",
+  "directory": "dashboards/open-brain-dashboard",
+  "context_file": "dashboards/open-brain-dashboard/CONTEXT.md",
+  "reasoning": "Non-trivial architecture: server-side MCP proxy pattern to prevent key leakage, dual env var strategy with different security profiles, text-parsing of two distinct MCP response formats using regex heuristics, SSE vs JSON response detection, ephemeral client-generated IDs, and Supabase SSR auth integration. Multiple non-obvious design decisions that would not be apparent from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "SvelteKit dashboard for searching, filtering, browsing, and capturing Open Brain thoughts with Supabase authentication",
+    "key_concepts": ["MCP proxy route", "ThoughtType", "Text parsing layer", "SSR auth"],
+    "exports": ["Thought", "ThoughtType", "ThoughtMetadata", "THOUGHT_TYPES", "getThoughts", "getStats", "captureThought"],
+    "depends_on": ["Supabase Edge Function (MCP server)", "Supabase Auth"],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": ["MCP_URL", "MCP_KEY", "PUBLIC_MCP_URL", "PUBLIC_MCP_KEY", "PUBLIC_SUPABASE_URL", "PUBLIC_SUPABASE_ANON_KEY"],
+      "config_files": ["dashboards/open-brain-dashboard/.env.example", "dashboards/open-brain-dashboard/svelte.config.js", "dashboards/open-brain-dashboard/vite.config.ts"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "status": "created",
+  "directory": "recipes/chatgpt-conversation-import",
+  "readme_file": "recipes/chatgpt-conversation-import/README.md",
+  "reasoning": "Import script with 5 environment variables, 1 optional schema table, multiple CLI commands, and a sync log — clear operational surface requiring documentation",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "commands",
+    "cli_options",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 0,
+    "env_var_count": 5,
+    "command_count": 12,
+    "has_health_check": false
+  }
+}

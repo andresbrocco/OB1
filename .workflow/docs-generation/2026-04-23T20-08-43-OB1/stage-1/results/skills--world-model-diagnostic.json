@@ -1,0 +1,29 @@
+{
+  "status": "created",
+  "directory": "skills/world-model-diagnostic",
+  "context_file": "skills/world-model-diagnostic/CONTEXT.md",
+  "reasoning": "The skill encodes a detailed diagnostic protocol with domain-specific terminology (world-model paradigm, boundary layer, simulated judgment, five-principle evaluation), non-obvious constraints (no numeric scores, three-artifact persistence contract, fuzzy tool resolution), and a multi-phase workflow with explicit business logic for paradigm mapping and priority tiebreakers. None of this is inferable from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Structured conversational skill for diagnosing a company's world-model readiness, mapping it to the right architectural paradigm, auditing its boundary layer, and producing a labeled build sequence",
+    "key_concepts": [
+      "World-model paradigm (vector database / structured ontology / signal-fidelity)",
+      "Boundary layer",
+      "Simulated judgment",
+      "Act on this / Interpret this first",
+      "Five-principle evaluation",
+      "OB1-connected mode vs. direct-chat mode",
+      "Firm finding / Inference / Open question labeling"
+    ],
+    "exports": ["SKILL.md (AI skill prompt pack)"],
+    "depends_on": ["Open Brain search/capture tools (optional)"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["skills/world-model-diagnostic/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "generated_at": "2026-04-23T20:08:43",
+  "target_path": "/Users/asbrocco/Documents/REPOS/OB1",
+  "slug": "OB1",
+  "tree": {
+    "total_directories": 142,
+    "max_depth": 8,
+    "organization_pattern": "category-based top level (recipes, extensions, skills, integrations, schemas, primitives, dashboards, docs) with flat contribution subfolders; dashboards use framework-native nested routing",
+    "naming_conventions": {
+      "folder_style": "lowercase-hyphenated",
+      "patterns_observed": [
+        "Top-level folders are category names (recipes, extensions, skills, integrations, schemas, primitives, dashboards, docs, server, resources)",
+        "Each contribution lives in its own named subfolder under the appropriate category",
+        "Contribution names are descriptive kebab-case slugs describing the capability",
+        "A _template folder exists in every open contribution category as a starter scaffold",
+        "Dashboards use framework-native routing conventions: SvelteKit uses src/routes/, Next.js uses app/ with [id] dynamic segments",
+        "Some skills use variants/, references/, scripts/ subfolders for richer contributions",
+        "Some recipes include scripts/, sql/, src/, server/, curriculum/ subfolders when they are full applications"
+      ]
+    }
+  },
+  "entry_points": {
+    "primary_entry": {
+      "path": "server/index.ts",
+      "reason": "The canonical Open Brain MCP server. All AI clients (Claude Desktop, claude.ai, any MCP-compatible client) connect to this. Every other entry point is either a variant of this server or a one-time data migration/enrichment script."
+    },
+    "application_count": 6,
+    "cli_count": 26,
+    "api_endpoint_count": 8,
+    "library_module_count": 6
+  },
+  "exclusions": {
+    "patterns": [
+      ".git/**",
+      "node_modules/**",
+      "__pycache__/**",
+      "*.pyc",
+      ".planning/**",
+      "supabase/**",
+      ".local/**",
+      ".agent/**",
+      ".claude.json",
+      ".env",
+      ".env.local",
+      ".env.*.local",
+      "credentials.json",
+      "token.json",
+      "gmail-sync-log.json",
+      "sync-log.json",
+      "deno.lock",
+      ".DS_Store",
+      ".workflow/**"
+    ],
+    "generated_code": [],
+    "vendor_code": []
+  },
+  "operational_facts": {
+    "ports": [8000, 5432, 8787],
+    "env_var_count": 30,
+    "core_env_vars": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "MCP_ACCESS_KEY", "OPENROUTER_API_KEY"],
+    "primary_deploy_command": "supabase functions deploy open-brain-mcp --no-verify-jwt",
+    "database": "Supabase + pgvector, core thoughts table with vector(1536) embeddings",
+    "health_endpoint_pattern": "GET * → {status: 'ok'} on all Edge Function servers"
+  },
+  "human_curated_info": []
+}

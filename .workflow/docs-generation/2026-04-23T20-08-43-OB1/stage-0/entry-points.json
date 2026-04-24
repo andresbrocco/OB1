@@ -1,0 +1,287 @@
+{
+  "status": "success",
+  "target_path": "/Users/asbrocco/Documents/REPOS/OB1",
+  "entry_points": {
+    "application": [
+      {
+        "path": "server/index.ts",
+        "type": "deno-mcp-edge-function",
+        "description": "Primary Open Brain MCP server. Deno/Hono HTTP app exposing 4 MCP tools (capture_thought, search_thoughts, list_thoughts, thought_stats) over StreamableHTTP. Authenticates via x-brain-key header or ?key= query param. Intended for deployment as a Supabase Edge Function.",
+        "startup_hint": "supabase functions deploy open-brain  OR  deno run --allow-net --allow-env server/index.ts",
+        "env_vars": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "MCP_ACCESS_KEY"]
+      },
+      {
+        "path": "integrations/kubernetes-deployment/index.ts",
+        "type": "deno-mcp-edge-function",
+        "description": "Self-hosted / Kubernetes variant of the core MCP server. Replaces Supabase client with a direct PostgreSQL+pgvector connection pool. Same 4 MCP tools and Hono HTTP layer as the primary server.",
+        "startup_hint": "deno run --allow-net --allow-env integrations/kubernetes-deployment/index.ts",
+        "env_vars": ["DB_HOST", "DB_PORT", "DB_NAME", "DB_USER", "DB_PASSWORD", "EMBEDDING_API_BASE", "EMBEDDING_API_KEY", "CHAT_MODEL", "MCP_ACCESS_KEY"]
+      },
+      {
+        "path": "integrations/entity-extraction-worker/index.ts",
+        "type": "deno-edge-function-worker",
+        "description": "Background batch worker (Supabase Edge Function) that drains the entity_extraction_queue table, calls an LLM to extract entities and relationships, and upserts into the knowledge-graph tables. Triggered via HTTP GET/POST with optional ?limit= and ?dry_run= params.",
+        "startup_hint": "supabase functions deploy entity-extraction-worker",
+        "env_vars": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "MCP_ACCESS_KEY"]
+      },
+      {
+        "path": "recipes/work-operating-model-activation/index.ts",
+        "type": "deno-mcp-edge-function",
+        "description": "Extended MCP server that adds Work Operating Model tools (goals, projects, decisions, check-ins) on top of a Supabase backend. Deployed as a Supabase Edge Function.",
+        "startup_hint": "supabase functions deploy work-operating-model-activation",
+        "env_vars": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "MCP_ACCESS_KEY", "DEFAULT_USER_ID"]
+      },
+      {
+        "path": "recipes/ob-graph/index.ts",
+        "type": "deno-mcp-edge-function",
+        "description": "Knowledge-graph MCP server (OB-Graph). Exposes 10 graph tools (create_node, create_edge, search_nodes, get_neighbors, traverse_graph, find_path, update_node, delete_node, delete_edge, list_edge_types) over Hono+StreamableHTTP.",
+        "startup_hint": "supabase functions deploy ob-graph"
+      },
+      {
+        "path": "recipes/repo-learning-coach/server/index.ts",
+        "type": "express-http-server",
+        "description": "Express HTTP server for the Repo Learning Coach full-stack app. Serves the React/Vite SPA and exposes REST endpoints for lesson progress, quiz answers, artifacts, and Supabase content sync.",
+        "startup_hint": "npm run serve  (inside recipes/repo-learning-coach/)",
+        "scripts": ["dev", "build", "serve", "sync"]
+      }
+    ],
+    "cli": [
+      {
+        "path": "recipes/chatgpt-conversation-import/import-chatgpt.py",
+        "type": "python-script",
+        "description": "CLI script to parse a ChatGPT conversations.json export and bulk-import it into the Open Brain Supabase database.",
+        "startup_hint": "python3 recipes/chatgpt-conversation-import/import-chatgpt.py"
+      },
+      {
+        "path": "recipes/obsidian-vault-import/import-obsidian.py",
+        "type": "python-script",
+        "description": "CLI script to walk an Obsidian vault directory and import all Markdown notes into Open Brain.",
+        "startup_hint": "python3 recipes/obsidian-vault-import/import-obsidian.py"
+      },
+      {
+        "path": "recipes/perplexity-conversation-import/import-perplexity.py",
+        "type": "python-script",
+        "description": "CLI script to parse a Perplexity AI conversation export and import it into Open Brain.",
+        "startup_hint": "python3 recipes/perplexity-conversation-import/import-perplexity.py"
+      },
+      {
+        "path": "recipes/local-ollama-embeddings/embed-local.py",
+        "type": "python-script",
+        "description": "CLI script that re-embeds thoughts using a locally running Ollama model instead of the default OpenRouter embeddings.",
+        "startup_hint": "python3 recipes/local-ollama-embeddings/embed-local.py"
+      },
+      {
+        "path": "recipes/infographic-generator/generate.py",
+        "type": "python-script",
+        "description": "CLI script to generate SVG/HTML infographics from retrieved Open Brain thoughts.",
+        "startup_hint": "python3 recipes/infographic-generator/generate.py"
+      },
+      {
+        "path": "recipes/google-activity-import/import-google-activity.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to parse a Google Takeout activity JSON export and import it into Open Brain.",
+        "startup_hint": "node recipes/google-activity-import/import-google-activity.mjs"
+      },
+      {
+        "path": "recipes/grok-export-import/import-grok.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to import a Grok (xAI) conversation export into Open Brain.",
+        "startup_hint": "node recipes/grok-export-import/import-grok.mjs"
+      },
+      {
+        "path": "recipes/instagram-import/import-instagram.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to parse an Instagram data export and import posts/captions into Open Brain.",
+        "startup_hint": "node recipes/instagram-import/import-instagram.mjs"
+      },
+      {
+        "path": "recipes/x-twitter-import/import-x-twitter.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to parse an X/Twitter archive export and import tweets into Open Brain.",
+        "startup_hint": "node recipes/x-twitter-import/import-x-twitter.mjs"
+      },
+      {
+        "path": "recipes/journals-blogger-import/import-blogger.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to import Blogger journal entries into Open Brain.",
+        "startup_hint": "node recipes/journals-blogger-import/import-blogger.mjs"
+      },
+      {
+        "path": "recipes/brain-backup/backup-brain.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to export all thoughts from Open Brain to a local JSON backup file.",
+        "startup_hint": "node recipes/brain-backup/backup-brain.mjs"
+      },
+      {
+        "path": "recipes/fingerprint-dedup-backfill/backfill-fingerprints.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to backfill content fingerprints on existing thoughts for deduplication.",
+        "startup_hint": "node recipes/fingerprint-dedup-backfill/backfill-fingerprints.mjs"
+      },
+      {
+        "path": "recipes/fingerprint-dedup-backfill/delete-duplicates.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to identify and delete duplicate thoughts based on content fingerprints.",
+        "startup_hint": "node recipes/fingerprint-dedup-backfill/delete-duplicates.mjs"
+      },
+      {
+        "path": "recipes/thought-enrichment/enrich-thoughts.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to re-process existing thoughts through the metadata enrichment pipeline.",
+        "startup_hint": "node recipes/thought-enrichment/enrich-thoughts.mjs"
+      },
+      {
+        "path": "recipes/thought-enrichment/backfill-type.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to backfill the 'type' metadata field on existing thoughts.",
+        "startup_hint": "node recipes/thought-enrichment/backfill-type.mjs"
+      },
+      {
+        "path": "recipes/thought-enrichment/backfill-sensitivity.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to backfill sensitivity classification on existing thoughts.",
+        "startup_hint": "node recipes/thought-enrichment/backfill-sensitivity.mjs"
+      },
+      {
+        "path": "recipes/entity-wiki/generate-wiki.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to generate wiki-style entity pages from the knowledge graph.",
+        "startup_hint": "node recipes/entity-wiki/generate-wiki.mjs"
+      },
+      {
+        "path": "recipes/typed-edge-classifier/classify-edges.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to classify/type knowledge graph edges using an LLM.",
+        "startup_hint": "node recipes/typed-edge-classifier/classify-edges.mjs"
+      },
+      {
+        "path": "recipes/wiki-compiler/compile-wiki.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI orchestration script that compiles per-entity wikis into a unified knowledge base document.",
+        "startup_hint": "node recipes/wiki-compiler/compile-wiki.mjs"
+      },
+      {
+        "path": "recipes/wiki-synthesis/scripts/synthesize-wiki.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to synthesize structured wiki content from raw thoughts and entity data.",
+        "startup_hint": "node recipes/wiki-synthesis/scripts/synthesize-wiki.mjs"
+      },
+      {
+        "path": "recipes/wiki-synthesis/scripts/backfill-gmail-wikis.mjs",
+        "type": "node-script",
+        "description": "Node.js CLI script to backfill wiki synthesis for Gmail-imported contacts.",
+        "startup_hint": "node recipes/wiki-synthesis/scripts/backfill-gmail-wikis.mjs"
+      },
+      {
+        "path": "recipes/email-history-import/pull-gmail.ts",
+        "type": "node-script",
+        "description": "TypeScript script to pull Gmail history and import email threads into Open Brain.",
+        "startup_hint": "tsx recipes/email-history-import/pull-gmail.ts"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/scripts/migrate.ts",
+        "type": "node-script",
+        "description": "Database migration runner for the Vercel+Neon variant.",
+        "startup_hint": "npm run migrate  (inside recipes/vercel-neon-telegram/)"
+      },
+      {
+        "path": "skills/heavy-file-ingestion/scripts/convert_heavy_file.py",
+        "type": "python-script",
+        "description": "Helper script to convert large binary/document files into text chunks suitable for Open Brain ingestion.",
+        "startup_hint": "python3 skills/heavy-file-ingestion/scripts/convert_heavy_file.py"
+      },
+      {
+        "path": "skills/heavy-file-ingestion/scripts/build_client_exports.py",
+        "type": "python-script",
+        "description": "Helper script to package converted file content into client-ready export format.",
+        "startup_hint": "python3 skills/heavy-file-ingestion/scripts/build_client_exports.py"
+      }
+    ],
+    "api": [
+      {
+        "path": "server/index.ts",
+        "type": "mcp-over-http",
+        "description": "MCP protocol endpoint. All routes handled by a single Hono catch-all that delegates to StreamableHTTPTransport. Auth via x-brain-key header or ?key= param.",
+        "base_path": "/"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/src/app/api/capture/route.ts",
+        "type": "next-api-route",
+        "description": "Next.js App Router API route for capturing a new thought via HTTP POST.",
+        "base_path": "/api/capture"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/src/app/api/mcp/route.ts",
+        "type": "next-api-route",
+        "description": "Next.js App Router API route that exposes the MCP endpoint for the Vercel+Neon deployment.",
+        "base_path": "/api/mcp"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/src/app/api/telegram/route.ts",
+        "type": "next-api-route",
+        "description": "Next.js App Router webhook handler for incoming Telegram bot messages (grammy).",
+        "base_path": "/api/telegram"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/src/app/api/health/route.ts",
+        "type": "next-api-route",
+        "description": "Health-check endpoint for the Vercel+Neon deployment.",
+        "base_path": "/api/health"
+      },
+      {
+        "path": "integrations/entity-extraction-worker/index.ts",
+        "type": "deno-http-handler",
+        "description": "HTTP endpoint for the entity extraction worker. Accepts GET/POST with optional ?limit= and ?dry_run= query params.",
+        "base_path": "/"
+      },
+      {
+        "path": "recipes/ob-graph/index.ts",
+        "type": "mcp-over-http",
+        "description": "OB-Graph MCP endpoint — Hono app exposing knowledge-graph tools over StreamableHTTP.",
+        "base_path": "/"
+      },
+      {
+        "path": "recipes/work-operating-model-activation/index.ts",
+        "type": "mcp-over-http",
+        "description": "Work Operating Model MCP endpoint.",
+        "base_path": "/"
+      }
+    ],
+    "library": [
+      {
+        "path": "recipes/schema-aware-routing/index.ts",
+        "type": "typescript-module",
+        "description": "Importable TypeScript module demonstrating the schema-aware routing pattern. Not a standalone server — meant to be embedded or studied as a reference implementation for multi-table writes driven by LLM-extracted metadata."
+      },
+      {
+        "path": "recipes/adaptive-capture-classification/capture-with-gating.ts",
+        "type": "typescript-module",
+        "description": "Importable TypeScript module implementing adaptive capture with LLM-based gating/classification before writing to the database."
+      },
+      {
+        "path": "integrations/entity-extraction-worker/_shared/helpers.ts",
+        "type": "typescript-module",
+        "description": "Shared utility helpers (type guards, coercions) used internally by the entity-extraction-worker Edge Function."
+      },
+      {
+        "path": "integrations/entity-extraction-worker/_shared/config.ts",
+        "type": "typescript-module",
+        "description": "Shared LLM model constants for the entity-extraction-worker (OpenRouter, OpenAI, Anthropic variants)."
+      },
+      {
+        "path": "recipes/thought-enrichment/lib/memory-core.mjs",
+        "type": "esm-module",
+        "description": "Reusable ESM library providing core memory operations (read/write/search) used by the thought-enrichment scripts."
+      },
+      {
+        "path": "recipes/thought-enrichment/lib/sensitivity-patterns.mjs",
+        "type": "esm-module",
+        "description": "Reusable ESM library with regex/heuristic patterns for classifying thought sensitivity."
+      }
+    ]
+  },
+  "primary_entry": {
+    "path": "server/index.ts",
+    "reason": "The canonical Open Brain MCP server. It is the single deployable unit that all AI clients (Claude Desktop, claude.ai, any MCP-compatible client) connect to. Every other entry point is either a variant of this server or a one-time data migration/enrichment script that feeds data into the database this server exposes."
+  }
+}

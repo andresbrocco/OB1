@@ -1,0 +1,26 @@
+{
+  "status": "created",
+  "directory": "extensions/home-maintenance",
+  "readme_file": "extensions/home-maintenance/README.md",
+  "reasoning": "Strong operational surface: 4 MCP tools exposed over 2 HTTP routes (POST for MCP, GET for health check), 4 environment variables (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, MCP_ACCESS_KEY, DEFAULT_USER_ID), 2 database tables with RLS and auto-trigger logic, a deploy workflow via Supabase CLI, and a deno.json dependency manifest.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "api_endpoints",
+    "mcp_tools",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 2,
+    "env_var_count": 4,
+    "command_count": 5,
+    "has_health_check": true,
+    "mcp_tool_count": 4,
+    "database_table_count": 2
+  }
+}

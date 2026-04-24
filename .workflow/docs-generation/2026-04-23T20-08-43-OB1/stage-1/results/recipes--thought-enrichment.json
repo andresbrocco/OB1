@@ -1,0 +1,35 @@
+{
+  "status": "created",
+  "directory": "recipes/thought-enrichment",
+  "context_file": "recipes/thought-enrichment/CONTEXT.md",
+  "reasoning": "Complex multi-script pipeline with non-obvious domain concepts (sensitivity tiers, enrichment versioning, three distinct backfill scenarios), cursor-based pagination logic, resumable state management, and calibrated LLM prompting. The relationship between the three scripts and their distinct repair purposes is not apparent from filenames alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "LLM-based retroactive classification and sensitivity-tier backfill pipeline for existing thoughts in a Supabase Open Brain database",
+    "key_concepts": [
+      "Sensitivity tiers (standard/personal/restricted)",
+      "Enrichment versioning",
+      "Cursor-based resumable state",
+      "Type backfill (metadata.type promotion)",
+      "LLM classification prompt with importance/confidence calibration"
+    ],
+    "exports": [],
+    "depends_on": ["Supabase REST API", "Anthropic API", "OpenRouter API"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "ANTHROPIC_API_KEY",
+        "OPENROUTER_API_KEY",
+        "ANTHROPIC_CLASSIFIER_MODEL",
+        "OPENROUTER_CLASSIFIER_MODEL",
+        "ENRICH_PROVIDER"
+      ],
+      "config_files": [".env.local", "sensitivity-patterns.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

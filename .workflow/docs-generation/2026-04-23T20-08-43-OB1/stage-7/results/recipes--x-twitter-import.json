@@ -1,0 +1,23 @@
+{
+  "status": "created",
+  "directory": "recipes/x-twitter-import",
+  "readme_file": "recipes/x-twitter-import/README.md",
+  "reasoning": "Module has 4 environment variables, 2 npm scripts, CLI flags with multiple import modes, a prescribed archive directory structure, and writes to the thoughts table via upsert_thought RPC — clear operational surface warranting a README.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "commands",
+    "cli_flags",
+    "archive_structure",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 0,
+    "env_var_count": 4,
+    "command_count": 2,
+    "has_health_check": false
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "status": "created",
+  "directory": "skills/panning-for-gold",
+  "context_file": "skills/panning-for-gold/CONTEXT.md",
+  "reasoning": "Complex multi-phase AI workflow skill with domain-specific terminology (panning, gold-found, thread triage verdicts, speaker consolidation), non-obvious operational constraints derived from production failures (mandatory permanent file writes, evaluator caps, summaries-first reading strategy), and a self-improving lessons log. Purpose and process are not deducible from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Multi-phase AI skill for transforming unstructured captures (voice transcripts, brain dumps) into evaluated idea inventories stored in Open Brain",
+    "key_concepts": [
+      "Panning / Gold-Found",
+      "Thread extraction",
+      "Verdict taxonomy (ACT NOW / RESEARCH MORE / PARK IT / KILL IT)",
+      "Speaker Consolidation",
+      "Mary's Law Check",
+      "COS items",
+      "Permanent file write discipline"
+    ],
+    "exports": ["SKILL.md (reusable AI client skill prompt)"],
+    "depends_on": ["Open Brain (capture_thought, search_thoughts)", "AI client file tools"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["skills/panning-for-gold/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "status": "created",
+  "directory": "extensions/household-knowledge",
+  "readme_file": "extensions/household-knowledge/README.md",
+  "reasoning": "Edge Function MCP server with 2 HTTP routes (POST for MCP tool dispatch, GET for health check), 4 required environment variables, 5 MCP tools, 2 database tables with RLS, and deploy/serve commands.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "api_endpoints",
+    "mcp_tools",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 2,
+    "env_var_count": 4,
+    "command_count": 4,
+    "has_health_check": true,
+    "mcp_tool_count": 5,
+    "database_table_count": 2
+  }
+}

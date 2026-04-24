@@ -1,0 +1,27 @@
+{
+  "status": "created",
+  "directory": "recipes/ob-graph",
+  "readme_file": "recipes/ob-graph/README.md",
+  "reasoning": "MCP Edge Function with 2 HTTP endpoints (GET health + POST MCP), 10 MCP tools, 4 required env vars, 2 database tables, 2 SQL traversal functions, and a deployment workflow — strong operational surface warrants a README.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "api_endpoints",
+    "mcp_tools",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 2,
+    "env_var_count": 4,
+    "command_count": 5,
+    "has_health_check": true,
+    "mcp_tool_count": 10,
+    "database_table_count": 2,
+    "sql_function_count": 2
+  }
+}

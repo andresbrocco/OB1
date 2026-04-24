@@ -1,0 +1,43 @@
+{
+  "status": "created",
+  "directory": "skills",
+  "context_file": "skills/CONTEXT.md",
+  "reasoning": "The skills directory uses a non-obvious behavioral protocol pattern where SKILL.md files serve as AI-consumable instruction sets rather than human documentation. It has domain-specific concepts (trigger conditions, variants, references as selective-load knowledge docs, self-improving lessons logs) and non-obvious conventions around tool name softness, the client-variant split, and the living-document nature of production skills like panning-for-gold.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Reusable AI behavioral protocols — prompt packs and process definitions that govern how an AI client handles a specific class of recurring problem",
+    "key_concepts": [
+      "SKILL.md",
+      "Trigger Conditions",
+      "Variants",
+      "References (selective-load knowledge docs)",
+      "Lessons Log",
+      "Output Contract"
+    ],
+    "exports": [
+      "auto-capture",
+      "autodream-brain-sync",
+      "claudeception",
+      "competitive-analysis",
+      "deal-memo-drafting",
+      "financial-model-review",
+      "heavy-file-ingestion",
+      "meeting-synthesis",
+      "n-agentic-harnesses",
+      "panning-for-gold",
+      "research-synthesis",
+      "weekly-signal-diff",
+      "work-operating-model",
+      "world-model-diagnostic"
+    ],
+    "depends_on": ["integrations", "recipes"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

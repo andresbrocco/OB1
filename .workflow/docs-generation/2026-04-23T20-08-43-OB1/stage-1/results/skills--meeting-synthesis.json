@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "skills/meeting-synthesis",
+  "reasoning": "The directory contains only SKILL.md and metadata.json. SKILL.md is itself a thorough, self-documenting workflow guide. The purpose is immediately clear from the directory name and file contents. There is no executable code, business logic, domain-specific abstractions, or non-obvious responsibility boundaries that would benefit from a separate CONTEXT.md.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Prompt-based skill pack for turning meeting transcripts or notes into structured outputs: decisions, action items, unresolved questions, risks, and follow-up artifacts",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["skills/meeting-synthesis/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

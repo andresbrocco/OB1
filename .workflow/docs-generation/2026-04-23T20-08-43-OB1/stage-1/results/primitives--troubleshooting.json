@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "primitives/troubleshooting",
+  "reasoning": "Directory contains only a metadata.json file. There is no code, no domain-specific logic, and no non-obvious concepts. The purpose is entirely self-evident from the directory name and metadata description: a beginner-level reference guide for common troubleshooting issues.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Reference guide for common troubleshooting issues across Open Brain extensions",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["primitives/troubleshooting/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

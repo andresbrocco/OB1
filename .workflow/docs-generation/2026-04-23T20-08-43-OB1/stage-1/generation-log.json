@@ -1,0 +1,3859 @@
+{
+  "generated_at": "2026-04-23T20:34:05-0300",
+  "target_path": "/Users/asbrocco/Documents/REPOS/OB1",
+  "total_candidates": 100,
+  "created": 79,
+  "skipped": 21,
+  "results": [
+    {
+      "status": "skipped",
+      "directory": ".claude",
+      "reasoning": "Standard Claude Code configuration directory containing only a skills subdirectory with a single admin skill file. The directory's purpose and structure are self-evident: it holds Claude Code slash command skill definitions for repository maintainers. No domain-specific concepts, complex business logic, or non-obvious design decisions are present.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Claude Code configuration and admin skill definitions for OB1 maintainers",
+        "key_concepts": [],
+        "exports": [
+          "skills/review-pr.md"
+        ],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": ".claude/skills",
+      "context_file": ".claude/skills/CONTEXT.md",
+      "reasoning": "Contains a single but non-trivial skill file defining a multi-step admin PR review workflow. The skill has clear responsibility boundaries (admin judgment vs CI automation), domain-specific outputs (admin summary, Discord draft, PR comment), and non-obvious behavioral constraints (branch checkout/return, user confirmation before side effects). The purpose and boundaries are not evident from the directory name alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Claude Code skill definitions for OB1 maintainer PR review workflows",
+        "key_concepts": [
+          "Skill file format",
+          "Human-judgment layer",
+          "Admin review vs CI automation"
+        ],
+        "exports": [
+          "review-pr"
+        ],
+        "depends_on": [
+          ".github/workflows/ob1-review.yml",
+          "gh CLI"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": ".github",
+      "context_file": ".github/CONTEXT.md",
+      "reasoning": "The .github directory contains a non-trivial two-stage CI/CD pipeline with a deterministic gate workflow, an LLM-backed qualitative review workflow, a trust-tier system for auto-review eligibility, idempotent PR comment management, and a metadata JSON schema that all contributions must satisfy. The design decisions (decoupled stages, artifact passing between workflows, docs-PR bypass, trusted-contributor quota gating) are not obvious from filenames and warrant documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Automated contribution governance: CI gate, LLM-backed PR review, issue triage, metadata schema validation, and community automation",
+        "key_concepts": [
+          "Two-stage review pipeline (deterministic gate + LLM qualitative review)",
+          "Trusted contributor auto-review",
+          "Idempotent PR comment via ob1-automated-review marker",
+          "Docs PR bypass",
+          "PR quota enforcement",
+          "security-blocked and needs-maintainer-triage label lifecycle"
+        ],
+        "exports": [
+          "metadata.schema.json",
+          "PULL_REQUEST_TEMPLATE.md",
+          "ob1-gate.yml",
+          "claude-review.yml",
+          "ob1-pr-followups.yml",
+          "claude-issue-triage.yml",
+          "auto-label.yml",
+          "discord-announce.yml",
+          "markdown-lint.yml",
+          "release-drafter.yml",
+          "welcome-new-contributors.yml"
+        ],
+        "depends_on": [
+          "CONTRIBUTING.md",
+          "CLAUDE.md",
+          "docs/01-getting-started.md",
+          "docs/05-tool-audit.md"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "ANTHROPIC_API_KEY",
+            "GITHUB_TOKEN"
+          ],
+          "config_files": [
+            ".github/.markdownlint.jsonc",
+            ".github/release-drafter.yml"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": ".github/workflows",
+      "context_file": ".github/workflows/CONTEXT.md",
+      "reasoning": "The directory contains a non-obvious two-stage CI/CD pipeline with domain-specific design decisions: a deterministic gate workflow that passes structured artifacts to a follow-up workflow, a contributor trust and quota policy governing when Claude auto-review fires, a manual dispatch path for secondary LLM review, idempotent PR comment management, and intentional security boundaries between pull_request and pull_request_target triggers. The non-consecutive rule numbering and security-blocked label behavior are additional gotchas that benefit from documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "GitHub Actions automation for the full OB1 contribution lifecycle: PR gating, AI-assisted quality review, issue triage, contributor onboarding, labeling, Discord announcements, markdown linting, and release drafting",
+        "key_concepts": [
+          "Two-stage review pipeline",
+          "Artifact handoff between workflows",
+          "Contributor trust and quota policy",
+          "Idempotent PR comments",
+          "pull_request vs pull_request_target security split"
+        ],
+        "exports": [],
+        "depends_on": [
+          ".github/metadata.schema.json",
+          ".github/.markdownlint.jsonc",
+          "CONTRIBUTING.md",
+          "CLAUDE.md"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "ANTHROPIC_API_KEY",
+            "DISCORD_WEBHOOK_URL",
+            "GITHUB_TOKEN"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "dashboards",
+      "context_file": "dashboards/CONTEXT.md",
+      "reasoning": "Contains two full frontend applications with non-obvious architectural differences: one uses REST+iron-session auth, the other uses MCP JSON-RPC proxy + Supabase Auth. Non-obvious details include text-scraping MCP responses, middleware auth exemptions for API routes, smart ingest heuristics, and kanban type restrictions. The directory name alone does not convey these distinctions.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Frontend dashboard templates for browsing, searching, capturing, and managing Open Brain thoughts via a browser UI",
+        "key_concepts": [
+          "REST API connection pattern (Next.js dashboard)",
+          "MCP JSON-RPC proxy connection pattern (SvelteKit dashboard)",
+          "iron-session cookie auth",
+          "Supabase Auth",
+          "Smart ingest auto-routing heuristic",
+          "Kanban workflow (task/idea types only)",
+          "sensitivity_tier restricted content gating"
+        ],
+        "exports": [],
+        "depends_on": [
+          "open-brain-rest Edge Function",
+          "open-brain-mcp Edge Function",
+          "Supabase Auth"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "NEXT_PUBLIC_API_URL",
+            "SESSION_SECRET",
+            "RESTRICTED_PASSPHRASE_HASH",
+            "MCP_URL",
+            "MCP_KEY",
+            "PUBLIC_MCP_URL",
+            "PUBLIC_MCP_KEY",
+            "PUBLIC_SUPABASE_URL",
+            "PUBLIC_SUPABASE_ANON_KEY"
+          ],
+          "config_files": [
+            "dashboards/open-brain-dashboard-next/.env.example",
+            "dashboards/open-brain-dashboard/.env.example",
+            "dashboards/open-brain-dashboard-next/next.config.ts",
+            "dashboards/open-brain-dashboard/svelte.config.js"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "dashboards/open-brain-dashboard",
+      "context_file": "dashboards/open-brain-dashboard/CONTEXT.md",
+      "reasoning": "Non-trivial architecture: server-side MCP proxy pattern to prevent key leakage, dual env var strategy with different security profiles, text-parsing of two distinct MCP response formats using regex heuristics, SSE vs JSON response detection, ephemeral client-generated IDs, and Supabase SSR auth integration. Multiple non-obvious design decisions that would not be apparent from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "SvelteKit dashboard for searching, filtering, browsing, and capturing Open Brain thoughts with Supabase authentication",
+        "key_concepts": [
+          "MCP proxy route",
+          "ThoughtType",
+          "Text parsing layer",
+          "SSR auth"
+        ],
+        "exports": [
+          "Thought",
+          "ThoughtType",
+          "ThoughtMetadata",
+          "THOUGHT_TYPES",
+          "getThoughts",
+          "getStats",
+          "captureThought"
+        ],
+        "depends_on": [
+          "Supabase Edge Function (MCP server)",
+          "Supabase Auth"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "MCP_URL",
+            "MCP_KEY",
+            "PUBLIC_MCP_URL",
+            "PUBLIC_MCP_KEY",
+            "PUBLIC_SUPABASE_URL",
+            "PUBLIC_SUPABASE_ANON_KEY"
+          ],
+          "config_files": [
+            "dashboards/open-brain-dashboard/.env.example",
+            "dashboards/open-brain-dashboard/svelte.config.js",
+            "dashboards/open-brain-dashboard/vite.config.ts"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "dashboards/open-brain-dashboard-next",
+      "context_file": "dashboards/open-brain-dashboard-next/CONTEXT.md",
+      "reasoning": "Complex Next.js dashboard with non-obvious auth architecture (two-layer guard via middleware + server-side requireSession), restricted-content session flag, a server-only API client that proxies requests to keep the brain API key out of the browser, and a workaround for the REST API's single-type filter limitation in the kanban view. Multiple domain-specific concepts (sensitivity_tier, quality_score threshold for audit, KANBAN_TYPES restriction) that are not self-evident from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Next.js 14 web dashboard for browsing, searching, capturing, and managing Open Brain thoughts behind session auth",
+        "key_concepts": [
+          "iron-session cookie auth",
+          "two-layer auth guard",
+          "restricted content gating",
+          "server-only API proxy",
+          "kanban workflow (task/idea types)",
+          "quality audit (quality_score <= 29)"
+        ],
+        "exports": [
+          "Web UI pages: thoughts, search, kanban, audit, duplicates, ingest",
+          "Next.js API routes: /api/audit, /api/duplicates, /api/ingest, /api/kanban, /api/search, /api/thoughts, /api/restricted, /api/logout"
+        ],
+        "depends_on": [
+          "Open Brain REST API (Supabase Edge Function)",
+          "iron-session",
+          "Next.js 14"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "NEXT_PUBLIC_API_URL",
+            "SESSION_SECRET",
+            "RESTRICTED_PASSPHRASE_HASH",
+            "NODE_ENV"
+          ],
+          "config_files": [
+            "dashboards/open-brain-dashboard-next/.env.example",
+            "dashboards/open-brain-dashboard-next/next.config.ts",
+            "dashboards/open-brain-dashboard-next/tsconfig.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "dashboards/open-brain-dashboard-next/app",
+      "reasoning": "Standard Next.js App Router directory containing only the four conventional files: layout.tsx, page.tsx, globals.css, and favicon.ico. The layout wraps content in a SidebarShell and establishes global fonts and CSS variables. The page.tsx is a straightforward server component dashboard page. Any Next.js developer would immediately recognize the structure and purpose without additional documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Next.js App Router root \u2014 global layout, root dashboard page, and design-token CSS",
+        "key_concepts": [],
+        "exports": [
+          "RootLayout",
+          "DashboardPage"
+        ],
+        "depends_on": [
+          "dashboards/open-brain-dashboard-next/components/SidebarShell",
+          "dashboards/open-brain-dashboard-next/components/StatsWidget",
+          "dashboards/open-brain-dashboard-next/components/KanbanSummary",
+          "dashboards/open-brain-dashboard-next/components/ThoughtCard",
+          "dashboards/open-brain-dashboard-next/components/AddToBrain",
+          "dashboards/open-brain-dashboard-next/lib/api",
+          "dashboards/open-brain-dashboard-next/lib/auth"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "dashboards/open-brain-dashboard-next/app/globals.css"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "dashboards/open-brain-dashboard-next/app/api",
+      "context_file": "dashboards/open-brain-dashboard-next/app/api/CONTEXT.md",
+      "reasoning": "Multiple sub-domains (audit, ingest, duplicates, kanban, thoughts, restricted) with non-obvious cross-cutting concerns: a two-tier restricted content system using session state + SHA-256 passphrase verification, an auto-routing heuristic that decides between single-thought capture and multi-thought extraction, partial-success batch delete semantics, and an inconsistency where some routes proxy via @/lib/api while others construct backend URLs directly.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Authenticated proxy and orchestration layer between the dashboard frontend and the Open Brain backend API",
+        "key_concepts": [
+          "Restricted content unlock",
+          "Auto-routing heuristic (shouldExtract)",
+          "Kanban statuses",
+          "Audit quality threshold",
+          "Session-scoped API key forwarding"
+        ],
+        "exports": [
+          "GET /api/audit",
+          "POST /api/audit/delete",
+          "GET /api/duplicates",
+          "POST /api/duplicates/resolve",
+          "GET /api/ingest",
+          "POST /api/ingest",
+          "GET /api/ingest/[id]",
+          "POST /api/ingest/[id]/execute",
+          "GET /api/kanban",
+          "POST /api/kanban/update",
+          "POST /api/kanban/delete",
+          "POST /api/logout",
+          "GET|POST|DELETE /api/restricted",
+          "GET /api/search",
+          "GET /api/thoughts/[id]/connections",
+          "POST /api/thoughts/[id]/reflection"
+        ],
+        "depends_on": [
+          "@/lib/api",
+          "@/lib/auth"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "RESTRICTED_PASSPHRASE_HASH",
+            "NEXT_PUBLIC_API_URL"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "dashboards/open-brain-dashboard-next/components",
+      "context_file": "dashboards/open-brain-dashboard-next/components/CONTEXT.md",
+      "reasoning": "Multiple non-obvious design decisions: optimistic update rollback pattern using useRef snapshots, client-side auto-archive logic that does not persist to the database, two-phase dry-run/execute ingestion flow in AddToBrain, KANBAN_TYPES eligibility boundary that nulls status on type change, React portal usage for modal stacking context, ThoughtEditor's server action prop pattern, and the passphrase-gated RestrictedToggle that self-hides when unconfigured.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "UI component library for browsing, editing, ingesting, and organizing thoughts in the Open Brain dashboard",
+        "key_concepts": [
+          "KANBAN_TYPES eligibility boundary",
+          "Ingestion modes (auto/single/extract)",
+          "Dry-run two-phase ingestion",
+          "Reflection types (decision_trace, lesson_trace, retrospective, hypothesis)",
+          "Restricted content passphrase gating"
+        ],
+        "exports": [
+          "AddToBrain",
+          "ConnectionsPanel",
+          "DeleteModal",
+          "FormattedDate",
+          "KanbanBoard",
+          "KanbanCard",
+          "KanbanCardModal",
+          "KanbanColumn",
+          "KanbanSummary",
+          "PriorityDot",
+          "ReflectionComposer",
+          "RestrictedToggle",
+          "SearchBar",
+          "Sidebar",
+          "SidebarShell",
+          "StatsWidget",
+          "ThoughtCard",
+          "TypeBadge",
+          "ThoughtDeleteButton",
+          "ThoughtEditor",
+          "ThoughtsFilter"
+        ],
+        "depends_on": [
+          "@/lib/types",
+          "/api/kanban",
+          "/api/ingest",
+          "/api/thoughts",
+          "/api/restricted",
+          "@dnd-kit/core"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "dashboards/open-brain-dashboard-next/lib",
+      "context_file": "dashboards/open-brain-dashboard-next/lib/CONTEXT.md",
+      "reasoning": "Contains non-obvious design decisions: server-only import guard to prevent API key leakage, dual auth helper pattern (throw vs redirect) for different Next.js contexts, a sequential multi-call workaround in fetchKanbanThoughts due to single-type API limitation, module-load-time SESSION_SECRET validation, and domain constants (KANBAN_TYPES, PRIORITY_LEVELS sort order) whose constraints are not self-evident.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Shared server-side infrastructure: typed API client, session auth helpers, domain types, and formatting utilities for the Next.js dashboard",
+        "key_concepts": [
+          "x-brain-key",
+          "sensitivity_tier",
+          "restrictedUnlocked",
+          "KANBAN_TYPES subset",
+          "AddToBrainMode",
+          "server-only boundary"
+        ],
+        "exports": [
+          "ApiError",
+          "fetchThoughts",
+          "fetchThought",
+          "updateThought",
+          "fetchKanbanThoughts",
+          "fetchDuplicates",
+          "deleteThought",
+          "searchThoughts",
+          "fetchStats",
+          "captureThought",
+          "fetchReflections",
+          "fetchIngestionJobs",
+          "triggerIngest",
+          "checkHealth",
+          "getSession",
+          "requireSession",
+          "requireSessionOrRedirect",
+          "AuthError",
+          "SessionData",
+          "Thought",
+          "THOUGHT_TYPES",
+          "KANBAN_TYPES",
+          "KANBAN_STATUSES",
+          "KANBAN_LABELS",
+          "KANBAN_COLORS",
+          "PRIORITY_LEVELS",
+          "getPriorityLevel",
+          "formatDate",
+          "formatDateShort"
+        ],
+        "depends_on": [
+          "iron-session",
+          "next/headers",
+          "next/navigation"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "NEXT_PUBLIC_API_URL",
+            "SESSION_SECRET",
+            "NODE_ENV"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "dashboards/open-brain-dashboard/src",
+      "context_file": "dashboards/open-brain-dashboard/src/CONTEXT.md",
+      "reasoning": "Standard SvelteKit root src directory, but contains non-obvious details worth documenting: the hooks.server.ts deliberately sets session to null while populating user; the MCP credential dual-path pattern is declared at the type level in app.d.ts; and app.css defines thought-type color tokens that are relied upon globally across components.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Application shell, global design tokens, TypeScript ambient declarations, and server-side Supabase auth bootstrap for the Open Brain SvelteKit dashboard",
+        "key_concepts": [
+          "Thought-type color tokens",
+          "MCP credential server-vs-public pattern",
+          "SvelteKit locals augmentation"
+        ],
+        "exports": [
+          "handle (SvelteKit Handle hook)"
+        ],
+        "depends_on": [
+          "@supabase/ssr",
+          "@sveltejs/kit",
+          "tailwindcss"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "PUBLIC_SUPABASE_URL",
+            "PUBLIC_SUPABASE_ANON_KEY",
+            "PUBLIC_MCP_URL",
+            "PUBLIC_MCP_KEY"
+          ],
+          "config_files": [
+            "dashboards/open-brain-dashboard/src/app.css",
+            "dashboards/open-brain-dashboard/src/app.html"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "dashboards/open-brain-dashboard/src/lib",
+      "context_file": "dashboards/open-brain-dashboard/src/lib/CONTEXT.md",
+      "reasoning": "Contains a non-obvious text-parsing layer that converts human-readable MCP tool responses into typed TypeScript objects using regex parsers. The two MCP list/search tools return structurally different text formats requiring separate parsers, and all parsed thought IDs are ephemeral (generated via crypto.randomUUID). These are genuine gotchas not evident from file names.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Shared data layer providing domain types, a Supabase browser client, and an MCP API client with text-response parsing",
+        "key_concepts": [
+          "ThoughtType",
+          "MCP text-response parsing",
+          "ephemeral IDs"
+        ],
+        "exports": [
+          "Thought",
+          "ThoughtMetadata",
+          "ThoughtType",
+          "THOUGHT_TYPES",
+          "supabase",
+          "getThoughts",
+          "getStats",
+          "captureThought"
+        ],
+        "depends_on": [
+          "@supabase/ssr",
+          "$env/dynamic/public",
+          "/api/mcp"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "PUBLIC_SUPABASE_URL",
+            "PUBLIC_SUPABASE_ANON_KEY"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "dashboards/open-brain-dashboard/src/routes",
+      "context_file": "dashboards/open-brain-dashboard/src/routes/CONTEXT.md",
+      "reasoning": "Contains non-obvious behavior: a server-side auth guard that depends on upstream hooks populating locals.user, an incremental result-merging strategy that accumulates rather than replaces search results, a composite dedup key based on created_at+content rather than a stable id, and a post-search filter extraction that overwrites global stats-derived filters with result-scoped values.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Top-level SvelteKit route tree providing the authenticated shell layout and single-page search/capture interface",
+        "key_concepts": [
+          "Auth guard via layout.server.ts",
+          "Incremental result merging",
+          "latestResultKey highlight",
+          "Post-search filter extraction"
+        ],
+        "exports": [],
+        "depends_on": [
+          "$lib/api",
+          "$lib/types"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "docs",
+      "context_file": "docs/CONTEXT.md",
+      "reasoning": "The docs directory has non-obvious organizational logic: numbered files form a deliberate progressive onboarding sequence, companion prompts are executable templates not just explanatory text, and the tool audit guide addresses a subtle MCP context-window degradation problem that isn't visible in any single extension. The query-parameter auth pattern documented in the FAQ is the most common setup failure and is genuinely non-obvious. These details go beyond what file names alone convey.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "End-user-facing setup guides, executable companion prompts, FAQ, AI-assisted setup instructions, and MCP optimization guidance for Open Brain onboarding and operation",
+        "key_concepts": [
+          "Progressive onboarding sequence",
+          "Executable companion prompts",
+          "MCP tool context overhead",
+          "Query-parameter auth pattern"
+        ],
+        "exports": [
+          "01-getting-started.md",
+          "02-companion-prompts.md",
+          "03-faq.md",
+          "04-ai-assisted-setup.md",
+          "05-tool-audit.md",
+          "video-walkthrough-script.md",
+          "workflow-pipeline.html",
+          "open-brain-credential-tracker.xlsx",
+          "open-brain-guide-mac.xlsx",
+          "open-brain-guide-mac-tabbed.xlsx",
+          "open-brain-guide-windows.xlsx",
+          "open-brain-guide-windows-tabbed.xlsx"
+        ],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "extensions",
+      "context_file": "extensions/CONTEXT.md",
+      "reasoning": "The extensions directory has several non-obvious design characteristics: a curated learning path (learning_order 1-6) that is maintainer-gated and distinct from community contributions, a DEFAULT_USER_ID pattern that bypasses Supabase RLS by design, per-request MCP server instantiation required by the Edge Function execution model, a machine-readable AGENT_SPEC.md that defines the full 5-file generation contract, and an exception pattern (shared-server.ts in meal-planning) that signals the shared-mcp primitive usage. These are not obvious from directory or file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Curated domain-specific MCP servers that extend Open Brain with structured memory capabilities, organized as a gated learning path and open community contributions",
+        "key_concepts": [
+          "Learning path (learning_order 1-6)",
+          "DEFAULT_USER_ID single-tenant pattern",
+          "Per-request MCP server instantiation",
+          "5-file extension contract",
+          "AGENT_SPEC.md machine-readable generation spec"
+        ],
+        "exports": [
+          "family-calendar MCP server",
+          "home-maintenance MCP server",
+          "household-knowledge MCP server",
+          "job-hunt MCP server",
+          "meal-planning MCP server",
+          "professional-crm MCP server"
+        ],
+        "depends_on": [
+          "primitives/deploy-edge-function",
+          "primitives/remote-mcp",
+          "primitives/rls",
+          "primitives/shared-mcp"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "MCP_ACCESS_KEY",
+            "DEFAULT_USER_ID",
+            "OPENROUTER_API_KEY"
+          ],
+          "config_files": [
+            "extensions/family-calendar/deno.json",
+            "extensions/home-maintenance/deno.json",
+            "extensions/household-knowledge/deno.json",
+            "extensions/job-hunt/deno.json",
+            "extensions/meal-planning/deno.json",
+            "extensions/professional-crm/deno.json"
+          ],
+          "has_health_endpoints": true,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "extensions/family-calendar",
+      "context_file": "extensions/family-calendar/CONTEXT.md",
+      "reasoning": "Contains non-obvious implementation details: a Claude Desktop Accept-header workaround with a Deno duplex streaming hack, a dual one-time/recurring activity model sharing a single table with a complex OR filter, NULL family_member_id semantics for household-wide events, and a DEFAULT_USER_ID pinning pattern not documented in .env.example. Worth documenting for contributors maintaining or extending this extension.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Remote MCP server providing household scheduling tools: family member roster, one-time and recurring activities, and important date tracking",
+        "key_concepts": [
+          "recurring vs. one-time activities in a unified table",
+          "NULL family_member_id for household-wide events",
+          "Claude Desktop Accept-header patch",
+          "DEFAULT_USER_ID single-tenant pinning"
+        ],
+        "exports": [
+          "add_family_member",
+          "add_activity",
+          "get_week_schedule",
+          "search_activities",
+          "add_important_date",
+          "get_upcoming_dates"
+        ],
+        "depends_on": [
+          "Supabase (family_members, activities, important_dates tables)",
+          "@hono/mcp StreamableHTTPTransport",
+          "@modelcontextprotocol/sdk McpServer",
+          "hono",
+          "zod"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "MCP_ACCESS_KEY",
+            "DEFAULT_USER_ID"
+          ],
+          "config_files": [
+            "extensions/family-calendar/deno.json",
+            "extensions/family-calendar/.env.example"
+          ],
+          "has_health_endpoints": true,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "extensions/home-maintenance",
+      "context_file": "extensions/home-maintenance/CONTEXT.md",
+      "reasoning": "Contains non-obvious implementation details: a Claude Desktop Accept-header workaround required for the MCP transport, a PostgreSQL trigger that drives next_due recalculation (invisible from the MCP layer), a DEFAULT_USER_ID identity pattern instead of JWT auth, a service-role key that bypasses RLS, and a two-phase query strategy in search_maintenance_history. These are all genuine gotchas a developer would need to know.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "MCP server (Supabase Edge Function) exposing four tools to manage recurring and one-time home maintenance tasks and log completed work",
+        "key_concepts": [
+          "maintenance_tasks vs maintenance_logs two-table design",
+          "trigger-driven next_due recalculation",
+          "frequency_days=NULL for one-time tasks",
+          "DEFAULT_USER_ID identity pinning"
+        ],
+        "exports": [
+          "add_maintenance_task",
+          "log_maintenance",
+          "get_upcoming_maintenance",
+          "search_maintenance_history"
+        ],
+        "depends_on": [
+          "Supabase (postgres + edge functions)",
+          "@hono/mcp",
+          "@modelcontextprotocol/sdk",
+          "hono",
+          "zod"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "MCP_ACCESS_KEY",
+            "DEFAULT_USER_ID"
+          ],
+          "config_files": [
+            "extensions/home-maintenance/.env.example",
+            "extensions/home-maintenance/deno.json"
+          ],
+          "has_health_endpoints": true,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "extensions/household-knowledge",
+      "context_file": "extensions/household-knowledge/CONTEXT.md",
+      "reasoning": "This extension contains several non-obvious implementation details worth documenting: the Accept-header patch workaround for Claude Desktop, the DEFAULT_USER_ID injection pattern for single-user auth, the freeform JSONB details field, and the asymmetry between household_items and household_vendors regarding the updated_at trigger. It also serves as learning-order 1 in the extensions path, making its role in the broader ecosystem worth stating explicitly.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Beginner-level Open Brain extension deploying a remote MCP server for home-management structured storage: household items and vendor contacts",
+        "key_concepts": [
+          "details JSONB freeform metadata field",
+          "DEFAULT_USER_ID environment injection",
+          "Accept-header patch for Claude Desktop compatibility",
+          "MCP_ACCESS_KEY pre-shared key authentication"
+        ],
+        "exports": [
+          "add_household_item",
+          "search_household_items",
+          "get_item_details",
+          "add_vendor",
+          "list_vendors"
+        ],
+        "depends_on": [
+          "primitives/deploy-edge-function",
+          "primitives/remote-mcp"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "MCP_ACCESS_KEY",
+            "DEFAULT_USER_ID"
+          ],
+          "config_files": [
+            "extensions/household-knowledge/.env.example",
+            "extensions/household-knowledge/deno.json"
+          ],
+          "has_health_endpoints": true,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "extensions/job-hunt",
+      "context_file": "extensions/job-hunt/CONTEXT.md",
+      "reasoning": "Complex domain module with a multi-table job search pipeline (companies, postings, applications, interviews, contacts), a cross-extension integration pattern with Extension 5 Professional CRM, a non-obvious Claude Desktop Accept-header workaround, and application-managed (non-DB-enforced) foreign key semantics. Multiple sub-modules with conceptual relationships that are not self-evident from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Remote MCP server managing a full job search pipeline: company tracking, job postings, application status, interview scheduling, and job contacts with optional promotion into the Professional CRM extension",
+        "key_concepts": [
+          "Pipeline (application status lifecycle)",
+          "Job contact vs professional contact",
+          "Interview stages",
+          "Cross-extension CRM link",
+          "only_unlinked filter"
+        ],
+        "exports": [
+          "add_company",
+          "add_job_posting",
+          "add_job_contact",
+          "submit_application",
+          "schedule_interview",
+          "log_interview_notes",
+          "get_pipeline_overview",
+          "get_upcoming_interviews",
+          "search_job_contacts",
+          "link_contact_to_professional_crm"
+        ],
+        "depends_on": [
+          "extensions/professional-crm (professional_contacts table)",
+          "primitives/deploy-edge-function",
+          "primitives/remote-mcp",
+          "primitives/rls"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "MCP_ACCESS_KEY",
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "DEFAULT_USER_ID"
+          ],
+          "config_files": [
+            "extensions/job-hunt/.env.example",
+            "extensions/job-hunt/deno.json"
+          ],
+          "has_health_endpoints": true,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "extensions/meal-planning",
+      "context_file": "extensions/meal-planning/CONTEXT.md",
+      "reasoning": "Dual-server architecture (owner vs household member), non-obvious RLS policy interactions using JWT role claims, JSONB storage for structured sub-objects, per-request server instantiation pattern, known naive quantity aggregation limitation, and a Claude Desktop Accept-header workaround all warrant documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Recipe management, weekly meal planning, and household-shared grocery lists as a Supabase MCP extension",
+        "key_concepts": [
+          "Dual-server architecture (owner vs household member)",
+          "Household member RLS via JWT role claim",
+          "JSONB ingredient and shopping item storage",
+          "Week-anchored meal plan slots",
+          "Per-request stateless MCP server instantiation"
+        ],
+        "exports": [
+          "add_recipe",
+          "search_recipes",
+          "update_recipe",
+          "create_meal_plan",
+          "get_meal_plan",
+          "generate_shopping_list",
+          "view_meal_plan",
+          "view_recipes",
+          "view_shopping_list",
+          "mark_item_purchased"
+        ],
+        "depends_on": [
+          "primitives/deploy-edge-function",
+          "primitives/remote-mcp",
+          "primitives/rls",
+          "primitives/shared-mcp"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "MCP_ACCESS_KEY",
+            "MCP_HOUSEHOLD_ACCESS_KEY",
+            "SUPABASE_HOUSEHOLD_KEY",
+            "DEFAULT_USER_ID"
+          ],
+          "config_files": [
+            "extensions/meal-planning/.env.example",
+            "extensions/meal-planning/deno.json"
+          ],
+          "has_health_endpoints": true,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "extensions/professional-crm",
+      "context_file": "extensions/professional-crm/CONTEXT.md",
+      "reasoning": "Contains non-obvious responsibility boundaries (service-role bypassing RLS, denormalized cross-extension thought linking), a database-trigger-managed field (last_contacted), two distinct follow-up mechanisms that are not synchronized, and a stateless MCP transport with a request-header workaround. These details are not evident from filenames or function signatures alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "MCP server (Edge Function) for professional contact management, interaction logging, opportunity pipeline tracking, and cross-extension linking of Open Brain thoughts to contacts",
+        "key_concepts": [
+          "Interaction log vs. follow-up date (two separate follow-up signals)",
+          "Trigger-managed last_contacted field",
+          "Cross-extension bridge via denormalized note append",
+          "Fixed opportunity stage enum",
+          "Stateless MCP transport"
+        ],
+        "exports": [
+          "add_professional_contact",
+          "search_contacts",
+          "log_interaction",
+          "get_contact_history",
+          "create_opportunity",
+          "get_follow_ups_due",
+          "update_professional_contact",
+          "link_thought_to_contact"
+        ],
+        "depends_on": [
+          "core thoughts table (read)",
+          "Supabase Edge Function runtime",
+          "hono",
+          "@hono/mcp",
+          "@modelcontextprotocol/sdk",
+          "zod",
+          "@supabase/supabase-js"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "MCP_ACCESS_KEY",
+            "DEFAULT_USER_ID"
+          ],
+          "config_files": [
+            ".env.example",
+            "deno.json"
+          ],
+          "has_health_endpoints": true,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "integrations",
+      "context_file": "integrations/CONTEXT.md",
+      "reasoning": "The directory contains multiple sub-modules with non-obvious responsibilities: an async queue-draining worker with optimistic locking, per-cold-start cost caps, and prompt-injection defenses; a Kubernetes variant that replaces the Supabase client with a raw PostgreSQL pool and runs as a persistent HTTP server rather than a serverless function; message-capture bots (Slack, Discord); and a shared config module with domain-specific classification constants, PII regex patterns, and a 0-6 importance scale. None of this is obvious from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "External connection points that bring data into Open Brain or replace its infrastructure layer, including message-capture bots, async LLM queue workers, and a Kubernetes self-hosted deployment variant",
+        "key_concepts": [
+          "Capture integration",
+          "entity_extraction_queue",
+          "Async worker with cost cap",
+          "Symmetric relation canonical ordering",
+          "Kubernetes self-hosted MCP server",
+          "Shared config with sensitivity tiers"
+        ],
+        "exports": [
+          "entity-extraction-worker (Edge Function)",
+          "kubernetes-deployment (Hono HTTP server)",
+          "slack-capture",
+          "discord-capture"
+        ],
+        "depends_on": [
+          "schemas/knowledge-graph",
+          "schemas/enhanced-thoughts"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "MCP_ACCESS_KEY",
+            "OPENROUTER_API_KEY",
+            "OPENAI_API_KEY",
+            "ANTHROPIC_API_KEY",
+            "ENTITY_EXTRACTION_MAX_CALLS",
+            "FETCH_TIMEOUT_MS",
+            "DB_HOST",
+            "DB_PORT",
+            "DB_NAME",
+            "DB_USER",
+            "DB_PASSWORD",
+            "EMBEDDING_API_BASE",
+            "EMBEDDING_API_KEY",
+            "EMBEDDING_MODEL",
+            "CHAT_API_BASE",
+            "CHAT_API_KEY",
+            "CHAT_MODEL",
+            "PORT"
+          ],
+          "config_files": [
+            "integrations/entity-extraction-worker/_shared/config.ts",
+            "integrations/entity-extraction-worker/deno.json",
+            "integrations/kubernetes-deployment/deno.json",
+            "integrations/kubernetes-deployment/k8s/secrets.yml.example"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "integrations/entity-extraction-worker",
+      "context_file": "integrations/entity-extraction-worker/CONTEXT.md",
+      "reasoning": "Complex async worker with non-obvious queue ownership model, atomic claim pattern, symmetric relation canonicalization, re-extraction idempotency, prompt injection defenses, per-container cost cap semantics, and wall-clock budget management. Multiple interacting design decisions that would not be apparent from file names or a casual read.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Async Edge Function worker that drains the entity extraction queue, calling an LLM to extract entities and relationships from thoughts and writing results into the knowledge graph",
+        "key_concepts": [
+          "entity_extraction_queue",
+          "support_count",
+          "symmetric relation canonicalization",
+          "re-extraction idempotency",
+          "ExtractionCostCapError",
+          "wall-clock budget"
+        ],
+        "exports": [],
+        "depends_on": [
+          "schemas/knowledge-graph",
+          "schemas/enhanced-thoughts"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "MCP_ACCESS_KEY",
+            "OPENROUTER_API_KEY",
+            "OPENAI_API_KEY",
+            "ANTHROPIC_API_KEY",
+            "ENTITY_EXTRACTION_MAX_CALLS",
+            "FETCH_TIMEOUT_MS"
+          ],
+          "config_files": [
+            "integrations/entity-extraction-worker/deno.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "integrations/entity-extraction-worker/_shared",
+      "context_file": "integrations/entity-extraction-worker/_shared/CONTEXT.md",
+      "reasoning": "Contains the canonical 14-step thought ingestion pipeline (prepareThoughtPayload), multi-provider LLM extraction with retry/fallback logic, structured-capture format parsing, escalation-only sensitivity tier resolution, a 0\u20136 importance scale with enforced cap at 5 for auto-assignment, and non-obvious precedence rules across four layers of metadata override. None of this is self-evident from file or function names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Shared pipeline for transforming raw thought text into an enriched, classified, and embedding-ready Supabase payload",
+        "key_concepts": [
+          "prepareThoughtPayload",
+          "Structured capture format",
+          "Importance scale (0-6, 6 is user-only)",
+          "Sensitivity tier escalation",
+          "Multi-provider LLM fallback (OpenRouter > OpenAI > Anthropic)",
+          "_enrichment_status"
+        ],
+        "exports": [
+          "prepareThoughtPayload",
+          "extractMetadata",
+          "embedText",
+          "detectSensitivity",
+          "resolveSensitivityTier",
+          "parseStructuredCapture",
+          "normalizeTypeHint",
+          "sanitizeMetadata",
+          "fallbackMetadata",
+          "computeContentFingerprint",
+          "applyEvergreenTag",
+          "tableExists",
+          "asString",
+          "asNumber",
+          "asInteger",
+          "asBoolean",
+          "asOptionalInteger",
+          "isRecord",
+          "normalizeStringArray",
+          "mergeUniqueStrings",
+          "safeEmbedding",
+          "ThoughtMetadata",
+          "SensitivityResult",
+          "PreparedPayload",
+          "PrepareThoughtOpts",
+          "StructuredCapture"
+        ],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "OPENROUTER_API_KEY",
+            "OPENAI_API_KEY",
+            "ANTHROPIC_API_KEY",
+            "OPENROUTER_EMBEDDING_MODEL",
+            "OPENAI_EMBEDDING_MODEL",
+            "OPENROUTER_CLASSIFIER_MODEL",
+            "OPENAI_CLASSIFIER_MODEL",
+            "ANTHROPIC_CLASSIFIER_MODEL"
+          ],
+          "config_files": [
+            "integrations/entity-extraction-worker/_shared/config.ts"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "integrations/kubernetes-deployment",
+      "context_file": "integrations/kubernetes-deployment/CONTEXT.md",
+      "reasoning": "This is a non-trivial MCP server variant with a deliberate architectural departure from the canonical repo pattern (direct PostgreSQL instead of Supabase). It contains non-obvious design decisions: dual API configuration for embeddings vs. chat, raw SQL vector casting, in-memory aggregation in thought_stats, and a specific authentication scheme. The divergence from the repo-wide Edge Function rule also warrants explanation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Self-hosted Kubernetes variant of the Open Brain MCP server using direct PostgreSQL + pgvector instead of Supabase",
+        "key_concepts": [
+          "Supabase replacement pattern",
+          "Dual API configuration (embedding vs. chat)",
+          "MCP_ACCESS_KEY authentication",
+          "pgvector cosine distance via raw SQL"
+        ],
+        "exports": [
+          "MCP HTTP server (Hono/StreamableHTTPTransport) on port 8000"
+        ],
+        "depends_on": [
+          "PostgreSQL + pgvector",
+          "OpenAI-compatible embedding API",
+          "OpenAI-compatible chat API"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "DB_HOST",
+            "DB_PORT",
+            "DB_NAME",
+            "DB_USER",
+            "DB_PASSWORD",
+            "EMBEDDING_API_BASE",
+            "EMBEDDING_API_KEY",
+            "OPENROUTER_API_KEY",
+            "EMBEDDING_MODEL",
+            "CHAT_API_BASE",
+            "CHAT_API_KEY",
+            "CHAT_MODEL",
+            "MCP_ACCESS_KEY",
+            "PORT"
+          ],
+          "config_files": [
+            "integrations/kubernetes-deployment/deno.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "integrations/kubernetes-deployment/k8s",
+      "context_file": "integrations/kubernetes-deployment/k8s/CONTEXT.md",
+      "reasoning": "Directory contains non-trivial Kubernetes manifests with a co-located pod pattern (two containers sharing 127.0.0.1), a duplicated init.sql (standalone file vs. ConfigMap-embedded copy), and a deliberate divergence from the standard Supabase-hosted deployment. The hostPath volume constraint, single-replica limitation, and pre-apply secrets workflow are all gotchas not obvious from filenames alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Kubernetes manifests and database initialization for self-hosting Open Brain outside of Supabase",
+        "key_concepts": [
+          "Co-located pod pattern",
+          "ConfigMap-embedded SQL",
+          "Supabase schema parity",
+          "hostPath volume",
+          "match_thoughts RPC equivalent"
+        ],
+        "exports": [
+          "openbrain namespace",
+          "openbrain-init-sql ConfigMap",
+          "openbrain StatefulSet",
+          "openbrain ClusterIP Service",
+          "secrets.yml.example"
+        ],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "POSTGRES_PASSWORD",
+            "DB_PASSWORD",
+            "MCP_ACCESS_KEY",
+            "EMBEDDING_API_BASE",
+            "EMBEDDING_API_KEY",
+            "EMBEDDING_MODEL",
+            "CHAT_API_BASE",
+            "CHAT_API_KEY",
+            "CHAT_MODEL",
+            "PORT"
+          ],
+          "config_files": [
+            "integrations/kubernetes-deployment/k8s/secrets.yml.example",
+            "integrations/kubernetes-deployment/k8s/openbrain.yml"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "primitives",
+      "context_file": "primitives/CONTEXT.md",
+      "reasoning": "The primitives directory has a non-obvious curation policy (requires 2+ extension references before acceptance), a distinct role from the open-contribution categories, and contains domain-specific terminology ('primitive' as a concept guide rather than code). The boundary between primitives and recipes/extensions is not self-evident from directory names alone, and the gating rules are important for contributors and agents to understand.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Maintainer-curated reusable concept guides for foundational patterns shared across two or more extensions",
+        "key_concepts": [
+          "Primitive",
+          "Curation gate",
+          "Concept vs. code"
+        ],
+        "exports": [
+          "deploy-edge-function",
+          "remote-mcp",
+          "rls",
+          "shared-mcp",
+          "troubleshooting"
+        ],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "primitives/deploy-edge-function",
+      "reasoning": "Directory contains only a metadata.json file. No source code, logic, or implementation files exist to analyze. The README.md was deleted. There is no domain complexity, business logic, or non-obvious details to document \u2014 the metadata itself fully describes the contribution (a beginner-level guide for deploying Supabase Edge Functions).",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Deployment guide primitive for deploying Open Brain extensions as Supabase Edge Functions",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "primitives/deploy-edge-function/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "primitives/remote-mcp",
+      "reasoning": "Directory contains only metadata.json (README.md has been deleted). No source code, logic, or domain concepts to document. The metadata itself clearly describes the purpose: a beginner-level guide for connecting remote MCP servers (Supabase Edge Functions) to AI clients. No non-obvious complexity exists.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Conceptual guide for connecting remote MCP servers to AI clients",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "primitives/remote-mcp/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "primitives/rls",
+      "reasoning": "Directory contains only metadata.json. No implementation files, SQL, or code exist to analyze. The purpose is fully self-evident from the metadata: a guide to PostgreSQL Row Level Security for multi-user extensions. No domain concepts, non-obvious logic, or gotchas to document.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Guide to PostgreSQL Row Level Security for multi-user and shared-access Open Brain extensions",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "primitives/shared-mcp",
+      "reasoning": "Directory contains only a metadata.json file. The README.md has been deleted and no implementation code exists. The purpose is fully self-evident from the metadata: a guide for building scoped MCP servers that give others limited access to specific parts of Open Brain. There are no domain concepts, non-obvious logic, or responsibility boundaries to document beyond what the metadata already states.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Guide for building scoped MCP servers that provide limited, controlled access to Open Brain for other users",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "primitives/shared-mcp/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "primitives/troubleshooting",
+      "reasoning": "Directory contains only a metadata.json file. There is no code, no domain-specific logic, and no non-obvious concepts. The purpose is entirely self-evident from the directory name and metadata description: a beginner-level reference guide for common troubleshooting issues.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Reference guide for common troubleshooting issues across Open Brain extensions",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "primitives/troubleshooting/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes",
+      "context_file": "recipes/CONTEXT.md",
+      "reasoning": "The recipes directory has non-obvious responsibility boundaries \u2014 the distinction between recipes, skills, extensions, and primitives is a domain-specific taxonomy not inferrable from directory names alone. The _template folder, the skill coupling pattern (local vs. canonical), and the metadata.json contract all represent non-obvious details worth documenting. The variety of sub-module types (importers, dedup utilities, skill packs, graph generators) and their shared structural contract justify a CONTEXT.md.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Standalone community capability builds that extend Open Brain without belonging to the curated learning path",
+        "key_concepts": [
+          "Recipe vs. Skill distinction",
+          "Recipe vs. Extension distinction",
+          "metadata.json contribution contract",
+          "_template skeleton",
+          "requires_skills delegation pattern"
+        ],
+        "exports": [],
+        "depends_on": [
+          "extensions",
+          "primitives",
+          "skills",
+          "schemas",
+          "integrations"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "recipes/_template/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/adaptive-capture-classification",
+      "context_file": "recipes/adaptive-capture-classification/CONTEXT.md",
+      "reasoning": "Contains a multi-stage pipeline with non-obvious design decisions: two-phase processCapture/completeCapture split to interpose user confirmation UI, per-type adaptive threshold learning loop driven by user feedback, dual-LLM consistency check with confidence penalty, and hintType override that bypasses gating entirely. Domain-specific concepts (confidence gating, threshold nudging, consistency penalty) would not be obvious from filenames alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "LLM-based capture classification with confidence gating and per-type adaptive threshold learning",
+        "key_concepts": [
+          "Confidence gating",
+          "Per-type thresholds",
+          "Consistency check",
+          "Two-phase pipeline",
+          "hintType override"
+        ],
+        "exports": [
+          "processCapture",
+          "completeCapture"
+        ],
+        "depends_on": [
+          "@supabase/supabase-js",
+          "OpenRouter (or any OpenAI-compatible gateway)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "recipes/brain-backup",
+      "reasoning": "Single-file script with a self-documenting header comment that fully describes usage, environment variables, and output format. No domain-specific terminology, no complex business logic, and no non-obvious responsibility boundaries. The pagination approach via PostgREST is standard and the table list is self-evident from the Open Brain schema.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Export all Open Brain Supabase tables to dated local JSON files for offline backup",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [
+          "Supabase PostgREST API"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/bring-your-own-context",
+      "context_file": "recipes/bring-your-own-context/CONTEXT.md",
+      "reasoning": "Contains domain-specific terminology (operating model layers, source confidence, portable bundle), a non-obvious two-phase workflow boundary (extraction vs. normalization), and a schema contract with subtle design decisions (artifacts returned as strings, not parsed objects). The separation between this recipe and work-operating-model-activation is meaningful but not self-evident from filenames alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Context extraction and ingestion into Open Brain from AI memory and external note sources, as the first phase of the portable-context workflow",
+        "key_concepts": [
+          "Operating Model Layers",
+          "Source Confidence",
+          "Portable Bundle",
+          "Two-Prompt Extraction Sequence"
+        ],
+        "exports": [
+          "extraction-prompts.md",
+          "context-profile.schema.json"
+        ],
+        "depends_on": [
+          "skills/work-operating-model",
+          "primitives/deploy-edge-function",
+          "primitives/remote-mcp",
+          "recipes/work-operating-model-activation"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "recipes/bring-your-own-context/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/chatgpt-conversation-import",
+      "context_file": "recipes/chatgpt-conversation-import/CONTEXT.md",
+      "reasoning": "Two-module pipeline with non-obvious complexity: ChatGPT's node-mapping conversation tree requires branch resolution logic; 14 content types need per-type extraction dispatch; signal-based filtering uses a three-tier scoring system; session splitting handles context window limits across multi-day conversations; an optional pyramid summary schema adds a secondary DB table. Several gotchas (sync log format migration, conversation hash derivation, multi-tenant USER_ID requirement) are not evident from names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Batch import ChatGPT data exports into Open Brain as structured knowledge thoughts",
+        "key_concepts": [
+          "Conversation tree / branch resolution",
+          "Content-type dispatch",
+          "Signal-based filtering",
+          "Session splitting",
+          "Pyramid summaries",
+          "Sync log"
+        ],
+        "exports": [
+          "extract_conversations",
+          "resolve_canonical_path",
+          "extract_dialogue_text",
+          "prepare_dialogue_for_extraction",
+          "should_skip",
+          "split_sessions",
+          "extract_conversation_metadata"
+        ],
+        "depends_on": [
+          "OpenRouter",
+          "Ollama (optional)",
+          "Supabase",
+          "pgvector"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY",
+            "INGEST_URL",
+            "INGEST_KEY",
+            "USER_ID"
+          ],
+          "config_files": [
+            "recipes/chatgpt-conversation-import/.env.example"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/claudeception",
+      "context_file": "recipes/claudeception/CONTEXT.md",
+      "reasoning": "This recipe defines a non-obvious meta-learning protocol with domain-specific terminology (Aiception, extraction, retrospective mode, quality gate, skill lifecycle), a multi-step process with ordering constraints, and behavioral triggers that are not self-evident from file names alone. The renaming from Claudeception to Aiception while keeping the folder name is a gotcha worth documenting. The Open Brain search-before/capture-after ordering requirement and the two-scope save-location decision are non-obvious design decisions.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Meta-learning recipe that enables an AI agent to extract, structure, and persist reusable knowledge from work sessions into new skill files, integrated with Open Brain for deduplication",
+        "key_concepts": [
+          "Aiception",
+          "Extraction",
+          "Retrospective Mode",
+          "Quality Gate",
+          "Skill Lifecycle"
+        ],
+        "exports": [
+          "claudeception.skill.md"
+        ],
+        "depends_on": [
+          "Open Brain (search_thoughts, capture_thought)",
+          "Claude Code"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "recipes/claudeception/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "recipes/daily-digest",
+      "reasoning": "Simple two-file recipe consisting of a skill prompt and metadata. The prompt itself is a linear, numbered workflow with no domain-specific terminology, no complex business logic, and no non-obvious design decisions. Purpose is entirely self-evident from filenames and content.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Automated daily summary of recent Open Brain thoughts delivered as a Gmail draft",
+        "key_concepts": [],
+        "exports": [
+          "daily-digest-skill.md"
+        ],
+        "depends_on": [
+          "Open Brain MCP (list_thoughts)",
+          "Gmail MCP (gmail_create_draft)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "recipes/daily-digest/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/email-history-import",
+      "context_file": "recipes/email-history-import/CONTEXT.md",
+      "reasoning": "Contains non-obvious multi-layer deduplication logic (local sync log + content fingerprint), a complex email cleaning pipeline, dual ingestion modes (direct Supabase vs. Edge Function endpoint), an embedded OAuth2 browser consent flow with a specific port requirement, and a rollback SQL artifact from a design change. These details are not evident from file names alone and are worth preserving for contributors.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Import Gmail email history into Open Brain as searchable thoughts with deduplication, embedding, and metadata extraction",
+        "key_concepts": [
+          "Sync log",
+          "Two-layer dedup",
+          "Ingestion modes",
+          "Noise filtering",
+          "Body cleaning pipeline"
+        ],
+        "exports": [],
+        "depends_on": [
+          "Gmail API",
+          "OpenRouter",
+          "Supabase REST API"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY",
+            "INGEST_URL",
+            "INGEST_KEY"
+          ],
+          "config_files": [
+            ".env.example"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/entity-wiki",
+      "context_file": "recipes/entity-wiki/CONTEXT.md",
+      "reasoning": "Single-file recipe with substantial non-obvious complexity: three distinct output modes with different trade-off implications, a two-layer prompt-injection defense (pre-scrub + structural message split), a dossier idempotency scheme that must avoid content-fingerprint dedup pitfalls, an embedding dimension preflight guard, an alias-resolution gap with a documented workaround, a slug collision resolution algorithm, and a noted N+1 batch heuristic with guidance on when to add an RPC. None of this is inferrable from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Auto-generate per-entity structured markdown wiki pages from linked thoughts and typed relationship edges via LLM synthesis",
+        "key_concepts": [
+          "Emergent cached view",
+          "Output modes (file / entity-metadata / thought)",
+          "Dossier thought",
+          "Semantic expansion",
+          "co_occurs_with exclusion",
+          "Slug collision resolution",
+          "Prompt injection defense"
+        ],
+        "exports": [
+          "generate-wiki.mjs (CLI script)"
+        ],
+        "depends_on": [
+          "Supabase PostgREST (entities, thoughts, thought_entities, edges tables)",
+          "match_thoughts RPC",
+          "upsert_thought RPC",
+          "OpenAI-compatible Chat Completions API",
+          "OpenAI-compatible Embeddings API (optional)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "OPEN_BRAIN_URL",
+            "OPEN_BRAIN_SERVICE_KEY",
+            "LLM_API_KEY",
+            "LLM_BASE_URL",
+            "LLM_MODEL",
+            "OB_WIKI_OUT_DIR",
+            "OB_WIKI_APP_NAME",
+            "EMBEDDING_API_KEY",
+            "EMBEDDING_BASE_URL",
+            "EMBEDDING_MODEL"
+          ],
+          "config_files": [
+            ".env.local",
+            ".env"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/fingerprint-dedup-backfill",
+      "context_file": "recipes/fingerprint-dedup-backfill/CONTEXT.md",
+      "reasoning": "Two-script workflow with a non-obvious run-order dependency, a resumable cursor pattern, an orphan-vs-duplicate classification that is not evident from names alone, and a fingerprint normalization algorithm that must exactly mirror a SQL function defined in a separate primitive. These details would not be apparent to a developer encountering the directory for the first time.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Retroactive backfill of content_fingerprint on NULL thoughts rows, and safe removal of duplicate rows discovered during backfill",
+        "key_concepts": [
+          "Content fingerprint",
+          "Orphan row",
+          "Duplicate row",
+          "Cursor-based resumability"
+        ],
+        "exports": [
+          "backfill-fingerprints.mjs",
+          "delete-duplicates.mjs"
+        ],
+        "depends_on": [
+          "content-fingerprint-dedup primitive (normalization contract)",
+          "Supabase REST API"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY"
+          ],
+          "config_files": [
+            "recipes/fingerprint-dedup-backfill/.env.example"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/google-activity-import",
+      "context_file": "recipes/google-activity-import/CONTEXT.md",
+      "reasoning": "The recipe has non-obvious responsibility boundaries and implementation details: per-category noise filtering rules, a content-addressed local sync log for idempotent reruns, an LLM prompt with explicit selectivity heuristics, a raw bypass mode, capped entry counts per day, and a specific thought-prefixing format on insert. These are not derivable from file or function names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Convert Google Takeout 'My Activity' exports into searchable, LLM-summarized thoughts in Open Brain",
+        "key_concepts": [
+          "High-value categories",
+          "Per-category noise filtering",
+          "Day-hash dedup via sync log",
+          "Raw mode (no summarization)",
+          "Thought prefix format on insert"
+        ],
+        "exports": [
+          "import-google-activity.mjs (CLI script)"
+        ],
+        "depends_on": [
+          "OpenRouter (gpt-4o-mini, text-embedding-3-small)",
+          "Supabase REST API"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY"
+          ],
+          "config_files": [
+            ".env.example"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/grok-export-import",
+      "context_file": "recipes/grok-export-import/CONTEXT.md",
+      "reasoning": "The recipe has non-obvious implementation details: MongoDB Extended JSON date parsing, multi-variant Grok export schema normalization, content fingerprinting for deduplication, and specific truncation thresholds for embeddings vs. storage. The use of the service role key (bypassing RLS) and the hardcoded thought metadata values are gotchas worth documenting.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Import xAI Grok conversation history exports into Open Brain as searchable thoughts with vector embeddings",
+        "key_concepts": [
+          "MongoDB-style date parsing",
+          "Content fingerprint deduplication",
+          "Conversation normalization",
+          "Transcript assembly"
+        ],
+        "exports": [
+          "import-grok.mjs (CLI script)"
+        ],
+        "depends_on": [
+          "@supabase/supabase-js",
+          "OpenRouter API",
+          "dotenv"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY",
+            "EMBEDDING_MODEL"
+          ],
+          "config_files": [
+            ".env.example"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/infographic-generator",
+      "context_file": "recipes/infographic-generator/CONTEXT.md",
+      "reasoning": "The recipe implements a non-obvious two-phase pipeline where an AI client authors structured prompt markdown and a separate Python script executes image generation. There are several non-obvious details: the decoupled prompts file format with regex-based parsing, silent skip behavior on malformed sections, self-bootstrapping venv path injection, hardcoded model name strings, and a skill install path assumption. These warrant documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Two-phase pipeline converting research content into infographic images via AI-authored prompts and Gemini image generation API",
+        "key_concepts": [
+          "Two-phase pipeline",
+          "Prompts file format",
+          "Manifest file",
+          "--redo flag"
+        ],
+        "exports": [
+          "generate.py",
+          "infographic-generator.skill.md"
+        ],
+        "depends_on": [
+          "Google Gemini API",
+          "google-genai Python package"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "GEMINI_API_KEY"
+          ],
+          "config_files": [
+            "recipes/infographic-generator/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/instagram-import",
+      "context_file": "recipes/instagram-import/CONTEXT.md",
+      "reasoning": "Contains multiple non-obvious implementation details: Meta's latin1/UTF-8 double-encoding bug and its repair, a directory-walking heuristic to locate the export root, per-conversation message caps, comment/post batching strategies, embedding truncation limits, comment JSON schema variants across export versions, and hardcoded quality/sensitivity defaults applied at upsert time. None of these are deducible from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "CLI script that parses Instagram GDPR export archives and imports DM conversations, comments, and post captions into Open Brain as embedded thoughts",
+        "key_concepts": [
+          "Content fingerprint (SHA-256 deduplication)",
+          "Meta latin1/UTF-8 encoding repair",
+          "upsert_thought RPC",
+          "Batched thought grouping"
+        ],
+        "exports": [],
+        "depends_on": [
+          "@supabase/supabase-js",
+          "OpenRouter embeddings API"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY",
+            "EMBEDDING_MODEL"
+          ],
+          "config_files": [
+            ".env.example"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/journals-blogger-import",
+      "context_file": "recipes/journals-blogger-import/CONTEXT.md",
+      "reasoning": "The recipe has non-obvious implementation details: a regex-based Atom XML parser that filters by Blogger entry kind, silent truncation at two different length limits for storage vs embedding, SHA-256 content fingerprinting for deduplication, and fixed metadata values (importance, quality_score) set at import time. These details would not be evident from file names or high-level description alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Import Google Blogger Atom XML exports into Open Brain as journal thoughts with embeddings",
+        "key_concepts": [
+          "Atom XML export",
+          "Entry kind filtering (post/comment vs settings/template)",
+          "Content fingerprint for deduplication"
+        ],
+        "exports": [],
+        "depends_on": [
+          "@supabase/supabase-js",
+          "OpenRouter API"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY",
+            "EMBEDDING_MODEL"
+          ],
+          "config_files": [
+            ".env.example"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/life-engine",
+      "context_file": "recipes/life-engine/CONTEXT.md",
+      "reasoning": "Complex orchestration recipe with multi-step loop logic, time-windowed behavior, domain-specific concepts (anchor date, briefing deduplication, self-improvement protocol, dynamic cron rescheduling), non-obvious design decisions (user_id as chat_id TEXT, RLS without permissive policies, single-instance state table), and explicit prompt injection guards. Multiple interacting subsystems across 3 files warrant documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Time-aware, self-improving personal assistant loop that delivers proactive briefings via Telegram or Discord based on calendar events and Open Brain knowledge",
+        "key_concepts": [
+          "Anchor date/time",
+          "Briefing deduplication",
+          "Dynamic loop rescheduling",
+          "Self-improvement protocol",
+          "External before internal enrichment",
+          "user_id as channel chat_id"
+        ],
+        "exports": [
+          "life-engine-skill.md",
+          "schema.sql"
+        ],
+        "depends_on": [
+          "supabase-mcp",
+          "google-calendar-mcp",
+          "telegram-channel-plugin",
+          "discord-channel-plugin",
+          "open-brain"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/live-retrieval",
+      "context_file": "recipes/live-retrieval/CONTEXT.md",
+      "reasoning": "The skill defines non-obvious behavioral contracts: topic-shift detection heuristics, a hard session cap of 3 retrievals, a 0.6 score threshold, a silent-on-miss contract, session-scoped deduplication by thought ID, and a self-calibrating retrieval log with prescriptive hit-rate tuning thresholds. These are design decisions that would not be evident from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Ambient proactive skill that surfaces relevant Open Brain thoughts on detected topic shifts, operating as the read side of the capture-retrieve flywheel",
+        "key_concepts": [
+          "Flywheel (read side)",
+          "Topic shift detection",
+          "Hit threshold (score > 0.6)",
+          "Session cap (max 3 retrievals)",
+          "Silent-on-miss contract",
+          "Session-scoped deduplication",
+          "Retrieval log"
+        ],
+        "exports": [
+          "live-retrieval.skill.md"
+        ],
+        "depends_on": [
+          "search_thoughts MCP tool",
+          "list_thoughts MCP tool"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/local-ollama-embeddings",
+      "context_file": "recipes/local-ollama-embeddings/CONTEXT.md",
+      "reasoning": "The module contains non-obvious gotchas (silent 8000-char input truncation, embedding dimension mismatch between Ollama models and the default vector(1536) schema, a --batch-size flag that is parsed but unused) and domain-specific workflow context (local vs cloud embedding tradeoffs, RLS bypass via service role key) that warrant documentation beyond what file names convey.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "CLI tool for ingesting thoughts into Open Brain using locally-run Ollama embedding models instead of cloud APIs",
+        "key_concepts": [
+          "Local embedding via Ollama",
+          "Embedding dimension mismatch",
+          "Multi-format input (stdin, positional args, .txt, .jsonl)"
+        ],
+        "exports": [
+          "embed-local.py"
+        ],
+        "depends_on": [
+          "Ollama /api/embed endpoint",
+          "Supabase REST API (thoughts table)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OLLAMA_BASE_URL"
+          ],
+          "config_files": [
+            ".env.example"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/ob-graph",
+      "context_file": "recipes/ob-graph/CONTEXT.md",
+      "reasoning": "Contains non-obvious architectural decisions: optional thought_id linkage pattern that overlays the core thoughts table without modifying it, a Claude Desktop Accept header workaround, DEFAULT_USER_ID-based auth separate from RLS auth.uid(), ON DELETE CASCADE reliance in delete_node, property merge semantics in update_node, and the behavioral distinction between traverse_graph (outgoing-only recursive CTE) and find_shortest_path (bidirectional BFS recursive CTE).",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Knowledge graph MCP server that adds nodes-and-edges relationship modeling over PostgreSQL on top of Open Brain",
+        "key_concepts": [
+          "graph_nodes",
+          "graph_edges",
+          "thought_id linkage",
+          "traverse_graph (outgoing recursive CTE)",
+          "find_shortest_path (bidirectional BFS recursive CTE)",
+          "edge weight",
+          "relationship_type"
+        ],
+        "exports": [
+          "create_node",
+          "create_edge",
+          "search_nodes",
+          "get_neighbors",
+          "traverse_graph",
+          "find_path",
+          "update_node",
+          "delete_node",
+          "delete_edge",
+          "list_edge_types"
+        ],
+        "depends_on": [
+          "Supabase (graph_nodes, graph_edges tables)",
+          "Open Brain thoughts table (optional linkage)"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "MCP_ACCESS_KEY",
+            "DEFAULT_USER_ID"
+          ],
+          "config_files": [
+            "recipes/ob-graph/deno.json",
+            "recipes/ob-graph/.env.example"
+          ],
+          "has_health_endpoints": true,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/obsidian-vault-import",
+      "context_file": "recipes/obsidian-vault-import/CONTEXT.md",
+      "reasoning": "Single-script recipe with a multi-stage pipeline (walk, parse, filter, chunk, embed, insert) containing non-obvious chunking thresholds, a two-tier dedup strategy (local sync log + DB fingerprint), active secret scanning before insert, preflight connection validation, and several subtle behavioral edges (mtime vs frontmatter date, sync log write-back only on success, 10-failure abort). Worth documenting so contributors understand chunking decisions and dedup mechanics before modifying.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Bulk and incremental import of Obsidian vault notes into Open Brain as vector-embedded, searchable thoughts",
+        "key_concepts": [
+          "Atomic thought",
+          "Two-tier chunking (heading split + LLM fallback)",
+          "Dual deduplication (sync log + content fingerprint)",
+          "Secret scanning"
+        ],
+        "exports": [
+          "import-obsidian.py (CLI entry point)"
+        ],
+        "depends_on": [
+          "OpenRouter API",
+          "Supabase REST API"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY"
+          ],
+          "config_files": [
+            ".env.example"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/panning-for-gold",
+      "context_file": "recipes/panning-for-gold/CONTEXT.md",
+      "reasoning": "Complex multi-phase skill with domain-specific terminology (panning, gold-found, thread, speaker consolidation), non-obvious production-learned rules (speaker label fragmentation, compaction-safe file persistence, summary-first token strategy), a self-improvement pattern via an embedded Lessons Log, and explicit triage verdicts that govern agent dispatch behavior. None of this is obvious from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Multi-phase AI skill for extracting, evaluating, and capturing ideas from raw voice transcripts and brain dumps into Open Brain",
+        "key_concepts": [
+          "Panning",
+          "Gold-Found",
+          "Thread",
+          "Speaker Consolidation",
+          "ACT NOW / RESEARCH MORE / PARK / KILL",
+          "Flywheel closure",
+          "Compaction-safe persistence"
+        ],
+        "exports": [
+          "panning-for-gold.skill.md"
+        ],
+        "depends_on": [
+          "Open Brain MCP (capture_thought, search_thoughts)",
+          "OpenRouter (Opus, Sonnet, Haiku)",
+          "recipes/auto-capture (optional)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "recipes/panning-for-gold/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/perplexity-conversation-import",
+      "context_file": "recipes/perplexity-conversation-import/CONTEXT.md",
+      "reasoning": "Contains non-trivial business logic including two distinct ingestion pipelines, a JSON profile flattening system with named sections, selective LLM summarization with a conservative prompt, a local deduplication sync log, and OUTPUT_STR unwrapping. Several behaviors are non-obvious (sync log update only on full success, dry-run still calls LLM, trivial conversations still marked done in sync log).",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "CLI recipe that imports Perplexity AI search history (.xlsx export) into Open Brain as searchable thoughts with embeddings",
+        "key_concepts": [
+          "Two-sheet import (Conversations + Memory)",
+          "JSON profile rows",
+          "Selective LLM summarization",
+          "Local sync log deduplication",
+          "OUTPUT_STR parsing"
+        ],
+        "exports": [],
+        "depends_on": [
+          "OpenRouter API",
+          "Supabase REST API",
+          "Ollama (optional)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY"
+          ],
+          "config_files": [
+            ".env.example"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/repo-learning-coach",
+      "context_file": "recipes/repo-learning-coach/CONTEXT.md",
+      "reasoning": "Complex recipe with multiple interacting sub-systems: a file-based content pipeline that syncs markdown to Supabase on startup, a REST API server with progress/quiz/comment/capture endpoints, an optional brain bridge for semantic retrieval and thought upserts, and a typed config abstraction. Contains non-obvious design decisions (sync-on-start, two-step embedding capture, slug+path dual identity matching, understanding_state taxonomy) and domain-specific terminology (brain bridge, learning artifacts, content-runtime separation) that would not be apparent from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Locally-run learning application that syncs file-based curriculum to Supabase and captures lesson artifacts into Open Brain thoughts",
+        "key_concepts": [
+          "Brain Bridge",
+          "Content-Runtime Separation",
+          "RepoLearningConfig",
+          "Learning Artifacts",
+          "Understanding State"
+        ],
+        "exports": [
+          "syncContentToSupabase",
+          "getBootstrapData",
+          "getLessonDetail",
+          "updateLessonProgress",
+          "addLessonComment",
+          "submitQuizAnswers",
+          "captureLessonArtifact",
+          "getResearchDocumentDetail"
+        ],
+        "depends_on": [
+          "Supabase",
+          "OpenRouter",
+          "gray-matter",
+          "zod",
+          "express"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY",
+            "OPENROUTER_EMBEDDING_MODEL",
+            "PORT"
+          ],
+          "config_files": [
+            "recipes/repo-learning-coach/repo-learning.config.ts",
+            "recipes/repo-learning-coach/.env.example"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/repo-learning-coach/server",
+      "context_file": "recipes/repo-learning-coach/server/CONTEXT.md",
+      "reasoning": "This server directory combines multiple non-trivial responsibilities: Express HTTP route handling, a startup content-sync pipeline, Supabase query orchestration across 8+ tables, and an optional Open Brain vector-search integration called BrainBridge. The BrainBridge degradation pattern, the sync-before-listen startup sequence, quiz question identity semantics, and the use of the service role key are all non-obvious details that benefit from documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Express HTTP API server that syncs file-based lesson content to Supabase on startup and serves REST endpoints for lesson progress, quiz submission, commenting, and optional Open Brain memory integration",
+        "key_concepts": [
+          "BrainBridge",
+          "Content sync",
+          "Artifact kinds (takeaway, confusion, summary)",
+          "LessonStatus",
+          "UnderstandingState"
+        ],
+        "exports": [
+          "syncContentToSupabase",
+          "getBootstrapData",
+          "getLessonDetail",
+          "getResearchDocumentDetail",
+          "updateLessonProgress",
+          "addLessonComment",
+          "submitQuizAnswers",
+          "captureLessonArtifact"
+        ],
+        "depends_on": [
+          "../repo-learning.config.js",
+          "Supabase (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)",
+          "OpenRouter API (optional, OPENROUTER_API_KEY)"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY",
+            "OPENROUTER_EMBEDDING_MODEL",
+            "PORT",
+            "NODE_ENV"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/repo-learning-coach/src",
+      "context_file": "recipes/repo-learning-coach/src/CONTEXT.md",
+      "reasoning": "The directory contains domain-specific concepts (BrainBridge gating, UnderstandingState taxonomy, LearningArtifactKind), a non-obvious two-panel architecture (Learning Studio vs. Research Vault), a bootstrap pattern that pre-loads all navigation state in one call, and subtle behavioral details like startTransition usage and conditional artifact validation. These are not obvious from file or function names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "React frontend for the Repo Learning Coach: lesson navigation, quiz submission, understanding-tagged notes, and selective artifact capture into Open Brain thoughts",
+        "key_concepts": [
+          "BrainBridge",
+          "UnderstandingState",
+          "LearningArtifactKind",
+          "Bootstrap",
+          "LessonStatus",
+          "RelatedThoughts"
+        ],
+        "exports": [
+          "App (default)"
+        ],
+        "depends_on": [
+          "src/lib/api.ts",
+          "src/lib/types.ts",
+          "react",
+          "react-markdown"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/repo-learning-coach/src/lib",
+      "context_file": "recipes/repo-learning-coach/src/lib/CONTEXT.md",
+      "reasoning": "Contains domain-specific types (BrainBridgeState, UnderstandingState, LearningArtifactKind, BootstrapData) whose semantics are not evident from names alone, plus a non-obvious centralised error-extraction pattern in the API client and a pgvector similarity score surfaced in RelatedThoughtSummary. These warrant documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Shared typed API client and TypeScript type definitions for the repo-learning-coach frontend",
+        "key_concepts": [
+          "BrainBridgeState",
+          "UnderstandingState",
+          "LearningArtifactKind",
+          "BootstrapData",
+          "RelatedThoughtSummary"
+        ],
+        "exports": [
+          "fetchBootstrap",
+          "fetchLessonDetail",
+          "fetchResearchDocument",
+          "saveLessonProgress",
+          "addLessonComment",
+          "captureLessonArtifact",
+          "submitQuiz",
+          "LessonStatus",
+          "UnderstandingState",
+          "LearningArtifactKind",
+          "BrainBridgeState",
+          "LessonSummary",
+          "ResearchDocumentSummary",
+          "RelatedThoughtSummary",
+          "BootstrapData",
+          "LessonDetail",
+          "ResearchDocumentDetail",
+          "QuizResult",
+          "CaptureResult"
+        ],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/research-to-decision-workflow",
+      "context_file": "recipes/research-to-decision-workflow/CONTEXT.md",
+      "reasoning": "This recipe defines a branching, multi-step workflow that sequences five named OB1 skills into two distinct paths (operator and investor). The branching logic, skip rules, handoff gating conditions, and the role of the 00-brief.md anchor file are all non-obvious from file names alone. Documentation adds clear value.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Composable orchestration scaffold that sequences five OB1 skills into operator or investor decision pipelines",
+        "key_concepts": [
+          "Operator path",
+          "Investor path",
+          "Handoff checklist",
+          "Prompt stubs",
+          "Skip rules"
+        ],
+        "exports": [
+          "workflow-template.md"
+        ],
+        "depends_on": [
+          "skills/competitive-analysis",
+          "skills/financial-model-review",
+          "skills/deal-memo-drafting",
+          "skills/research-synthesis",
+          "skills/meeting-synthesis"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "recipes/research-to-decision-workflow/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/schema-aware-routing",
+      "context_file": "recipes/schema-aware-routing/CONTEXT.md",
+      "reasoning": "Contains non-trivial domain logic: a three-pass person resolution algorithm, a first-person intent gate for action item routing, and a schema-driven multi-table write pipeline. Multiple non-obvious behaviors (pending resolution, last-write linking, parallel extraction) warrant documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "LLM-driven metadata extraction and schema-aware routing of unstructured text into multiple Supabase tables",
+        "key_concepts": [
+          "Schema-aware routing",
+          "Three-pass person resolution",
+          "First-person intent gate",
+          "Pending person confirmation"
+        ],
+        "exports": [
+          "processThought",
+          "findOrCreatePerson",
+          "extractMetadata",
+          "namesAreSimilar",
+          "EXTRACTION_SYSTEM_PROMPT",
+          "ExtractedMetadata",
+          "PersonMention",
+          "PersonResult",
+          "WriteResult",
+          "RoutingOutcome"
+        ],
+        "depends_on": [
+          "@supabase/supabase-js",
+          "OpenAI-compatible LLM API",
+          "OpenAI-compatible embeddings API"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "recipes/source-filtering",
+      "reasoning": "Single Deno script with a narrow, well-documented purpose. The inline JSDoc header fully explains usage, context, options, and required env vars. No domain-specific abstractions, no non-obvious responsibility boundaries, and no multiple sub-modules requiring conceptual explanation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Retroactive LLM metadata backfill for thoughts that were imported directly into Supabase without going through the normal ingest endpoint",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [
+          "Supabase REST API",
+          "OpenRouter (gpt-4o-mini)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/thought-enrichment",
+      "context_file": "recipes/thought-enrichment/CONTEXT.md",
+      "reasoning": "Complex multi-script pipeline with non-obvious domain concepts (sensitivity tiers, enrichment versioning, three distinct backfill scenarios), cursor-based pagination logic, resumable state management, and calibrated LLM prompting. The relationship between the three scripts and their distinct repair purposes is not apparent from filenames alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "LLM-based retroactive classification and sensitivity-tier backfill pipeline for existing thoughts in a Supabase Open Brain database",
+        "key_concepts": [
+          "Sensitivity tiers (standard/personal/restricted)",
+          "Enrichment versioning",
+          "Cursor-based resumable state",
+          "Type backfill (metadata.type promotion)",
+          "LLM classification prompt with importance/confidence calibration"
+        ],
+        "exports": [],
+        "depends_on": [
+          "Supabase REST API",
+          "Anthropic API",
+          "OpenRouter API"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "ANTHROPIC_API_KEY",
+            "OPENROUTER_API_KEY",
+            "ANTHROPIC_CLASSIFIER_MODEL",
+            "OPENROUTER_CLASSIFIER_MODEL",
+            "ENRICH_PROVIDER"
+          ],
+          "config_files": [
+            ".env.local",
+            "sensitivity-patterns.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "recipes/thought-enrichment/lib",
+      "reasoning": "Two small utility modules with self-documenting names and straightforward implementations. memory-core.mjs provides text normalization and SHA-256 hashing helpers. sensitivity-patterns.mjs loads and compiles regex patterns from a sibling JSON config file. No domain-specific terminology, no complex business logic, no non-obvious responsibility boundaries.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Low-level text normalization, hashing, and regex pattern compilation utilities for the thought-enrichment recipe",
+        "key_concepts": [],
+        "exports": [
+          "normalizeWhitespace",
+          "canonicalizeText",
+          "sha256Hex",
+          "buildContentFingerprint",
+          "RESTRICTED_PATTERNS",
+          "PERSONAL_PATTERNS"
+        ],
+        "depends_on": [
+          "node:crypto",
+          "fs",
+          "path",
+          "url",
+          "sensitivity-patterns.json"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/typed-edge-classifier",
+      "context_file": "recipes/typed-edge-classifier/CONTEXT.md",
+      "reasoning": "Complex LLM pipeline recipe with a two-stage hybrid filter+classify architecture, a typed relation vocabulary with specific semantic boundaries, a hard cost-cap enforcement mechanism using proactive parallelism clamping, idempotent upsert via RPC, directional edge semantics, and several non-obvious gotchas around reclassification eligibility, best-effort mirroring, and unknown-model pricing refusal.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Two-stage Haiku/Opus hybrid classifier that populates thought_edges with typed semantic reasoning relations between thought pairs",
+        "key_concepts": [
+          "Hybrid filter+classify pipeline",
+          "Typed relation vocabulary (supports, contradicts, evolved_into, supersedes, depends_on, related_to)",
+          "Edge direction (A_to_B, B_to_A, symmetric)",
+          "Hard cost cap with proactive parallelism clamping",
+          "Idempotent upsert via thought_edges_upsert RPC",
+          "Candidate sampling via thought_entities shared-entity overlap"
+        ],
+        "exports": [
+          "classify-edges.mjs (CLI script)"
+        ],
+        "depends_on": [
+          "schemas/typed-reasoning-edges",
+          "schemas/entity-extraction",
+          "Anthropic API (Haiku + Opus)",
+          "Supabase REST API"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "OPEN_BRAIN_URL",
+            "OPEN_BRAIN_SERVICE_KEY",
+            "ANTHROPIC_API_KEY"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/vercel-neon-telegram",
+      "context_file": "recipes/vercel-neon-telegram/CONTEXT.md",
+      "reasoning": "Complex alternative-architecture recipe with multiple non-obvious design decisions: stateless MCP transport pattern, parallel capture pipeline, triple-path auth supporting header-less AI clients, separate Telegram webhook secret, mixed SQL client strategies in db.ts, and an in-memory rate limiter with cold-start reset semantics. Domain terminology (ThoughtType taxonomy, match_thoughts function, maxDuration Vercel override) would not be obvious from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Alternative Open Brain deployment using Vercel, Neon Postgres, and Telegram \u2014 replaces Cloudflare + Supabase + Slack while preserving the same thoughts schema and MCP interface",
+        "key_concepts": [
+          "Stateless MCP transport",
+          "Parallel capture pipeline",
+          "ThoughtType taxonomy",
+          "In-memory rate limiter with cold-start reset"
+        ],
+        "exports": [
+          "POST /api/capture",
+          "POST /api/mcp",
+          "POST /api/telegram",
+          "GET /api/health"
+        ],
+        "depends_on": [
+          "OpenAI API",
+          "Neon Postgres (pgvector)",
+          "grammY (Telegram bot library)",
+          "@modelcontextprotocol/sdk"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "DATABASE_URL",
+            "OPENAI_API_KEY",
+            "BRAIN_ACCESS_KEY",
+            "TELEGRAM_BOT_TOKEN",
+            "TELEGRAM_WEBHOOK_SECRET",
+            "APP_URL"
+          ],
+          "config_files": [
+            "recipes/vercel-neon-telegram/.env.example",
+            "recipes/vercel-neon-telegram/vercel.json",
+            "recipes/vercel-neon-telegram/next.config.mjs"
+          ],
+          "has_health_endpoints": true,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/vercel-neon-telegram/src",
+      "context_file": "recipes/vercel-neon-telegram/src/CONTEXT.md",
+      "reasoning": "Complex application source with multiple intake surfaces (REST API, Telegram bot, MCP protocol), a shared AI-powered capture pipeline, custom timing-safe auth, in-memory rate limiting, and Neon pgvector integration. Contains multiple non-obvious design decisions including stateless MCP per-request instantiation, Vercel timeout overrides, grammY command guard, and mixed SQL query styles in db.ts.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Full Next.js application source for a multi-surface thought capture system (REST, Telegram, MCP) backed by OpenAI embeddings and a Neon pgvector database",
+        "key_concepts": [
+          "captureThought pipeline",
+          "ThoughtType",
+          "ThoughtMetadata",
+          "timingSafeEqual auth",
+          "in-memory sliding-window rate limiter",
+          "stateless MCP server",
+          "Telegram webhook singleton bot"
+        ],
+        "exports": [
+          "POST /api/capture",
+          "POST /api/telegram",
+          "POST /api/mcp",
+          "GET /api/health"
+        ],
+        "depends_on": [
+          "OpenAI (text-embedding-3-small, gpt-4o-mini)",
+          "@neondatabase/serverless",
+          "grammy",
+          "@modelcontextprotocol/sdk",
+          "@ai-sdk/openai",
+          "zod"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "BRAIN_ACCESS_KEY",
+            "DATABASE_URL",
+            "TELEGRAM_BOT_TOKEN",
+            "TELEGRAM_WEBHOOK_SECRET",
+            "OPENAI_API_KEY"
+          ],
+          "config_files": [],
+          "has_health_endpoints": true,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/vercel-neon-telegram/src/app/api",
+      "context_file": "recipes/vercel-neon-telegram/src/app/api/CONTEXT.md",
+      "reasoning": "Contains four distinct API route handlers with non-obvious design decisions: stateless MCP server instantiation per request, a bot singleton for Telegram warm-instance reuse, two different authentication mechanisms (bearer token vs Telegram webhook secret), and Vercel-specific maxDuration hints. These are not self-evident from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "HTTP route handlers exposing REST capture, MCP protocol, Telegram bot webhook, and health check surfaces",
+        "key_concepts": [
+          "Stateless MCP server per request",
+          "Telegram webhook secret authentication",
+          "Bearer token authentication",
+          "Bot singleton pattern",
+          "MCP protocol compliance (HEAD/DELETE/OPTIONS)"
+        ],
+        "exports": [
+          "POST (capture)",
+          "POST/GET/HEAD/DELETE/OPTIONS (mcp)",
+          "POST (telegram)",
+          "GET (health)"
+        ],
+        "depends_on": [
+          "recipes/vercel-neon-telegram/src/lib/auth",
+          "recipes/vercel-neon-telegram/src/lib/rate-limit",
+          "recipes/vercel-neon-telegram/src/lib/capture",
+          "recipes/vercel-neon-telegram/src/lib/db",
+          "recipes/vercel-neon-telegram/src/lib/ai"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "TELEGRAM_BOT_TOKEN",
+            "TELEGRAM_WEBHOOK_SECRET"
+          ],
+          "config_files": [],
+          "has_health_endpoints": true,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/vercel-neon-telegram/src/lib",
+      "context_file": "recipes/vercel-neon-telegram/src/lib/CONTEXT.md",
+      "reasoning": "Contains a multi-stage thought-capture pipeline with non-obvious details: in-memory rate limiter that resets on cold start, mixed Neon query styles (tagged template vs parameterized), three-strategy auth key extraction with timing-safe comparison, and vector serialization quirk for pgvector via Neon driver. Domain concepts like ThoughtMetadata, thought type taxonomy, and the match_thoughts Postgres function dependency warrant documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Core shared library for the thought-capture pipeline: authentication, rate limiting, AI enrichment, and Neon DB persistence",
+        "key_concepts": [
+          "Thought",
+          "ThoughtMetadata",
+          "ThoughtType",
+          "match_thoughts",
+          "captureThought pipeline"
+        ],
+        "exports": [
+          "captureThought",
+          "generateEmbedding",
+          "extractMetadata",
+          "insertThought",
+          "searchThoughts",
+          "listThoughts",
+          "validateAccessKey",
+          "extractKey",
+          "requireAuth",
+          "checkRateLimit",
+          "thoughtTypeEnum",
+          "metadataSchema"
+        ],
+        "depends_on": [
+          "@ai-sdk/openai",
+          "@neondatabase/serverless",
+          "zod",
+          "crypto"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "BRAIN_ACCESS_KEY",
+            "DATABASE_URL",
+            "OPENAI_API_KEY"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "recipes/vercel-neon-telegram/src/lib/__tests__",
+      "reasoning": "Standard Vitest test directory. Three test files cover auth.ts, rate-limit.ts, and types.ts with straightforward unit tests. Purpose is entirely self-evident from the directory name and file names. No domain concepts, design decisions, or non-obvious logic exist here beyond what is already expressed in the tests themselves.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Unit tests for the lib utilities (auth, rate-limit, types)",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [
+          "recipes/vercel-neon-telegram/src/lib/auth",
+          "recipes/vercel-neon-telegram/src/lib/rate-limit",
+          "recipes/vercel-neon-telegram/src/lib/types"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "BRAIN_ACCESS_KEY"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/wiki-compiler",
+      "context_file": "recipes/wiki-compiler/CONTEXT.md",
+      "reasoning": "Single-file orchestrator with non-trivial pipeline sequencing logic: four delegated recipe phases, per-phase skip/require toggles, best-effort error handling, remote HTTP trigger for entity extraction, manifest artifact generation, and layered env-var merging. The concepts of 'compiled wiki', 'phase toggles', and 'best-effort mode' are domain-specific and not obvious from filenames alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Multi-phase pipeline orchestrator that sequences entity extraction, typed-edge classification, entity wiki generation, and topic wiki synthesis into a single compiled wiki run",
+        "key_concepts": [
+          "Compiled wiki",
+          "Phase toggles",
+          "Best-effort mode",
+          "Compile manifest",
+          "Topic"
+        ],
+        "exports": [],
+        "depends_on": [
+          "recipes/typed-edge-classifier",
+          "recipes/entity-wiki",
+          "recipes/wiki-synthesis"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "OPEN_BRAIN_URL",
+            "OPEN_BRAIN_SERVICE_KEY",
+            "ENTITY_EXTRACTION_WORKER_URL",
+            "ENTITY_EXTRACTION_MCP_ACCESS_KEY",
+            "MCP_ACCESS_KEY",
+            "LLM_API_KEY",
+            "LLM_MODEL",
+            "WIKI_OUTPUT_DIR"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/wiki-synthesis",
+      "context_file": "recipes/wiki-synthesis/CONTEXT.md",
+      "reasoning": "The recipe contains two non-trivial synthesis pipelines with domain-specific concepts (life-date bucketing, thread eligibility gating, synthesizer catalogue pattern, resume-safe JSONL state), a meaningful distinction from a sibling recipe (entity-wiki vs wiki-synthesis), and several non-obvious implementation choices (deduplication-by-thread-id deletion, selective RPC error swallowing, prompt injection defenses, env-var allowlisting in dashboard subprocess spawn).",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "LLM-driven wiki article synthesis from Open Brain atomic thoughts, with an autobiographical narrative synthesizer and a Gmail-thread summarizer",
+        "key_concepts": [
+          "Synthesizer catalogue",
+          "Life-date bucketing",
+          "Thread eligibility (content-weight gating)",
+          "Resume-safe JSONL state",
+          "wiki vs entity-wiki distinction"
+        ],
+        "exports": [
+          "scripts/synthesize-wiki.mjs",
+          "scripts/backfill-gmail-wikis.mjs",
+          "dashboard-snippets/components/GenerateAutobiographyButton.tsx",
+          "dashboard-snippets/app/wiki/page.tsx",
+          "dashboard-snippets/app/wiki/[slug]/page.tsx"
+        ],
+        "depends_on": [
+          "public.thoughts (core OB1 schema)",
+          "public.thought_edges (knowledge-graph schema)",
+          "public.upsert_thought RPC (optional)",
+          "OpenAI-compatible Chat Completions API"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "OPEN_BRAIN_URL",
+            "OPEN_BRAIN_SERVICE_KEY",
+            "LLM_BASE_URL",
+            "LLM_API_KEY",
+            "LLM_MODEL",
+            "SUBJECT_NAME",
+            "SOURCE_TYPE_FILTER",
+            "WIKI_OUTPUT_DIR"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "recipes/wiki-synthesis/dashboard-snippets",
+      "reasoning": "Copy-paste Next.js App Router UI snippets for integrating wiki synthesis into a dashboard. Purpose is self-evident from directory name and inline JSDoc comments. No domain-specific terminology, no complex business logic. The subprocess env allowlist in page.tsx is the only non-obvious detail but is a single implementation note, not a conceptual pattern requiring documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Next.js App Router dashboard snippets for rendering and triggering wiki synthesis articles",
+        "key_concepts": [],
+        "exports": [
+          "WikiIndexPage",
+          "WikiArticlePage",
+          "GenerateAutobiographyButton",
+          "GenerateAutobiographyActionState"
+        ],
+        "depends_on": [
+          "next",
+          "react",
+          "react-markdown",
+          "remark-gfm",
+          "recipes/wiki-synthesis/scripts/synthesize-wiki.mjs"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "OPEN_BRAIN_URL",
+            "OPEN_BRAIN_SERVICE_KEY",
+            "LLM_BASE_URL",
+            "LLM_API_KEY",
+            "LLM_MODEL",
+            "SUBJECT_NAME",
+            "SOURCE_TYPE_FILTER",
+            "WIKI_OUTPUT_DIR"
+          ],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/wiki-synthesis/scripts",
+      "context_file": "recipes/wiki-synthesis/scripts/CONTEXT.md",
+      "reasoning": "Both scripts contain non-obvious domain logic: a named synthesizer plugin catalogue, life-date bucketing across multiple metadata keys, a compound eligibility gate with deduplication-aware word counting, a resume-safe JSONL state machine with partial-edge retry semantics, prompt injection defenses using XML delimiters, sensitivity-tier inheritance, and a conditional RPC/fallback insert pattern. None of these are inferable from file or function names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Executable scripts that synthesize wiki articles from atomic thoughts \u2014 one general topic-scoped synthesizer with a plugin architecture, one Gmail-thread-specific backfill with resume-safe state tracking and graph edge writing",
+        "key_concepts": [
+          "Synthesizer catalogue (plugin map)",
+          "Life-date bucketing",
+          "Thread eligibility gate",
+          "Resume-safe JSONL state log",
+          "derived_from edges",
+          "Prompt injection defense"
+        ],
+        "exports": [],
+        "depends_on": [
+          "Supabase PostgREST (thoughts, thought_edges, upsert_thought RPC)",
+          "OpenAI-compatible Chat Completions endpoint",
+          "recipes/email-history-import (upstream Gmail data)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "OPEN_BRAIN_URL",
+            "OPEN_BRAIN_SERVICE_KEY",
+            "LLM_BASE_URL",
+            "LLM_API_KEY",
+            "LLM_MODEL",
+            "SUBJECT_NAME",
+            "SOURCE_TYPE_FILTER",
+            "WIKI_OUTPUT_DIR"
+          ],
+          "config_files": [
+            ".env.local (loaded at runtime from cwd)"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/work-operating-model-activation",
+      "context_file": "recipes/work-operating-model-activation/CONTEXT.md",
+      "reasoning": "Complex domain module with a five-layer operating model interview workflow, versioned session/checkpoint/entry data model, layer-specific Zod detail validators, multi-artifact export rendering (USER.md, SOUL.md, HEARTBEAT.md, JSON exports), and non-obvious version resolution and finalization semantics. Purpose is not obvious from directory name alone and contains several gotchas worth documenting.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Remote MCP server that elicits a user's work operating model across five structured layers and renders versioned, agent-ready export artifacts",
+        "key_concepts": [
+          "Five Layers (operating_rhythms, recurring_decisions, dependencies, institutional_knowledge, friction)",
+          "Session Versioning",
+          "Checkpoint + Entry Separation",
+          "source_confidence",
+          "Export Artifacts (USER.md, SOUL.md, HEARTBEAT.md)",
+          "Layer Detail Validators"
+        ],
+        "exports": [
+          "start_operating_model_session (MCP tool)",
+          "save_operating_model_layer (MCP tool)",
+          "query_operating_model (MCP tool)",
+          "generate_operating_model_exports (MCP tool)"
+        ],
+        "depends_on": [
+          "Supabase (operating_model_profiles, operating_model_sessions, operating_model_layer_checkpoints, operating_model_entries, operating_model_exports)",
+          "skills/work-operating-model"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "MCP_ACCESS_KEY",
+            "DEFAULT_USER_ID"
+          ],
+          "config_files": [
+            "recipes/work-operating-model-activation/deno.json"
+          ],
+          "has_health_endpoints": true,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/x-twitter-import",
+      "context_file": "recipes/x-twitter-import/CONTEXT.md",
+      "reasoning": "The script has several non-obvious implementation details: Twitter's JS-wrapped export format requires stripping a window assignment prefix before JSON parsing, tweets are batched in groups of 20 for embedding density, DM conversations below 3 messages are silently dropped, and all thoughts receive hardcoded importance/quality values regardless of engagement. These details are not apparent from file names alone and warrant documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "One-time import of a Twitter/X data export archive into Open Brain as searchable thoughts with embeddings",
+        "key_concepts": [
+          "Twitter JS export format",
+          "Tweet batching",
+          "Content fingerprinting"
+        ],
+        "exports": [],
+        "depends_on": [
+          "@supabase/supabase-js",
+          "dotenv",
+          "OpenRouter embeddings API",
+          "upsert_thought RPC"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY",
+            "EMBEDDING_MODEL"
+          ],
+          "config_files": [
+            ".env.example"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "schemas",
+      "context_file": "schemas/CONTEXT.md",
+      "reasoning": "Contains four distinct schema extensions with non-trivial dependency ordering, a two-tier edge model (entity-to-entity vs thought-to-thought) that is easy to conflate, domain-specific graph vocabulary (reasoning relation types, temporal validity semantics, sensitivity_tier filtering), hard prerequisite checks with fail-fast exceptions, diverging RLS postures across sub-schemas, and non-obvious NULL handling in the upsert RPC.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Community-contributed idempotent SQL migrations that extend the Open Brain Supabase database with knowledge-graph tables, enrichment columns, RPCs, triggers, and RLS policies",
+        "key_concepts": [
+          "Two-tier edge model (entity edges vs thought edges)",
+          "Reasoning relation vocabulary (supports, contradicts, evolved_into, supersedes, depends_on, related_to)",
+          "Temporal validity and decay_weight",
+          "Entity extraction queue with auto-trigger",
+          "sensitivity_tier access filtering",
+          "Two-phase full-text search (GIN tsvector + ILIKE fallback)"
+        ],
+        "exports": [
+          "search_thoughts_text",
+          "brain_stats_aggregate",
+          "get_thought_connections",
+          "thought_edges_upsert",
+          "queue_entity_extraction (trigger function)",
+          "thought_edges_set_updated_at (trigger function)",
+          "entities table",
+          "edges table",
+          "thought_entities table",
+          "entity_extraction_queue table",
+          "consolidation_log table",
+          "thought_edges table"
+        ],
+        "depends_on": [
+          "docs/01-getting-started.md (thoughts table + content_fingerprint column)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "schemas/enhanced-thoughts",
+      "context_file": "schemas/enhanced-thoughts/CONTEXT.md",
+      "reasoning": "Contains non-obvious domain logic: a two-phase GIN+ILIKE full-text search strategy, a composite rank formula blending text relevance with importance and quality_score signals, a sensitivity_tier access control pattern used across all three RPCs, and a thought-connection algorithm based purely on metadata array overlap rather than vector similarity. None of these design decisions are self-evident from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Extends the thoughts table with structured classification columns and installs utility RPCs for full-text search, aggregate statistics, and thought-connection discovery",
+        "key_concepts": [
+          "sensitivity_tier",
+          "importance/quality_score ranking signals",
+          "two-phase GIN+ILIKE full-text search",
+          "metadata-overlap thought connections",
+          "idempotent schema migration"
+        ],
+        "exports": [
+          "search_thoughts_text",
+          "brain_stats_aggregate",
+          "get_thought_connections"
+        ],
+        "depends_on": [
+          "thoughts table (core Open Brain schema)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "schemas/entity-extraction",
+      "context_file": "schemas/entity-extraction/CONTEXT.md",
+      "reasoning": "Multi-table schema with domain-specific graph concepts (canonical entity, normalized_name dedup, edge support_count, thought-entity evidence links), async queue with content-addressed re-queue logic, a non-obvious prerequisite hard-fail guard, trigger skip logic for generated artifacts, opt-in backfill pattern, and RLS scaffolded for future multi-tenancy. Several of these details are genuinely non-obvious from table names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Knowledge graph schema layer with async extraction queue and consolidation audit trail for automatic entity and relationship extraction from thoughts",
+        "key_concepts": [
+          "Canonical entity / normalized name deduplication",
+          "Edge support count",
+          "Thought-entity mention role and evidence",
+          "Async queue with content-addressed re-queue",
+          "Consolidation log"
+        ],
+        "exports": [
+          "public.entities",
+          "public.edges",
+          "public.thought_entities",
+          "public.entity_extraction_queue",
+          "public.consolidation_log",
+          "public.queue_entity_extraction (trigger function)"
+        ],
+        "depends_on": [
+          "public.thoughts (content_fingerprint column required)",
+          "primitives/rls"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "schemas/entity-extraction/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "schemas/typed-reasoning-edges",
+      "context_file": "schemas/typed-reasoning-edges/CONTEXT.md",
+      "reasoning": "Contains multiple non-obvious domain concepts: a closed relation vocabulary with distinct semantic meanings, NULL-semantic temporal validity fields, a dual-table migration scope (new table + ALTER on an existing table from a different schema), mixed PK/FK types, an upsert function with NULL-wins conflict resolution logic, and RLS posture that must mirror a separate table for privacy reasons.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Database schema extension adding typed semantic reasoning edges between thoughts and temporal validity decay to entity edges",
+        "key_concepts": [
+          "Relation vocabulary (supports/contradicts/evolved_into/supersedes/depends_on/related_to)",
+          "Temporal validity with NULL semantics",
+          "decay_weight",
+          "support_count evidence accumulation",
+          "Upsert NULL-wins conflict resolution"
+        ],
+        "exports": [
+          "public.thought_edges",
+          "public.thought_edges_upsert (RPC)",
+          "public.edges.valid_from (column)",
+          "public.edges.valid_until (column)",
+          "public.edges.decay_weight (column)"
+        ],
+        "depends_on": [
+          "public.thoughts (docs/01-getting-started.md)",
+          "schemas/entity-extraction"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "schemas/typed-reasoning-edges/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "schemas/workflow-status",
+      "reasoning": "Simple SQL migration that adds two columns (status and status_updated_at) and a partial index to the thoughts table. Purpose is fully self-evident from file names, inline SQL comments, and metadata.json. No domain-specific terminology beyond standard kanban vocabulary, no non-obvious design decisions, and no responsibility boundaries requiring documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Database schema extension adding kanban-style workflow status tracking to the thoughts table",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [
+          "thoughts table"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "schemas/workflow-status/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": true
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "server",
+      "context_file": "server/CONTEXT.md",
+      "reasoning": "This is the core runtime of the entire Open Brain system. It contains non-obvious design decisions: a two-step thought capture flow (upsert then embedding patch), a workaround for Claude Desktop's missing Accept header, dual-mode access key auth (header or query param), and the constraint that it runs as a Supabase Edge Function (Deno), not a Node.js server. These details are not recoverable from file/function names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Core Open Brain MCP server exposing thought capture, semantic search, listing, and statistics as MCP tools over a Supabase Edge Function",
+        "key_concepts": [
+          "MCP tool registration",
+          "StreamableHTTPTransport",
+          "Two-step capture (upsert + embedding patch)",
+          "match_thoughts RPC (pgvector similarity search)",
+          "upsert_thought RPC (deduplication-aware insert)",
+          "x-brain-key access key auth",
+          "Accept header patch for Claude Desktop compatibility"
+        ],
+        "exports": [
+          "search_thoughts (MCP tool)",
+          "list_thoughts (MCP tool)",
+          "thought_stats (MCP tool)",
+          "capture_thought (MCP tool)"
+        ],
+        "depends_on": [
+          "@modelcontextprotocol/sdk",
+          "@hono/mcp",
+          "hono",
+          "zod",
+          "@supabase/supabase-js",
+          "OpenRouter API (embeddings + chat completions)"
+        ],
+        "operational_hints": {
+          "has_api_routes": true,
+          "has_cli_commands": false,
+          "env_vars_referenced": [
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "OPENROUTER_API_KEY",
+            "MCP_ACCESS_KEY"
+          ],
+          "config_files": [
+            "server/deno.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "skills",
+      "context_file": "skills/CONTEXT.md",
+      "reasoning": "The skills directory uses a non-obvious behavioral protocol pattern where SKILL.md files serve as AI-consumable instruction sets rather than human documentation. It has domain-specific concepts (trigger conditions, variants, references as selective-load knowledge docs, self-improving lessons logs) and non-obvious conventions around tool name softness, the client-variant split, and the living-document nature of production skills like panning-for-gold.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Reusable AI behavioral protocols \u2014 prompt packs and process definitions that govern how an AI client handles a specific class of recurring problem",
+        "key_concepts": [
+          "SKILL.md",
+          "Trigger Conditions",
+          "Variants",
+          "References (selective-load knowledge docs)",
+          "Lessons Log",
+          "Output Contract"
+        ],
+        "exports": [
+          "auto-capture",
+          "autodream-brain-sync",
+          "claudeception",
+          "competitive-analysis",
+          "deal-memo-drafting",
+          "financial-model-review",
+          "heavy-file-ingestion",
+          "meeting-synthesis",
+          "n-agentic-harnesses",
+          "panning-for-gold",
+          "research-synthesis",
+          "weekly-signal-diff",
+          "work-operating-model",
+          "world-model-diagnostic"
+        ],
+        "depends_on": [
+          "integrations",
+          "recipes"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "skills/auto-capture",
+      "reasoning": "This directory contains only two files: a self-documenting SKILL.md behavioral protocol and a metadata.json. The purpose is immediately obvious from the file names and frontmatter. There is no code logic, domain-specific terminology, or non-obvious responsibility boundaries \u2014 it is a plain-language prompt pack with trigger conditions and a numbered process. No CONTEXT.md is warranted.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Behavioral skill protocol for automatically capturing ACT NOW items and a session summary to Open Brain at session close",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "skills/autodream-brain-sync",
+      "reasoning": "The directory contains only SKILL.md and metadata.json. SKILL.md is itself a well-structured, self-documenting specification that clearly explains the problem, trigger conditions, process, guardrails, and scope. There are no complex sub-modules, no non-obvious domain concepts, and no design decisions that require additional explanation beyond what the skill file already provides. The purpose is immediately apparent from both the directory name and file contents.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Skill definition for syncing Claude Code's local autodream/memory file writes to Open Brain so memories are accessible from all AI clients and devices",
+        "key_concepts": [
+          "autodream",
+          "dreaming",
+          "memory sync",
+          "multi-client memory"
+        ],
+        "exports": [],
+        "depends_on": [
+          "mcp__open-brain__capture_thought"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "skills/autodream-brain-sync/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "skills/claudeception",
+      "context_file": "skills/claudeception/CONTEXT.md",
+      "reasoning": "Meta-skill with non-obvious domain concepts: self-referential skill extraction, a three-way deduplication decision tree against Open Brain, a two-step save requirement (file + brain capture), legacy naming inconsistency between directory and frontmatter, and a dual-scope storage model (.claude/skills/ vs ~/.claude/skills/). These are not self-evident from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Meta-skill that extracts reusable knowledge from AI work sessions and codifies it into new skill files, with Open Brain integration for duplicate detection and cross-session persistence",
+        "key_concepts": [
+          "Aiception/Claudeception (self-referential skill extraction)",
+          "Extraction threshold and quality gates",
+          "Open Brain deduplication workflow",
+          "Skill lifecycle (creation to archival)",
+          "Retrospective mode",
+          "Dual-scope skill storage"
+        ],
+        "exports": [
+          "SKILL.md (aiception skill definition)"
+        ],
+        "depends_on": [
+          "Open Brain (search_thoughts, capture_thought)",
+          ".claude/skills/ or ~/.claude/skills/ (AI client skill storage)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "skills/claudeception/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "skills/competitive-analysis",
+      "reasoning": "The directory contains only SKILL.md and metadata.json. SKILL.md is a self-documenting workflow specification that already explains purpose, audience, process, evidence rules, and output format in detail. No code, no domain abstractions, no non-obvious design decisions \u2014 the skill pack is a plain prompt/workflow guide with self-evident structure.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Standalone AI skill pack for competitor profiling, pricing comparisons, market mapping, SWOT generation, and operator-ready strategic recommendations",
+        "key_concepts": [
+          "operator-first framing",
+          "evidence labeling (fact vs. inference)",
+          "decision-support brief"
+        ],
+        "exports": [
+          "SKILL.md prompt workflow"
+        ],
+        "depends_on": [
+          "open_brain (optional search and capture)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "skills/competitive-analysis/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "skills/deal-memo-drafting",
+      "context_file": "skills/deal-memo-drafting/CONTEXT.md",
+      "reasoning": "Contains domain-specific investment terminology (IC memo, diligence packet, conviction state, decision-readiness), non-obvious responsibility boundaries with explicit sibling skill delegation, and an unusual epistemic honesty constraint that requires documentation \u2014 the skill intentionally produces weak-labeled or negative-recommendation memos rather than filling gaps with confident prose.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "AI skill for drafting structured deal, IC, partnership, or acquisition memos from pre-existing diligence materials",
+        "key_concepts": [
+          "IC memo",
+          "Deal memo",
+          "Diligence packet",
+          "Conviction state",
+          "Decision-readiness"
+        ],
+        "exports": [
+          "SKILL.md prompt/skill definition"
+        ],
+        "depends_on": [
+          "skills/competitive-analysis",
+          "skills/financial-model-review",
+          "skills/research-synthesis",
+          "skills/meeting-synthesis"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "skills/deal-memo-drafting/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "skills/financial-model-review",
+      "context_file": "skills/financial-model-review/CONTEXT.md",
+      "reasoning": "The skill pack defines domain-specific finance terminology (investor-grade, board-grade, CAC efficiency, roll-forwards), a multi-step analytical process with distinct judgment tiers, and non-obvious scoping boundaries that prevent the skill from drifting into model building. The responsibility split between this skill and peer skills (deal-memo-drafting, research-synthesis, competitive-analysis) is also non-obvious and worth documenting.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Investor-first AI skill pack for reviewing existing financial models, forecasts, and scenario sets for assumption quality, structural risk, and decision usefulness",
+        "key_concepts": [
+          "Investor-grade / Board-grade / Internal planning standard",
+          "Model shape",
+          "Fatal issues vs. caution flags vs. acceptable simplifications",
+          "Structural risk vs. business risk",
+          "Roll-forwards"
+        ],
+        "exports": [],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "skills/heavy-file-ingestion",
+      "context_file": "skills/heavy-file-ingestion/CONTEXT.md",
+      "reasoning": "The directory implements a non-trivial tiered cost-escalation policy (deterministic \u2192 cheap model \u2192 expensive model), multiple format-specific converter strategies with fallback logic, a quality-flag system that drives automated next-step recommendations, and a multi-client variant/build pipeline. None of this is evident from file names alone, and several behaviors (openpyxl data_only semantics, PPTX deduplication, DOCX table truncation, scanned-PDF heuristic thresholds, .skill packaging format) are genuine gotchas for maintainers.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Converts heavyweight files into cheap agent-friendly artifacts (markdown, CSV, index) before any model tokens are spent on the original file",
+        "key_concepts": [
+          "Deterministic-first policy",
+          "Cost tier escalation",
+          "Quality flags",
+          "Converter preference (auto/native/markitdown)",
+          "Output directory convention (.ob1/)",
+          "Client variants and build exports"
+        ],
+        "exports": [
+          "convert_heavy_file.py (CLI script)",
+          "build_client_exports.py (build script)",
+          "variants/claude-code/SKILL.md",
+          "variants/claude-desktop/SKILL.md",
+          "variants/codex/SKILL.md",
+          "references/open-source-stack.md"
+        ],
+        "depends_on": [
+          "pdfplumber",
+          "python-docx",
+          "python-pptx",
+          "openpyxl",
+          "markitdown (optional)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "skills/heavy-file-ingestion/scripts",
+      "context_file": "skills/heavy-file-ingestion/scripts/CONTEXT.md",
+      "reasoning": "Contains two non-trivial scripts: a multi-format file converter with format-specific conversion paths, quality flag logic, a converter-selection strategy (prefer flag), and structured artifact output; and a build script that assembles variant-specific export bundles. Domain concepts like ConversionResult, quality flags, infer_next_step, and the .ob1 output convention are not self-evident from filenames alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "File format conversion to AI-consumable artifacts and export bundle assembly for AI client variants",
+        "key_concepts": [
+          "ConversionResult",
+          "quality flags",
+          "prefer strategy",
+          ".ob1 output directory",
+          "export bundles"
+        ],
+        "exports": [
+          "convert_heavy_file.py",
+          "build_client_exports.py"
+        ],
+        "depends_on": [
+          "skills/heavy-file-ingestion/variants",
+          "skills/heavy-file-ingestion/references",
+          "resources"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": true,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "skills/heavy-file-ingestion/variants",
+      "reasoning": "This directory is a flat container of three per-client SKILL.md files (claude-code, claude-desktop, codex). The purpose is immediately obvious from the directory name and subdirectory names. Each SKILL.md is self-documenting. There are no domain-specific concepts, shared logic, or non-obvious relationships between the variants that require explanation beyond reading the files themselves.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Per-client variants of the heavy file ingestion skill prompt",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "skills/meeting-synthesis",
+      "reasoning": "The directory contains only SKILL.md and metadata.json. SKILL.md is itself a thorough, self-documenting workflow guide. The purpose is immediately clear from the directory name and file contents. There is no executable code, business logic, domain-specific abstractions, or non-obvious responsibility boundaries that would benefit from a separate CONTEXT.md.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Prompt-based skill pack for turning meeting transcripts or notes into structured outputs: decisions, action items, unresolved questions, risks, and follow-up artifacts",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "skills/meeting-synthesis/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "skills/n-agentic-harnesses",
+      "context_file": "skills/n-agentic-harnesses/CONTEXT.md",
+      "reasoning": "Domain-specific skill pack with specialized terminology (harness, harness primitives, approval gates, durability), a non-obvious index-based routing architecture where SKILL.md acts as the sole routing index into 11 numbered reference files, explicit mode classification logic (design/evaluation/design+evaluation), a solo-developer bias that overrides default multi-agent assumptions, and structurally distinct output contracts per mode. Purpose and module relationships are not self-evident from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Reusable AI skill pack for designing, auditing, and improving the harness layer of agentic products",
+        "key_concepts": [
+          "Harness",
+          "Harness primitives",
+          "Product shape",
+          "Mode classification",
+          "Approval gates"
+        ],
+        "exports": [
+          "SKILL.md (routing index)",
+          "references/01-principles-and-solo-dev-defaults.md",
+          "references/02-harness-shapes-and-architecture.md",
+          "references/03-tools-execution-and-permissions.md",
+          "references/04-state-sessions-and-durability.md",
+          "references/05-context-memory-and-evaluation.md",
+          "references/06-agents-and-extensibility.md",
+          "references/07-ux-observability-and-operations.md",
+          "references/08-design-and-build-playbook.md",
+          "references/09-evaluation-and-improvement-playbook.md",
+          "references/10-example-requests-and-output-patterns.md",
+          "references/11-codex-translation-notes.md"
+        ],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "skills/n-agentic-harnesses/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "skills/n-agentic-harnesses/variants",
+      "reasoning": "This directory is a pure organizational container with no files of its own. It holds two subdirectories ('anthropic' and 'codex') each containing a platform-specific SKILL.md. The name 'variants' and the subdirectory names make the structure self-evident. No domain logic, no non-obvious boundaries, and no concepts requiring documentation.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Organizational container for platform-specific variants of the n-agentic-harnesses skill",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "skills/panning-for-gold",
+      "context_file": "skills/panning-for-gold/CONTEXT.md",
+      "reasoning": "Complex multi-phase AI workflow skill with domain-specific terminology (panning, gold-found, thread triage verdicts, speaker consolidation), non-obvious operational constraints derived from production failures (mandatory permanent file writes, evaluator caps, summaries-first reading strategy), and a self-improving lessons log. Purpose and process are not deducible from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Multi-phase AI skill for transforming unstructured captures (voice transcripts, brain dumps) into evaluated idea inventories stored in Open Brain",
+        "key_concepts": [
+          "Panning / Gold-Found",
+          "Thread extraction",
+          "Verdict taxonomy (ACT NOW / RESEARCH MORE / PARK IT / KILL IT)",
+          "Speaker Consolidation",
+          "Mary's Law Check",
+          "COS items",
+          "Permanent file write discipline"
+        ],
+        "exports": [
+          "SKILL.md (reusable AI client skill prompt)"
+        ],
+        "depends_on": [
+          "Open Brain (capture_thought, search_thoughts)",
+          "AI client file tools"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "skills/panning-for-gold/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "skipped",
+      "directory": "skills/research-synthesis",
+      "reasoning": "This directory contains only a SKILL.md prompt definition and metadata.json. The purpose is immediately clear from the file name and the skill's own documentation. There are no code files, no domain abstractions beyond what is explicitly stated in the skill definition, and no non-obvious logic or gotchas. It is a self-documenting prompt pack.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Standalone AI skill pack for synthesizing a source set into decision-grade findings, contradictions, confidence markers, gaps, and next questions",
+        "key_concepts": [],
+        "exports": [],
+        "depends_on": [],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "skills/weekly-signal-diff",
+      "context_file": "skills/weekly-signal-diff/CONTEXT.md",
+      "reasoning": "The skill introduces domain-specific terminology ('signal diff' vs 'digest', 'starter universe', 'structural questions') and contains non-obvious design decisions around personalization balance, portable tool-name abstraction, and the intentional 3-7 signal cap. These concepts are not self-evident from file names or standard patterns.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Reusable AI skill for turning weekly market or industry news into a personalized structural diff using Open Brain memory and optional live web search",
+        "key_concepts": [
+          "Signal diff vs digest",
+          "Starter universe bootstrap",
+          "Structural questions framework",
+          "Personalization vs discovery balance",
+          "Live search upgrade"
+        ],
+        "exports": [
+          "SKILL.md prompt pack"
+        ],
+        "depends_on": [
+          "Open Brain memory tools",
+          "Optional: OpenRouter / Perplexity Sonar"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "skills/weekly-signal-diff/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "skills/work-operating-model",
+      "context_file": "skills/work-operating-model/CONTEXT.md",
+      "reasoning": "Contains a multi-phase structured interview protocol with non-obvious behavioral constraints (source_confidence semantics, mandatory contradiction pass, lean memory discipline, tentative-hint rule), a per-layer canonical entry contract with distinct sub-shapes, and a dependency on paired recipe MCP tools that must be discovered at runtime. Purpose and rules are not self-evident from directory or file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Structured AI skill for interviewing users about how their work actually runs, saving approved results into Open Brain via paired recipe MCP tools, and generating agent-ready operating model exports",
+        "key_concepts": [
+          "Five fixed interview layers",
+          "source_confidence (confirmed vs synthesized)",
+          "Canonical entry contract",
+          "Lean memory discipline",
+          "Contradiction pass",
+          "Export artifacts (USER.md, SOUL.md, HEARTBEAT.md)"
+        ],
+        "exports": [
+          "SKILL.md (prompt pack loaded by AI client)"
+        ],
+        "depends_on": [
+          "Work Operating Model recipe MCP tools",
+          "Base Open Brain search_thoughts and capture_thought tools"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "skills/work-operating-model/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    },
+    {
+      "status": "created",
+      "directory": "skills/world-model-diagnostic",
+      "context_file": "skills/world-model-diagnostic/CONTEXT.md",
+      "reasoning": "The skill encodes a detailed diagnostic protocol with domain-specific terminology (world-model paradigm, boundary layer, simulated judgment, five-principle evaluation), non-obvious constraints (no numeric scores, three-artifact persistence contract, fuzzy tool resolution), and a multi-phase workflow with explicit business logic for paradigm mapping and priority tiebreakers. None of this is inferable from file names alone.",
+      "has_human_curated_info": false,
+      "module_summary": {
+        "purpose": "Structured conversational skill for diagnosing a company's world-model readiness, mapping it to the right architectural paradigm, auditing its boundary layer, and producing a labeled build sequence",
+        "key_concepts": [
+          "World-model paradigm (vector database / structured ontology / signal-fidelity)",
+          "Boundary layer",
+          "Simulated judgment",
+          "Act on this / Interpret this first",
+          "Five-principle evaluation",
+          "OB1-connected mode vs. direct-chat mode",
+          "Firm finding / Inference / Open question labeling"
+        ],
+        "exports": [
+          "SKILL.md (AI skill prompt pack)"
+        ],
+        "depends_on": [
+          "Open Brain search/capture tools (optional)"
+        ],
+        "operational_hints": {
+          "has_api_routes": false,
+          "has_cli_commands": false,
+          "env_vars_referenced": [],
+          "config_files": [
+            "skills/world-model-diagnostic/metadata.json"
+          ],
+          "has_health_endpoints": false,
+          "has_database_models": false
+        }
+      }
+    }
+  ]
+}

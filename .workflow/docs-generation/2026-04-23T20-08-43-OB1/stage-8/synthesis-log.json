@@ -1,0 +1,27 @@
+{
+  "generated_at": "2026-04-23T21:15:00-0300",
+  "target_path": "/Users/asbrocco/Documents/REPOS/OB1",
+  "readme_file": "README.md",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "quick_start",
+    "mcp_tools",
+    "port_reference",
+    "environment_variables",
+    "common_commands",
+    "project_structure",
+    "schema_migration_order",
+    "module_readmes",
+    "troubleshooting",
+    "documentation",
+    "contributing",
+    "license"
+  ],
+  "summary": {
+    "total_ports": 3,
+    "total_env_vars": 4,
+    "total_commands": 10,
+    "directory_readme_links": 26,
+    "doc_file_links": 8
+  }
+}

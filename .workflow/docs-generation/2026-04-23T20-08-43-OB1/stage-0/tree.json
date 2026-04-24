@@ -1,0 +1,1050 @@
+{
+  "status": "success",
+  "target_path": "/Users/asbrocco/Documents/REPOS/OB1",
+  "tree": {
+    "total_directories": 142,
+    "max_depth": 8,
+    "organization_pattern": "category-based top level (recipes, extensions, skills, integrations, schemas, primitives, dashboards, docs) with flat contribution subfolders; dashboards use framework-native nested routing",
+    "directories": [
+      {
+        "path": ".claude",
+        "depth": 1,
+        "type": "config",
+        "description": "Claude Code project-local config and skills"
+      },
+      {
+        "path": ".claude/skills",
+        "depth": 2,
+        "type": "config",
+        "description": "Claude Code skill files for this repo's maintainers"
+      },
+      {
+        "path": ".github",
+        "depth": 1,
+        "type": "config",
+        "description": "GitHub Actions workflows, issue templates, PR template, and metadata schema"
+      },
+      {
+        "path": ".github/ISSUE_TEMPLATE",
+        "depth": 2,
+        "type": "config",
+        "description": "Structured issue forms for bug reports, feature requests, and contribution submissions"
+      },
+      {
+        "path": ".github/workflows",
+        "depth": 2,
+        "type": "config",
+        "description": "CI/CD workflows including automated PR review (ob1-gate.yml), markdown linting, labeling, and release drafting"
+      },
+      {
+        "path": "dashboards",
+        "depth": 1,
+        "type": "source",
+        "description": "Frontend dashboard templates for visualizing and managing Open Brain data"
+      },
+      {
+        "path": "dashboards/_template",
+        "depth": 2,
+        "type": "config",
+        "description": "Contribution template for new dashboard submissions (metadata only)"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard",
+        "depth": 2,
+        "type": "source",
+        "description": "SvelteKit-based dashboard (v1) for browsing and managing thoughts"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard/src",
+        "depth": 3,
+        "type": "source",
+        "description": "SvelteKit application source"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard/src/lib",
+        "depth": 4,
+        "type": "source",
+        "description": "Shared library code: API client, Supabase client, types"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard/src/lib/assets",
+        "depth": 5,
+        "type": "assets",
+        "description": "Static SVG and image assets for the SvelteKit dashboard"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard/src/routes",
+        "depth": 4,
+        "type": "source",
+        "description": "SvelteKit file-based routing: main page, auth routes, MCP API route"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard/src/routes/api",
+        "depth": 5,
+        "type": "source",
+        "description": "Server-side API route handlers"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard/src/routes/api/mcp",
+        "depth": 6,
+        "type": "source",
+        "description": "MCP proxy API endpoint"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard/src/routes/signin",
+        "depth": 5,
+        "type": "source",
+        "description": "Sign-in page route"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard/src/routes/signout",
+        "depth": 5,
+        "type": "source",
+        "description": "Sign-out action route"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard/static",
+        "depth": 3,
+        "type": "assets",
+        "description": "Static public assets: favicons, robots.txt"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next",
+        "depth": 2,
+        "type": "source",
+        "description": "Next.js App Router-based dashboard (v2) with richer features: kanban, duplicate resolution, audit log"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app",
+        "depth": 3,
+        "type": "source",
+        "description": "Next.js App Router root: pages and API routes"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api",
+        "depth": 4,
+        "type": "source",
+        "description": "Next.js Route Handlers for all backend API endpoints"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/audit",
+        "depth": 5,
+        "type": "source",
+        "description": "Audit log API routes"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/audit/delete",
+        "depth": 6,
+        "type": "source",
+        "description": "DELETE handler for audit log entries"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/duplicates",
+        "depth": 5,
+        "type": "source",
+        "description": "Duplicate detection API routes"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/duplicates/resolve",
+        "depth": 6,
+        "type": "source",
+        "description": "POST handler for resolving detected duplicates"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/ingest",
+        "depth": 5,
+        "type": "source",
+        "description": "Ingest pipeline API: list and create ingest jobs"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/ingest/[id]",
+        "depth": 6,
+        "type": "source",
+        "description": "Single ingest job API (GET/DELETE by id)"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/ingest/[id]/execute",
+        "depth": 7,
+        "type": "source",
+        "description": "POST handler to trigger execution of an ingest job"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/kanban",
+        "depth": 5,
+        "type": "source",
+        "description": "Kanban board API: list cards"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/kanban/delete",
+        "depth": 6,
+        "type": "source",
+        "description": "DELETE handler for kanban cards"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/kanban/update",
+        "depth": 6,
+        "type": "source",
+        "description": "PATCH handler for updating kanban cards"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/logout",
+        "depth": 5,
+        "type": "source",
+        "description": "POST handler for user logout / session invalidation"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/restricted",
+        "depth": 5,
+        "type": "source",
+        "description": "API for toggling restricted visibility on thoughts"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/search",
+        "depth": 5,
+        "type": "source",
+        "description": "Vector search API endpoint"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/thoughts",
+        "depth": 5,
+        "type": "source",
+        "description": "Thoughts CRUD API: list and create"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/thoughts/[id]",
+        "depth": 6,
+        "type": "source",
+        "description": "Single thought API (GET/PATCH/DELETE by id)"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/thoughts/[id]/connections",
+        "depth": 7,
+        "type": "source",
+        "description": "GET handler for a thought's semantic connections"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/api/thoughts/[id]/reflection",
+        "depth": 7,
+        "type": "source",
+        "description": "POST handler to generate an AI reflection on a thought"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/audit",
+        "depth": 4,
+        "type": "source",
+        "description": "Audit log page"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/duplicates",
+        "depth": 4,
+        "type": "source",
+        "description": "Duplicate management page"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/ingest",
+        "depth": 4,
+        "type": "source",
+        "description": "Ingest pipeline management page"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/kanban",
+        "depth": 4,
+        "type": "source",
+        "description": "Kanban board page"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/login",
+        "depth": 4,
+        "type": "source",
+        "description": "Login page with LoginForm component"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/search",
+        "depth": 4,
+        "type": "source",
+        "description": "Semantic search page"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/thoughts",
+        "depth": 4,
+        "type": "source",
+        "description": "Thoughts list page and single-thought detail route"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/app/thoughts/[id]",
+        "depth": 5,
+        "type": "source",
+        "description": "Individual thought detail page"
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/components",
+        "depth": 3,
+        "type": "source",
+        "description": "Shared React components: ThoughtCard, KanbanBoard, SearchBar, ReflectionComposer, etc."
+      },
+      {
+        "path": "dashboards/open-brain-dashboard-next/lib",
+        "depth": 3,
+        "type": "source",
+        "description": "Shared utility modules: API client, auth helpers, formatters, TypeScript types"
+      },
+      {
+        "path": "docs",
+        "depth": 1,
+        "type": "docs",
+        "description": "Setup guides, companion prompts, FAQ, tool audit, and workflow documentation"
+      },
+      {
+        "path": "docs/drafts",
+        "depth": 2,
+        "type": "docs",
+        "description": "Draft documents not yet promoted to main docs"
+      },
+      {
+        "path": "extensions",
+        "depth": 1,
+        "type": "source",
+        "description": "Curated ordered learning path (6 domain-specific builds): each is a full MCP Edge Function extension"
+      },
+      {
+        "path": "extensions/_template",
+        "depth": 2,
+        "type": "config",
+        "description": "Contribution template for extension submissions"
+      },
+      {
+        "path": "extensions/family-calendar",
+        "depth": 2,
+        "type": "source",
+        "description": "Extension #1: family calendar memory layer (Deno Edge Function)"
+      },
+      {
+        "path": "extensions/home-maintenance",
+        "depth": 2,
+        "type": "source",
+        "description": "Home maintenance tracking extension (Deno Edge Function)"
+      },
+      {
+        "path": "extensions/household-knowledge",
+        "depth": 2,
+        "type": "source",
+        "description": "Household knowledge base extension (Deno Edge Function)"
+      },
+      {
+        "path": "extensions/job-hunt",
+        "depth": 2,
+        "type": "source",
+        "description": "Job search tracking extension (Deno Edge Function)"
+      },
+      {
+        "path": "extensions/meal-planning",
+        "depth": 2,
+        "type": "source",
+        "description": "Meal planning memory extension (Deno Edge Function)"
+      },
+      {
+        "path": "extensions/professional-crm",
+        "depth": 2,
+        "type": "source",
+        "description": "Professional CRM extension (Deno Edge Function)"
+      },
+      {
+        "path": "integrations",
+        "depth": 1,
+        "type": "source",
+        "description": "MCP extensions, webhooks, and capture source integrations (community contributions)"
+      },
+      {
+        "path": "integrations/_template",
+        "depth": 2,
+        "type": "config",
+        "description": "Contribution template for integration submissions"
+      },
+      {
+        "path": "integrations/discord-capture",
+        "depth": 2,
+        "type": "source",
+        "description": "Discord message capture integration (metadata only, stub)"
+      },
+      {
+        "path": "integrations/entity-extraction-worker",
+        "depth": 2,
+        "type": "source",
+        "description": "Background worker for automated entity extraction from thoughts"
+      },
+      {
+        "path": "integrations/entity-extraction-worker/_shared",
+        "depth": 3,
+        "type": "source",
+        "description": "Shared TypeScript helpers for the entity extraction worker (config, utilities)"
+      },
+      {
+        "path": "integrations/kubernetes-deployment",
+        "depth": 2,
+        "type": "source",
+        "description": "Kubernetes deployment manifests and Dockerfile for running Open Brain workers in k8s"
+      },
+      {
+        "path": "integrations/kubernetes-deployment/k8s",
+        "depth": 3,
+        "type": "config",
+        "description": "Kubernetes YAML manifests: deployment, secrets example, SQL init"
+      },
+      {
+        "path": "integrations/slack-capture",
+        "depth": 2,
+        "type": "source",
+        "description": "Slack message capture integration (metadata only, stub)"
+      },
+      {
+        "path": "primitives",
+        "depth": 1,
+        "type": "docs",
+        "description": "Reusable concept guides referenced by 2+ extensions (curated)"
+      },
+      {
+        "path": "primitives/_template",
+        "depth": 2,
+        "type": "config",
+        "description": "Contribution template for primitive submissions"
+      },
+      {
+        "path": "primitives/deploy-edge-function",
+        "depth": 2,
+        "type": "docs",
+        "description": "Primitive guide: deploying Supabase Edge Functions"
+      },
+      {
+        "path": "primitives/remote-mcp",
+        "depth": 2,
+        "type": "docs",
+        "description": "Primitive guide: building and connecting remote MCP servers"
+      },
+      {
+        "path": "primitives/rls",
+        "depth": 2,
+        "type": "docs",
+        "description": "Primitive guide: Supabase Row Level Security patterns"
+      },
+      {
+        "path": "primitives/shared-mcp",
+        "depth": 2,
+        "type": "docs",
+        "description": "Primitive guide: shared/multi-tenant MCP server patterns"
+      },
+      {
+        "path": "primitives/troubleshooting",
+        "depth": 2,
+        "type": "docs",
+        "description": "Primitive guide: common troubleshooting patterns"
+      },
+      {
+        "path": "recipes",
+        "depth": 1,
+        "type": "source",
+        "description": "Standalone capability builds: importers, enrichers, workflow automations, dashboards (open community contributions)"
+      },
+      {
+        "path": "recipes/_template",
+        "depth": 2,
+        "type": "config",
+        "description": "Contribution template for recipe submissions"
+      },
+      {
+        "path": "recipes/adaptive-capture-classification",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: LLM-gated capture with adaptive routing and classification"
+      },
+      {
+        "path": "recipes/auto-capture",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: automated thought capture pipeline (metadata only)"
+      },
+      {
+        "path": "recipes/brain-backup",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: backup Open Brain data to a local JSON file"
+      },
+      {
+        "path": "recipes/bring-your-own-context",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: structured context profile extraction with JSON schema"
+      },
+      {
+        "path": "recipes/chatgpt-conversation-import",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: import ChatGPT conversation exports into Open Brain"
+      },
+      {
+        "path": "recipes/claudeception",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: Claude-in-Claude skill for memory-augmented self-referential tasks"
+      },
+      {
+        "path": "recipes/content-fingerprint-dedup",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: content fingerprinting for deduplication (metadata only)"
+      },
+      {
+        "path": "recipes/daily-digest",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: daily summary digest generation from recent thoughts"
+      },
+      {
+        "path": "recipes/email-history-import",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: import Gmail email history into Open Brain via TypeScript"
+      },
+      {
+        "path": "recipes/entity-wiki",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: generate entity wiki pages from extracted entities"
+      },
+      {
+        "path": "recipes/fingerprint-dedup-backfill",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: backfill fingerprint hashes and deduplicate existing thoughts"
+      },
+      {
+        "path": "recipes/google-activity-import",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: import Google activity history into Open Brain"
+      },
+      {
+        "path": "recipes/grok-export-import",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: import Grok (xAI) conversation exports"
+      },
+      {
+        "path": "recipes/infographic-generator",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: generate infographics from brain data using Python"
+      },
+      {
+        "path": "recipes/instagram-import",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: import Instagram data exports into Open Brain"
+      },
+      {
+        "path": "recipes/journals-blogger-import",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: import Blogger journal exports into Open Brain"
+      },
+      {
+        "path": "recipes/life-engine",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: life engine — personal operating system built on Open Brain memory"
+      },
+      {
+        "path": "recipes/life-engine-video",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: video companion variant of the life engine recipe (metadata only)"
+      },
+      {
+        "path": "recipes/live-retrieval",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: live semantic retrieval skill (prompt-only)"
+      },
+      {
+        "path": "recipes/local-ollama-embeddings",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: generate and store embeddings locally using Ollama"
+      },
+      {
+        "path": "recipes/ob-graph",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: graph visualization of thoughts and their connections (Deno Edge Function)"
+      },
+      {
+        "path": "recipes/obsidian-vault-import",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: import Obsidian vault markdown files into Open Brain"
+      },
+      {
+        "path": "recipes/panning-for-gold",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: surface high-signal insights from memory (skill variant)"
+      },
+      {
+        "path": "recipes/perplexity-conversation-import",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: import Perplexity conversation exports into Open Brain"
+      },
+      {
+        "path": "recipes/repo-learning-coach",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: interactive learning coach app built on a code repo + Open Brain memory"
+      },
+      {
+        "path": "recipes/repo-learning-coach/curriculum",
+        "depth": 3,
+        "type": "docs",
+        "description": "Curriculum content: lesson markdown files for the learning coach"
+      },
+      {
+        "path": "recipes/repo-learning-coach/curriculum/lessons",
+        "depth": 4,
+        "type": "docs",
+        "description": "Individual lesson files for the learning coach curriculum"
+      },
+      {
+        "path": "recipes/repo-learning-coach/public",
+        "depth": 3,
+        "type": "assets",
+        "description": "Static public assets for the Vite React frontend"
+      },
+      {
+        "path": "recipes/repo-learning-coach/research",
+        "depth": 3,
+        "type": "docs",
+        "description": "Architecture research notes for the learning coach recipe"
+      },
+      {
+        "path": "recipes/repo-learning-coach/server",
+        "depth": 3,
+        "type": "source",
+        "description": "Express/Node server: brain API bridge, content loader, Supabase client"
+      },
+      {
+        "path": "recipes/repo-learning-coach/src",
+        "depth": 3,
+        "type": "source",
+        "description": "Vite React frontend source: App component, CSS, entry point"
+      },
+      {
+        "path": "recipes/repo-learning-coach/src/lib",
+        "depth": 4,
+        "type": "source",
+        "description": "Frontend library: API client and TypeScript types"
+      },
+      {
+        "path": "recipes/research-to-decision-workflow",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: structured research-to-decision workflow template"
+      },
+      {
+        "path": "recipes/schema-aware-routing",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: route captures to different schema tables based on content type"
+      },
+      {
+        "path": "recipes/source-filtering",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: backfill source metadata on existing thoughts"
+      },
+      {
+        "path": "recipes/thought-enrichment",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: async batch enrichment of thoughts with type, sensitivity, and metadata"
+      },
+      {
+        "path": "recipes/thought-enrichment/lib",
+        "depth": 3,
+        "type": "source",
+        "description": "Shared modules for thought enrichment: memory core, sensitivity patterns"
+      },
+      {
+        "path": "recipes/typed-edge-classifier",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: classify and label edges between thoughts by relationship type"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: full-stack Telegram bot with Next.js on Vercel and Neon Postgres"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/scripts",
+        "depth": 3,
+        "type": "scripts",
+        "description": "Setup scripts: generate encryption key, run migrations, set Telegram webhook"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/sql",
+        "depth": 3,
+        "type": "config",
+        "description": "SQL migration files for Neon Postgres schema"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/src",
+        "depth": 3,
+        "type": "source",
+        "description": "Next.js App Router source"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/src/app",
+        "depth": 4,
+        "type": "source",
+        "description": "Next.js App Router: API routes"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/src/app/api",
+        "depth": 5,
+        "type": "source",
+        "description": "API route handlers: capture, health, MCP, telegram webhook"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/src/app/api/capture",
+        "depth": 6,
+        "type": "source",
+        "description": "POST handler for capturing thoughts via API"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/src/app/api/health",
+        "depth": 6,
+        "type": "source",
+        "description": "GET health check endpoint"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/src/app/api/mcp",
+        "depth": 6,
+        "type": "source",
+        "description": "MCP protocol route handler"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/src/app/api/telegram",
+        "depth": 6,
+        "type": "source",
+        "description": "Telegram webhook handler"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/src/lib",
+        "depth": 4,
+        "type": "source",
+        "description": "Shared library: AI client, auth, capture, DB, rate limiting, types"
+      },
+      {
+        "path": "recipes/vercel-neon-telegram/src/lib/__tests__",
+        "depth": 5,
+        "type": "tests",
+        "description": "Unit tests for auth, rate limiting, and type utilities"
+      },
+      {
+        "path": "recipes/wiki-compiler",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: orchestration script to compile entity wikis into a unified knowledge base"
+      },
+      {
+        "path": "recipes/wiki-synthesis",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: synthesize multiple wiki entries into coherent narratives"
+      },
+      {
+        "path": "recipes/wiki-synthesis/dashboard-snippets",
+        "depth": 3,
+        "type": "source",
+        "description": "Dashboard UI snippets for displaying synthesized wikis"
+      },
+      {
+        "path": "recipes/wiki-synthesis/dashboard-snippets/app",
+        "depth": 4,
+        "type": "source",
+        "description": "Next.js App Router pages for wiki display"
+      },
+      {
+        "path": "recipes/wiki-synthesis/dashboard-snippets/app/wiki",
+        "depth": 5,
+        "type": "source",
+        "description": "Wiki listing page"
+      },
+      {
+        "path": "recipes/wiki-synthesis/dashboard-snippets/app/wiki/[slug]",
+        "depth": 6,
+        "type": "source",
+        "description": "Individual wiki entry page (dynamic route)"
+      },
+      {
+        "path": "recipes/wiki-synthesis/dashboard-snippets/components",
+        "depth": 4,
+        "type": "source",
+        "description": "React component for triggering autobiography generation"
+      },
+      {
+        "path": "recipes/wiki-synthesis/scripts",
+        "depth": 3,
+        "type": "scripts",
+        "description": "CLI scripts: synthesize wikis, backfill Gmail wikis"
+      },
+      {
+        "path": "recipes/work-operating-model-activation",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: activate and load a work operating model from brain memory (Deno Edge Function)"
+      },
+      {
+        "path": "recipes/world-model-diagnostic-activation",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: world model diagnostic activation (schema draft)"
+      },
+      {
+        "path": "recipes/x-twitter-import",
+        "depth": 2,
+        "type": "source",
+        "description": "Recipe: import X (Twitter) data exports into Open Brain"
+      },
+      {
+        "path": "resources",
+        "depth": 1,
+        "type": "assets",
+        "description": "Official packaged skill exports and companion files for distribution"
+      },
+      {
+        "path": "schemas",
+        "depth": 1,
+        "type": "config",
+        "description": "Database table extension SQL schemas for augmenting the core thoughts table"
+      },
+      {
+        "path": "schemas/_template",
+        "depth": 2,
+        "type": "config",
+        "description": "Contribution template for schema submissions"
+      },
+      {
+        "path": "schemas/enhanced-thoughts",
+        "depth": 2,
+        "type": "config",
+        "description": "Schema: adds enrichment columns to thoughts (type, sensitivity, source, etc.)"
+      },
+      {
+        "path": "schemas/entity-extraction",
+        "depth": 2,
+        "type": "config",
+        "description": "Schema: entity and relationship tables for extracted named entities"
+      },
+      {
+        "path": "schemas/typed-reasoning-edges",
+        "depth": 2,
+        "type": "config",
+        "description": "Schema: typed edge table for reasoning relationships between thoughts"
+      },
+      {
+        "path": "schemas/workflow-status",
+        "depth": 2,
+        "type": "config",
+        "description": "Schema: workflow status tracking migration"
+      },
+      {
+        "path": "server",
+        "depth": 1,
+        "type": "source",
+        "description": "Core MCP server entry point (Deno): the main Open Brain MCP Edge Function"
+      },
+      {
+        "path": "skills",
+        "depth": 1,
+        "type": "source",
+        "description": "Reusable AI client skill packs and prompt files (community contributions)"
+      },
+      {
+        "path": "skills/_template",
+        "depth": 2,
+        "type": "config",
+        "description": "Contribution template for skill submissions"
+      },
+      {
+        "path": "skills/auto-capture",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: automatic thought capture prompt pack"
+      },
+      {
+        "path": "skills/autodream-brain-sync",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: brain sync during idle / dream-state processing"
+      },
+      {
+        "path": "skills/claudeception",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: Claude-in-Claude memory-augmented recursive task skill"
+      },
+      {
+        "path": "skills/competitive-analysis",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: competitive analysis using brain memory"
+      },
+      {
+        "path": "skills/deal-memo-drafting",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: deal memo drafting from memory context"
+      },
+      {
+        "path": "skills/financial-model-review",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: financial model review skill pack"
+      },
+      {
+        "path": "skills/heavy-file-ingestion",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: ingest large files into Open Brain with chunking strategies"
+      },
+      {
+        "path": "skills/heavy-file-ingestion/references",
+        "depth": 3,
+        "type": "docs",
+        "description": "Reference materials: open source stack notes"
+      },
+      {
+        "path": "skills/heavy-file-ingestion/scripts",
+        "depth": 3,
+        "type": "scripts",
+        "description": "Python scripts: convert files and build client export packages"
+      },
+      {
+        "path": "skills/heavy-file-ingestion/variants",
+        "depth": 3,
+        "type": "source",
+        "description": "Client-specific SKILL.md variants for different AI clients"
+      },
+      {
+        "path": "skills/heavy-file-ingestion/variants/claude-code",
+        "depth": 4,
+        "type": "source",
+        "description": "Heavy file ingestion skill variant for Claude Code"
+      },
+      {
+        "path": "skills/heavy-file-ingestion/variants/claude-desktop",
+        "depth": 4,
+        "type": "source",
+        "description": "Heavy file ingestion skill variant for Claude Desktop"
+      },
+      {
+        "path": "skills/heavy-file-ingestion/variants/codex",
+        "depth": 4,
+        "type": "source",
+        "description": "Heavy file ingestion skill variant for Codex"
+      },
+      {
+        "path": "skills/meeting-synthesis",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: synthesize meeting notes into structured memory"
+      },
+      {
+        "path": "skills/n-agentic-harnesses",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: n-agent harness patterns for orchestrating multi-agent workflows"
+      },
+      {
+        "path": "skills/n-agentic-harnesses/agents",
+        "depth": 3,
+        "type": "source",
+        "description": "Agent definition files: OpenAI YAML agent spec"
+      },
+      {
+        "path": "skills/n-agentic-harnesses/references",
+        "depth": 3,
+        "type": "docs",
+        "description": "Reference guides: principles, harness shapes, tools, state, context, UX, design playbook, evaluation, example patterns, Codex notes"
+      },
+      {
+        "path": "skills/n-agentic-harnesses/variants",
+        "depth": 3,
+        "type": "source",
+        "description": "Client-specific SKILL.md variants"
+      },
+      {
+        "path": "skills/n-agentic-harnesses/variants/anthropic",
+        "depth": 4,
+        "type": "source",
+        "description": "n-agentic harness skill variant for Anthropic (Claude)"
+      },
+      {
+        "path": "skills/n-agentic-harnesses/variants/codex",
+        "depth": 4,
+        "type": "source",
+        "description": "n-agentic harness skill variant for Codex"
+      },
+      {
+        "path": "skills/panning-for-gold",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: surface high-signal insights from accumulated memory (standalone)"
+      },
+      {
+        "path": "skills/research-synthesis",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: synthesize multi-source research into coherent output"
+      },
+      {
+        "path": "skills/weekly-signal-diff",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: weekly diff of signals and changes in brain memory"
+      },
+      {
+        "path": "skills/weekly-signal-diff/references",
+        "depth": 3,
+        "type": "docs",
+        "description": "Reference materials: live search upgrade notes, starter universe guide"
+      },
+      {
+        "path": "skills/work-operating-model",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: work operating model framework prompt pack"
+      },
+      {
+        "path": "skills/world-model-diagnostic",
+        "depth": 2,
+        "type": "source",
+        "description": "Skill: world model diagnostic prompt pack"
+      }
+    ]
+  },
+  "naming_conventions": {
+    "folder_style": "lowercase-hyphenated",
+    "patterns_observed": [
+      "Top-level folders are category names (recipes, extensions, skills, integrations, schemas, primitives, dashboards, docs, server, resources)",
+      "Each contribution lives in its own named subfolder under the appropriate category (e.g. recipes/chatgpt-conversation-import, skills/panning-for-gold)",
+      "Contribution names are descriptive kebab-case slugs describing the capability",
+      "A _template folder exists in every open contribution category as a starter scaffold",
+      "Dashboards use framework-native routing conventions: SvelteKit uses src/routes/ with +page.svelte / +server.ts, Next.js uses app/ with page.tsx / route.ts and [id] dynamic segments",
+      "Some skills use a variants/ subfolder to hold client-specific variants (claude-code, claude-desktop, codex, anthropic)",
+      "Some skills and recipes use a references/ subfolder for supporting documentation",
+      "Some recipes include scripts/, sql/, src/, server/, curriculum/ subfolders when they are full applications rather than single-file scripts"
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "status": "created",
+  "directory": "recipes/repo-learning-coach/src/lib",
+  "context_file": "recipes/repo-learning-coach/src/lib/CONTEXT.md",
+  "reasoning": "Contains domain-specific types (BrainBridgeState, UnderstandingState, LearningArtifactKind, BootstrapData) whose semantics are not evident from names alone, plus a non-obvious centralised error-extraction pattern in the API client and a pgvector similarity score surfaced in RelatedThoughtSummary. These warrant documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Shared typed API client and TypeScript type definitions for the repo-learning-coach frontend",
+    "key_concepts": [
+      "BrainBridgeState",
+      "UnderstandingState",
+      "LearningArtifactKind",
+      "BootstrapData",
+      "RelatedThoughtSummary"
+    ],
+    "exports": [
+      "fetchBootstrap",
+      "fetchLessonDetail",
+      "fetchResearchDocument",
+      "saveLessonProgress",
+      "addLessonComment",
+      "captureLessonArtifact",
+      "submitQuiz",
+      "LessonStatus",
+      "UnderstandingState",
+      "LearningArtifactKind",
+      "BrainBridgeState",
+      "LessonSummary",
+      "ResearchDocumentSummary",
+      "RelatedThoughtSummary",
+      "BootstrapData",
+      "LessonDetail",
+      "ResearchDocumentDetail",
+      "QuizResult",
+      "CaptureResult"
+    ],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

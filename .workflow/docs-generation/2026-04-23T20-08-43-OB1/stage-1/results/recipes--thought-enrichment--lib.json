@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "recipes/thought-enrichment/lib",
+  "reasoning": "Two small utility modules with self-documenting names and straightforward implementations. memory-core.mjs provides text normalization and SHA-256 hashing helpers. sensitivity-patterns.mjs loads and compiles regex patterns from a sibling JSON config file. No domain-specific terminology, no complex business logic, no non-obvious responsibility boundaries.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Low-level text normalization, hashing, and regex pattern compilation utilities for the thought-enrichment recipe",
+    "key_concepts": [],
+    "exports": ["normalizeWhitespace", "canonicalizeText", "sha256Hex", "buildContentFingerprint", "RESTRICTED_PATTERNS", "PERSONAL_PATTERNS"],
+    "depends_on": ["node:crypto", "fs", "path", "url", "sensitivity-patterns.json"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

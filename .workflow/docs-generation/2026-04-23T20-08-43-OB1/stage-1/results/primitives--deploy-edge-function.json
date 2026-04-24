@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "primitives/deploy-edge-function",
+  "reasoning": "Directory contains only a metadata.json file. No source code, logic, or implementation files exist to analyze. The README.md was deleted. There is no domain complexity, business logic, or non-obvious details to document — the metadata itself fully describes the contribution (a beginner-level guide for deploying Supabase Edge Functions).",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Deployment guide primitive for deploying Open Brain extensions as Supabase Edge Functions",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["primitives/deploy-edge-function/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

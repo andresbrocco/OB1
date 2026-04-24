@@ -1,0 +1,581 @@
+{
+  "groups": [
+    {
+      "label": "Authentication and Access Control",
+      "concepts": [
+        "Bearer token authentication",
+        "MCP_ACCESS_KEY authentication",
+        "MCP_ACCESS_KEY pre-shared key authentication",
+        "x-brain-key",
+        "x-brain-key access key auth",
+        "Query-parameter auth pattern",
+        "timingSafeEqual auth",
+        "two-layer auth guard",
+        "Auth guard via layout.server.ts",
+        "iron-session cookie auth",
+        "Telegram webhook secret authentication",
+        "Session-scoped API key forwarding",
+        "Household member RLS via JWT role claim",
+        "Restricted content passphrase gating",
+        "restricted content gating",
+        "Restricted content unlock",
+        "restrictedUnlocked",
+        "sensitivity_tier access filtering",
+        "sensitivity_tier restricted content gating",
+        "Sensitivity tiers (standard/personal/restricted)",
+        "sensitivity_tier",
+        "SSR auth",
+        "server-only API proxy",
+        "server-only boundary"
+      ]
+    },
+    {
+      "label": "MCP Protocol and Transport",
+      "concepts": [
+        "MCP protocol compliance (HEAD/DELETE/OPTIONS)",
+        "MCP proxy route",
+        "MCP tool registration",
+        "MCP tool context overhead",
+        "MCP text-response parsing",
+        "MCP credential server-vs-public pattern",
+        "MCP JSON-RPC proxy connection pattern (SvelteKit dashboard)",
+        "Per-request MCP server instantiation",
+        "Per-request stateless MCP server instantiation",
+        "stateless MCP server",
+        "Stateless MCP server per request",
+        "Stateless MCP transport",
+        "StreamableHTTPTransport",
+        "Accept header patch for Claude Desktop compatibility",
+        "Accept-header patch for Claude Desktop compatibility",
+        "Claude Desktop Accept-header patch",
+        "Kubernetes self-hosted MCP server"
+      ]
+    },
+    {
+      "label": "Deduplication and Fingerprinting",
+      "concepts": [
+        "Content fingerprint",
+        "Content fingerprint (SHA-256 deduplication)",
+        "Content fingerprint deduplication",
+        "Content fingerprint for deduplication",
+        "Content fingerprinting",
+        "Open Brain deduplication workflow",
+        "Dual deduplication (sync log + content fingerprint)",
+        "Two-layer dedup",
+        "Session-scoped deduplication",
+        "Local sync log deduplication",
+        "Day-hash dedup via sync log",
+        "Sync log",
+        "Briefing deduplication",
+        "re-extraction idempotency",
+        "Idempotent upsert via thought_edges_upsert RPC",
+        "Idempotent PR comment via ob1-automated-review marker",
+        "Idempotent PR comments",
+        "idempotent schema migration",
+        "Duplicate row"
+      ]
+    },
+    {
+      "label": "Thought Ingestion and Capture",
+      "concepts": [
+        "captureThought pipeline",
+        "Capture integration",
+        "Two-step capture (upsert + embedding patch)",
+        "upsert_thought RPC",
+        "upsert_thought RPC (deduplication-aware insert)",
+        "Atomic thought",
+        "Thought prefix format on insert",
+        "prepareThoughtPayload",
+        "Structured capture format",
+        "Parallel capture pipeline",
+        "Ingestion modes",
+        "Ingestion modes (auto/single/extract)",
+        "Smart ingest auto-routing heuristic",
+        "Auto-routing heuristic (shouldExtract)",
+        "Dry-run two-phase ingestion",
+        "AddToBrainMode"
+      ]
+    },
+    {
+      "label": "Entity Extraction and Enrichment",
+      "concepts": [
+        "Entity extraction queue with auto-trigger",
+        "entity_extraction_queue",
+        "Extraction",
+        "Extraction threshold and quality gates",
+        "ExtractionCostCapError",
+        "External before internal enrichment",
+        "Enrichment versioning",
+        "_enrichment_status",
+        "Thought-entity mention role and evidence",
+        "Two-Prompt Extraction Sequence",
+        "Post-search filter extraction",
+        "Thread extraction",
+        "Canonical entity / normalized name deduplication",
+        "Three-pass person resolution",
+        "Pending person confirmation"
+      ]
+    },
+    {
+      "label": "Graph and Knowledge Edges",
+      "concepts": [
+        "graph_edges",
+        "graph_nodes",
+        "Two-tier edge model (entity edges vs thought edges)",
+        "Edge direction (A_to_B, B_to_A, symmetric)",
+        "Edge support count",
+        "edge weight",
+        "derived_from edges",
+        "co_occurs_with exclusion",
+        "Reasoning relation vocabulary (supports, contradicts, evolved_into, supersedes, depends_on, related_to)",
+        "Relation vocabulary (supports/contradicts/evolved_into/supersedes/depends_on/related_to)",
+        "Typed relation vocabulary (supports, contradicts, evolved_into, supersedes, depends_on, related_to)",
+        "relationship_type",
+        "Symmetric relation canonical ordering",
+        "symmetric relation canonicalization",
+        "support_count",
+        "support_count evidence accumulation",
+        "metadata-overlap thought connections",
+        "find_shortest_path (bidirectional BFS recursive CTE)",
+        "traverse_graph (outgoing recursive CTE)"
+      ]
+    },
+    {
+      "label": "Vector Search and Retrieval",
+      "concepts": [
+        "match_thoughts",
+        "match_thoughts RPC (pgvector similarity search)",
+        "match_thoughts RPC equivalent",
+        "pgvector cosine distance via raw SQL",
+        "Embedding dimension mismatch",
+        "Local embedding via Ollama",
+        "Dual API configuration (embedding vs. chat)",
+        "Hit threshold (score > 0.6)",
+        "Two-phase full-text search (GIN tsvector + ILIKE fallback)",
+        "two-phase GIN+ILIKE full-text search",
+        "Semantic expansion",
+        "Live search upgrade",
+        "Retrieval log",
+        "Session cap (max 3 retrievals)",
+        "RelatedThoughts",
+        "RelatedThoughtSummary"
+      ]
+    },
+    {
+      "label": "Quality Scoring and Confidence",
+      "concepts": [
+        "Confidence gating",
+        "Quality Gate",
+        "Quality flags",
+        "quality audit (quality_score <= 29)",
+        "importance/quality_score ranking signals",
+        "Importance scale (0-6, 6 is user-only)",
+        "Audit quality threshold",
+        "Per-type thresholds",
+        "Source Confidence",
+        "source_confidence",
+        "source_confidence (confirmed vs synthesized)",
+        "Extraction threshold and quality gates",
+        "LLM classification prompt with importance/confidence calibration",
+        "Fatal issues vs. caution flags vs. acceptable simplifications",
+        "Five-principle evaluation"
+      ]
+    },
+    {
+      "label": "Cost Management and Rate Limiting",
+      "concepts": [
+        "Async worker with cost cap",
+        "ExtractionCostCapError",
+        "Hard cost cap with proactive parallelism clamping",
+        "wall-clock budget",
+        "Cost tier escalation",
+        "In-memory rate limiter with cold-start reset",
+        "in-memory sliding-window rate limiter",
+        "PR quota enforcement",
+        "Contributor trust and quota policy"
+      ]
+    },
+    {
+      "label": "Resume-Safe State and Cursor Pagination",
+      "concepts": [
+        "Resume-safe JSONL state",
+        "Resume-safe JSONL state log",
+        "Cursor-based resumability",
+        "Cursor-based resumable state",
+        "Checkpoint + Entry Separation",
+        "Async queue with content-addressed re-queue",
+        "Dynamic loop rescheduling",
+        "Phase toggles",
+        "--redo flag"
+      ]
+    },
+    {
+      "label": "Multi-Provider LLM and Classification",
+      "concepts": [
+        "Multi-provider LLM fallback (OpenRouter > OpenAI > Anthropic)",
+        "LLM classification prompt with importance/confidence calibration",
+        "Hybrid filter+classify pipeline",
+        "Mode classification",
+        "Content-type dispatch",
+        "Schema-aware routing",
+        "Synthesizer catalogue",
+        "Synthesizer catalogue (plugin map)",
+        "Selective LLM summarization",
+        "Two-stage review pipeline",
+        "Two-stage review pipeline (deterministic gate + LLM qualitative review)",
+        "Deterministic-first policy"
+      ]
+    },
+    {
+      "label": "Thought Types and Taxonomy",
+      "concepts": [
+        "ThoughtType",
+        "ThoughtType taxonomy",
+        "Thought-type color tokens",
+        "Reflection types (decision_trace, lesson_trace, retrospective, hypothesis)",
+        "Artifact kinds (takeaway, confusion, summary)",
+        "LearningArtifactKind",
+        "Verdict taxonomy (ACT NOW / RESEARCH MORE / PARK IT / KILL IT)",
+        "ACT NOW / RESEARCH MORE / PARK / KILL",
+        "Kanban statuses",
+        "kanban workflow (task/idea types only)",
+        "kanban workflow (task/idea types)",
+        "KANBAN_TYPES eligibility boundary",
+        "KANBAN_TYPES subset"
+      ]
+    },
+    {
+      "label": "Conversation and Thread Processing",
+      "concepts": [
+        "Conversation normalization",
+        "Conversation tree / branch resolution",
+        "Thread",
+        "Thread eligibility (content-weight gating)",
+        "Thread eligibility gate",
+        "Session splitting",
+        "Topic shift detection",
+        "Speaker Consolidation",
+        "Transcript assembly",
+        "Two-sheet import (Conversations + Memory)",
+        "Session Versioning"
+      ]
+    },
+    {
+      "label": "Import and Export Pipelines",
+      "concepts": [
+        "Atom XML export",
+        "Twitter JS export format",
+        "Tweet batching",
+        "export bundles",
+        "Export Artifacts (USER.md, SOUL.md, HEARTBEAT.md)",
+        "Portable Bundle",
+        "MongoDB-style date parsing",
+        "Meta latin1/UTF-8 encoding repair",
+        "Multi-format input (stdin, positional args, .txt, .jsonl)",
+        "Converter preference (auto/native/markitdown)",
+        "ConversionResult",
+        "Body cleaning pipeline"
+      ]
+    },
+    {
+      "label": "Wiki and Knowledge Compilation",
+      "concepts": [
+        "Compiled wiki",
+        "Compile manifest",
+        "Manifest file",
+        "wiki vs entity-wiki distinction",
+        "Pyramid summaries",
+        "Two-tier chunking (heading split + LLM fallback)",
+        "Slug collision resolution",
+        "Incremental result merging",
+        "Output Contract",
+        "Output directory convention (.ob1/)",
+        ".ob1 output directory"
+      ]
+    },
+    {
+      "label": "Skill and Recipe Contribution Framework",
+      "concepts": [
+        "Recipe vs. Extension distinction",
+        "Recipe vs. Skill distinction",
+        "Skill file format",
+        "SKILL.md",
+        "Skill Lifecycle",
+        "Skill lifecycle (creation to archival)",
+        "Prompts file format",
+        "Prompt stubs",
+        "5-file extension contract",
+        "_template skeleton",
+        "Canonical entry contract",
+        "metadata.json contribution contract",
+        "Output modes (file / entity-metadata / thought)",
+        "Dual-scope skill storage",
+        "requires_skills delegation pattern",
+        "Learning path (learning_order 1-6)"
+      ]
+    },
+    {
+      "label": "PR Review and CI Automation",
+      "concepts": [
+        "Admin review vs CI automation",
+        "Two-stage review pipeline",
+        "Two-stage review pipeline (deterministic gate + LLM qualitative review)",
+        "Trusted contributor auto-review",
+        "Idempotent PR comment via ob1-automated-review marker",
+        "Idempotent PR comments",
+        "pull_request vs pull_request_target security split",
+        "Secret scanning",
+        "security-blocked and needs-maintainer-triage label lifecycle",
+        "Docs PR bypass",
+        "Approval gates",
+        "Curation gate"
+      ]
+    },
+    {
+      "label": "Single-Tenant Identity and User Isolation",
+      "concepts": [
+        "DEFAULT_USER_ID environment injection",
+        "DEFAULT_USER_ID identity pinning",
+        "DEFAULT_USER_ID single-tenant pattern",
+        "DEFAULT_USER_ID single-tenant pinning",
+        "user_id as channel chat_id",
+        "Supabase Auth",
+        "SvelteKit locals augmentation",
+        "Two-layer dedup",
+        "server-only boundary"
+      ]
+    },
+    {
+      "label": "Temporal Validity and Decay",
+      "concepts": [
+        "Temporal validity and decay_weight",
+        "Temporal validity with NULL semantics",
+        "decay_weight",
+        "Anchor date/time",
+        "Life-date bucketing",
+        "frequency_days=NULL for one-time tasks",
+        "recurring vs. one-time activities in a unified table",
+        "trigger-driven next_due recalculation",
+        "Dynamic loop rescheduling"
+      ]
+    },
+    {
+      "label": "CRM and Professional Contact Tracking",
+      "concepts": [
+        "Job contact vs professional contact",
+        "Interaction log vs. follow-up date (two separate follow-up signals)",
+        "Trigger-managed last_contacted field",
+        "Cross-extension bridge via denormalized note append",
+        "Cross-extension CRM link",
+        "Fixed opportunity stage enum",
+        "Pipeline (application status lifecycle)",
+        "Dossier thought",
+        "Diligence packet",
+        "Pending person confirmation"
+      ]
+    },
+    {
+      "label": "Household and Family Data Models",
+      "concepts": [
+        "Dual-server architecture (owner vs household member)",
+        "NULL family_member_id for household-wide events",
+        "Household member RLS via JWT role claim",
+        "Week-anchored meal plan slots",
+        "JSONB ingredient and shopping item storage",
+        "maintenance_tasks vs maintenance_logs two-table design",
+        "recurring vs. one-time activities in a unified table"
+      ]
+    },
+    {
+      "label": "Noise Filtering and Signal Quality",
+      "concepts": [
+        "Noise filtering",
+        "Per-category noise filtering",
+        "Signal-based filtering",
+        "Signal diff vs digest",
+        "Entry kind filtering (post/comment vs settings/template)",
+        "Thread eligibility (content-weight gating)",
+        "Thread eligibility gate",
+        "First-person intent gate",
+        "Skip rules",
+        "High-value categories",
+        "Panning",
+        "Panning / Gold-Found",
+        "Gold-Found"
+      ]
+    },
+    {
+      "label": "Agentic Harness and Workflow Orchestration",
+      "concepts": [
+        "Harness",
+        "Harness primitives",
+        "Two-phase pipeline",
+        "Artifact handoff between workflows",
+        "Approval gates",
+        "Async queue with content-addressed re-queue",
+        "Phase toggles",
+        "Parallel capture pipeline",
+        "Aiception",
+        "Aiception/Claudeception (self-referential skill extraction)",
+        "Self-improvement protocol",
+        "Retrospective Mode"
+      ]
+    },
+    {
+      "label": "Operating Model and Decision Framework",
+      "concepts": [
+        "Operating Model Layers",
+        "Five Layers (operating_rhythms, recurring_decisions, dependencies, institutional_knowledge, friction)",
+        "Five fixed interview layers",
+        "Layer Detail Validators",
+        "ACT NOW / RESEARCH MORE / PARK / KILL",
+        "Verdict taxonomy (ACT NOW / RESEARCH MORE / PARK IT / KILL IT)",
+        "Decision-readiness",
+        "Conviction state",
+        "Structural questions framework",
+        "Structural risk vs. business risk",
+        "COS items",
+        "Interview stages"
+      ]
+    },
+    {
+      "label": "Investment and Deal Analysis",
+      "concepts": [
+        "Deal memo",
+        "IC memo",
+        "Diligence packet",
+        "Investor path",
+        "Investor-grade / Board-grade / Internal planning standard",
+        "Firm finding / Inference / Open question labeling",
+        "Fatal issues vs. caution flags vs. acceptable simplifications",
+        "Five-principle evaluation",
+        "Structural risk vs. business risk",
+        "Contradiction pass"
+      ]
+    },
+    {
+      "label": "World Model and Knowledge Paradigm",
+      "concepts": [
+        "World-model paradigm (vector database / structured ontology / signal-fidelity)",
+        "Understanding State",
+        "UnderstandingState",
+        "Flywheel (read side)",
+        "Flywheel closure",
+        "Emergent cached view",
+        "Lean memory discipline",
+        "Personalization vs discovery balance",
+        "OB1-connected mode vs. direct-chat mode",
+        "Brain Bridge",
+        "BrainBridge",
+        "BrainBridgeState"
+      ]
+    },
+    {
+      "label": "Kubernetes and Infrastructure Deployment",
+      "concepts": [
+        "Co-located pod pattern",
+        "ConfigMap-embedded SQL",
+        "hostPath volume",
+        "Kubernetes self-hosted MCP server",
+        "Supabase replacement pattern",
+        "Supabase schema parity",
+        "idempotent schema migration",
+        "Bootstrap",
+        "BootstrapData",
+        "Starter universe bootstrap"
+      ]
+    },
+    {
+      "label": "Dashboard and Frontend Patterns",
+      "concepts": [
+        "REST API connection pattern (Next.js dashboard)",
+        "MCP JSON-RPC proxy connection pattern (SvelteKit dashboard)",
+        "SvelteKit locals augmentation",
+        "Auth guard via layout.server.ts",
+        "iron-session cookie auth",
+        "SSR auth",
+        "Client variants and build exports",
+        "Variants",
+        "latestResultKey highlight"
+      ]
+    },
+    {
+      "label": "JSONB and Schema Metadata",
+      "concepts": [
+        "details JSONB freeform metadata field",
+        "JSONB ingredient and shopping item storage",
+        "ThoughtMetadata",
+        "JSON profile rows",
+        "Type backfill (metadata.type promotion)",
+        "Model shape",
+        "Product shape",
+        "Shared config with sensitivity tiers"
+      ]
+    },
+    {
+      "label": "Prompt Injection and Security",
+      "concepts": [
+        "Prompt injection defense",
+        "Secret scanning",
+        "security-blocked and needs-maintainer-triage label lifecycle",
+        "pull_request vs pull_request_target security split",
+        "Mary's Law Check",
+        "Simulated judgment",
+        "Human-judgment layer"
+      ]
+    },
+    {
+      "label": "Learning and Lesson Artifacts",
+      "concepts": [
+        "Learning Artifacts",
+        "LearningArtifactKind",
+        "Lessons Log",
+        "LessonStatus",
+        "Artifact kinds (takeaway, confusion, summary)",
+        "Reflection types (decision_trace, lesson_trace, retrospective, hypothesis)",
+        "Retrospective Mode",
+        "Progressive onboarding sequence",
+        "RepoLearningConfig"
+      ]
+    },
+    {
+      "label": "Telegram and Bot Integration",
+      "concepts": [
+        "Bot singleton pattern",
+        "Telegram webhook secret authentication",
+        "Telegram webhook singleton bot",
+        "user_id as channel chat_id",
+        "In-memory rate limiter with cold-start reset",
+        "in-memory sliding-window rate limiter",
+        "Compaction-safe persistence"
+      ]
+    },
+    {
+      "label": "Output and File Writing Discipline",
+      "concepts": [
+        "Permanent file write discipline",
+        "Output directory convention (.ob1/)",
+        ".ob1 output directory",
+        "Output Contract",
+        "Output modes (file / entity-metadata / thought)",
+        "AGENT_SPEC.md machine-readable generation spec",
+        "Compile manifest",
+        "Manifest file",
+        "Resume-safe JSONL state",
+        "Resume-safe JSONL state log"
+      ]
+    },
+    {
+      "label": "Null Semantics and Upsert Conflict Resolution",
+      "concepts": [
+        "Upsert NULL-wins conflict resolution",
+        "NULL family_member_id for household-wide events",
+        "Temporal validity with NULL semantics",
+        "frequency_days=NULL for one-time tasks",
+        "ephemeral IDs",
+        "Orphan row",
+        "Silent-on-miss contract"
+      ]
+    }
+  ]
+}

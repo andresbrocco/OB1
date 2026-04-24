@@ -1,0 +1,53 @@
+{
+  "status": "created",
+  "directory": "extensions/meal-planning",
+  "context_file": "extensions/meal-planning/CONTEXT.md",
+  "reasoning": "Dual-server architecture (owner vs household member), non-obvious RLS policy interactions using JWT role claims, JSONB storage for structured sub-objects, per-request server instantiation pattern, known naive quantity aggregation limitation, and a Claude Desktop Accept-header workaround all warrant documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Recipe management, weekly meal planning, and household-shared grocery lists as a Supabase MCP extension",
+    "key_concepts": [
+      "Dual-server architecture (owner vs household member)",
+      "Household member RLS via JWT role claim",
+      "JSONB ingredient and shopping item storage",
+      "Week-anchored meal plan slots",
+      "Per-request stateless MCP server instantiation"
+    ],
+    "exports": [
+      "add_recipe",
+      "search_recipes",
+      "update_recipe",
+      "create_meal_plan",
+      "get_meal_plan",
+      "generate_shopping_list",
+      "view_meal_plan",
+      "view_recipes",
+      "view_shopping_list",
+      "mark_item_purchased"
+    ],
+    "depends_on": [
+      "primitives/deploy-edge-function",
+      "primitives/remote-mcp",
+      "primitives/rls",
+      "primitives/shared-mcp"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "MCP_ACCESS_KEY",
+        "MCP_HOUSEHOLD_ACCESS_KEY",
+        "SUPABASE_HOUSEHOLD_KEY",
+        "DEFAULT_USER_ID"
+      ],
+      "config_files": [
+        "extensions/meal-planning/.env.example",
+        "extensions/meal-planning/deno.json"
+      ],
+      "has_health_endpoints": true,
+      "has_database_models": true
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "status": "created",
+  "directory": "dashboards/open-brain-dashboard-next/lib",
+  "context_file": "dashboards/open-brain-dashboard-next/lib/CONTEXT.md",
+  "reasoning": "Contains non-obvious design decisions: server-only import guard to prevent API key leakage, dual auth helper pattern (throw vs redirect) for different Next.js contexts, a sequential multi-call workaround in fetchKanbanThoughts due to single-type API limitation, module-load-time SESSION_SECRET validation, and domain constants (KANBAN_TYPES, PRIORITY_LEVELS sort order) whose constraints are not self-evident.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Shared server-side infrastructure: typed API client, session auth helpers, domain types, and formatting utilities for the Next.js dashboard",
+    "key_concepts": [
+      "x-brain-key",
+      "sensitivity_tier",
+      "restrictedUnlocked",
+      "KANBAN_TYPES subset",
+      "AddToBrainMode",
+      "server-only boundary"
+    ],
+    "exports": [
+      "ApiError",
+      "fetchThoughts",
+      "fetchThought",
+      "updateThought",
+      "fetchKanbanThoughts",
+      "fetchDuplicates",
+      "deleteThought",
+      "searchThoughts",
+      "fetchStats",
+      "captureThought",
+      "fetchReflections",
+      "fetchIngestionJobs",
+      "triggerIngest",
+      "checkHealth",
+      "getSession",
+      "requireSession",
+      "requireSessionOrRedirect",
+      "AuthError",
+      "SessionData",
+      "Thought",
+      "THOUGHT_TYPES",
+      "KANBAN_TYPES",
+      "KANBAN_STATUSES",
+      "KANBAN_LABELS",
+      "KANBAN_COLORS",
+      "PRIORITY_LEVELS",
+      "getPriorityLevel",
+      "formatDate",
+      "formatDateShort"
+    ],
+    "depends_on": [
+      "iron-session",
+      "next/headers",
+      "next/navigation"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "NEXT_PUBLIC_API_URL",
+        "SESSION_SECRET",
+        "NODE_ENV"
+      ],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

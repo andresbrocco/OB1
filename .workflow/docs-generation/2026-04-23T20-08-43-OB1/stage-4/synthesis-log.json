@@ -1,0 +1,58 @@
+{
+  "generated_at": "2026-04-23T22:15:00-0300",
+  "target_path": "/Users/asbrocco/Documents/REPOS/OB1",
+  "outputs": {
+    "patterns": {
+      "file": "docs/PATTERNS.md",
+      "status": "success",
+      "summary": {
+        "patterns_documented": [
+          "authentication-and-authorization",
+          "error-handling",
+          "logging",
+          "configuration",
+          "data-access",
+          "mcp-server-pattern",
+          "parallel-async-operations",
+          "schema-validation",
+          "llm-provider-fallback-chain",
+          "prompt-injection-defense",
+          "sensitivity-and-content-gating",
+          "shared-code-distribution",
+          "ci-contribution-governance"
+        ]
+      }
+    },
+    "testing": {
+      "file": "docs/TESTING.md",
+      "status": "success",
+      "summary": {
+        "test_frameworks": ["vitest"],
+        "test_types": ["unit"],
+        "test_files": 3,
+        "test_locations": ["recipes/vercel-neon-telegram/src/lib/__tests__"]
+      }
+    },
+    "security": {
+      "file": "docs/SECURITY.md",
+      "status": "success",
+      "summary": {
+        "auth_method": "x-brain-key shared access key (header, Authorization Bearer, or ?key= query param)",
+        "validation_library": "zod (Deno + Node.js); internal sanitizeMetadata",
+        "password_hashing": "SHA-256 via Web Crypto API; timingSafeEqual for access key comparison",
+        "secrets_count": 8
+      }
+    },
+    "infrastructure": {
+      "file": "docs/INFRASTRUCTURE.md",
+      "status": "success",
+      "summary": {
+        "ci_cd": "github-actions",
+        "containerization": "docker (kubernetes-deployment integration only)",
+        "deployment_method": "supabase-edge-functions (primary); kubernetes (self-hosted variant); vercel (dashboards)",
+        "environments": ["development (local)", "production (supabase + vercel)"],
+        "infra_files_found": 12
+      }
+    }
+  }
+}

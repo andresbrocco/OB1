@@ -1,0 +1,33 @@
+{
+  "status": "created",
+  "directory": "recipes/research-to-decision-workflow",
+  "context_file": "recipes/research-to-decision-workflow/CONTEXT.md",
+  "reasoning": "This recipe defines a branching, multi-step workflow that sequences five named OB1 skills into two distinct paths (operator and investor). The branching logic, skip rules, handoff gating conditions, and the role of the 00-brief.md anchor file are all non-obvious from file names alone. Documentation adds clear value.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Composable orchestration scaffold that sequences five OB1 skills into operator or investor decision pipelines",
+    "key_concepts": [
+      "Operator path",
+      "Investor path",
+      "Handoff checklist",
+      "Prompt stubs",
+      "Skip rules"
+    ],
+    "exports": ["workflow-template.md"],
+    "depends_on": [
+      "skills/competitive-analysis",
+      "skills/financial-model-review",
+      "skills/deal-memo-drafting",
+      "skills/research-synthesis",
+      "skills/meeting-synthesis"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["recipes/research-to-decision-workflow/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

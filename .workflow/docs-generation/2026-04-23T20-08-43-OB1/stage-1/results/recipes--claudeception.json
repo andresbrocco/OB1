@@ -1,0 +1,32 @@
+{
+  "status": "created",
+  "directory": "recipes/claudeception",
+  "context_file": "recipes/claudeception/CONTEXT.md",
+  "reasoning": "This recipe defines a non-obvious meta-learning protocol with domain-specific terminology (Aiception, extraction, retrospective mode, quality gate, skill lifecycle), a multi-step process with ordering constraints, and behavioral triggers that are not self-evident from file names alone. The renaming from Claudeception to Aiception while keeping the folder name is a gotcha worth documenting. The Open Brain search-before/capture-after ordering requirement and the two-scope save-location decision are non-obvious design decisions.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Meta-learning recipe that enables an AI agent to extract, structure, and persist reusable knowledge from work sessions into new skill files, integrated with Open Brain for deduplication",
+    "key_concepts": [
+      "Aiception",
+      "Extraction",
+      "Retrospective Mode",
+      "Quality Gate",
+      "Skill Lifecycle"
+    ],
+    "exports": [
+      "claudeception.skill.md"
+    ],
+    "depends_on": [
+      "Open Brain (search_thoughts, capture_thought)",
+      "Claude Code"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["recipes/claudeception/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

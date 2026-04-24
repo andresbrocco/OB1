@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "primitives/shared-mcp",
+  "reasoning": "Directory contains only a metadata.json file. The README.md has been deleted and no implementation code exists. The purpose is fully self-evident from the metadata: a guide for building scoped MCP servers that give others limited access to specific parts of Open Brain. There are no domain concepts, non-obvious logic, or responsibility boundaries to document beyond what the metadata already states.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Guide for building scoped MCP servers that provide limited, controlled access to Open Brain for other users",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["primitives/shared-mcp/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

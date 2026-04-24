@@ -1,0 +1,46 @@
+{
+  "status": "created",
+  "directory": "server",
+  "context_file": "server/CONTEXT.md",
+  "reasoning": "This is the core runtime of the entire Open Brain system. It contains non-obvious design decisions: a two-step thought capture flow (upsert then embedding patch), a workaround for Claude Desktop's missing Accept header, dual-mode access key auth (header or query param), and the constraint that it runs as a Supabase Edge Function (Deno), not a Node.js server. These details are not recoverable from file/function names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Core Open Brain MCP server exposing thought capture, semantic search, listing, and statistics as MCP tools over a Supabase Edge Function",
+    "key_concepts": [
+      "MCP tool registration",
+      "StreamableHTTPTransport",
+      "Two-step capture (upsert + embedding patch)",
+      "match_thoughts RPC (pgvector similarity search)",
+      "upsert_thought RPC (deduplication-aware insert)",
+      "x-brain-key access key auth",
+      "Accept header patch for Claude Desktop compatibility"
+    ],
+    "exports": [
+      "search_thoughts (MCP tool)",
+      "list_thoughts (MCP tool)",
+      "thought_stats (MCP tool)",
+      "capture_thought (MCP tool)"
+    ],
+    "depends_on": [
+      "@modelcontextprotocol/sdk",
+      "@hono/mcp",
+      "hono",
+      "zod",
+      "@supabase/supabase-js",
+      "OpenRouter API (embeddings + chat completions)"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "OPENROUTER_API_KEY",
+        "MCP_ACCESS_KEY"
+      ],
+      "config_files": ["server/deno.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

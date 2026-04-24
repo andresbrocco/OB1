@@ -1,0 +1,22 @@
+{
+  "status": "created",
+  "directory": "recipes/journals-blogger-import",
+  "readme_file": "recipes/journals-blogger-import/README.md",
+  "reasoning": "CLI import script with 4 environment variables, 2 npm commands, direct writes to the thoughts table via upsert_thought RPC, and pagination flags — clear operational surface requiring documentation.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 0,
+    "env_var_count": 4,
+    "command_count": 2,
+    "has_health_check": false
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "status": "skipped",
+  "directory": "recipes/wiki-synthesis/dashboard-snippets",
+  "reasoning": "Copy-paste Next.js App Router UI snippets for integrating wiki synthesis into a dashboard. Purpose is self-evident from directory name and inline JSDoc comments. No domain-specific terminology, no complex business logic. The subprocess env allowlist in page.tsx is the only non-obvious detail but is a single implementation note, not a conceptual pattern requiring documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Next.js App Router dashboard snippets for rendering and triggering wiki synthesis articles",
+    "key_concepts": [],
+    "exports": [
+      "WikiIndexPage",
+      "WikiArticlePage",
+      "GenerateAutobiographyButton",
+      "GenerateAutobiographyActionState"
+    ],
+    "depends_on": [
+      "next",
+      "react",
+      "react-markdown",
+      "remark-gfm",
+      "recipes/wiki-synthesis/scripts/synthesize-wiki.mjs"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "OPEN_BRAIN_URL",
+        "OPEN_BRAIN_SERVICE_KEY",
+        "LLM_BASE_URL",
+        "LLM_API_KEY",
+        "LLM_MODEL",
+        "SUBJECT_NAME",
+        "SOURCE_TYPE_FILTER",
+        "WIKI_OUTPUT_DIR"
+      ],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

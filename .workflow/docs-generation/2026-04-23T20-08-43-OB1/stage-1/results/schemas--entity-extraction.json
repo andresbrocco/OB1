@@ -1,0 +1,37 @@
+{
+  "status": "created",
+  "directory": "schemas/entity-extraction",
+  "context_file": "schemas/entity-extraction/CONTEXT.md",
+  "reasoning": "Multi-table schema with domain-specific graph concepts (canonical entity, normalized_name dedup, edge support_count, thought-entity evidence links), async queue with content-addressed re-queue logic, a non-obvious prerequisite hard-fail guard, trigger skip logic for generated artifacts, opt-in backfill pattern, and RLS scaffolded for future multi-tenancy. Several of these details are genuinely non-obvious from table names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Knowledge graph schema layer with async extraction queue and consolidation audit trail for automatic entity and relationship extraction from thoughts",
+    "key_concepts": [
+      "Canonical entity / normalized name deduplication",
+      "Edge support count",
+      "Thought-entity mention role and evidence",
+      "Async queue with content-addressed re-queue",
+      "Consolidation log"
+    ],
+    "exports": [
+      "public.entities",
+      "public.edges",
+      "public.thought_entities",
+      "public.entity_extraction_queue",
+      "public.consolidation_log",
+      "public.queue_entity_extraction (trigger function)"
+    ],
+    "depends_on": [
+      "public.thoughts (content_fingerprint column required)",
+      "primitives/rls"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["schemas/entity-extraction/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": true
+    }
+  }
+}

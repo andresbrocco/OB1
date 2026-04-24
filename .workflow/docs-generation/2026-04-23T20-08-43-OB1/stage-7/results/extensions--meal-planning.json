@@ -1,0 +1,28 @@
+{
+  "status": "created",
+  "directory": "extensions/meal-planning",
+  "readme_file": "extensions/meal-planning/README.md",
+  "reasoning": "Rich operational surface: 2 MCP Edge Function servers (primary + shared), 10 MCP tools across both servers, 4 env vars (plus 2 for shared server), 3 database tables with RLS, a schema.sql migration file, and a deno.json config. Learning path extension 4 of 6 with both recipe management and household sharing patterns.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "mcp_tools_primary",
+    "mcp_tools_shared",
+    "health_endpoints",
+    "authentication",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 3,
+    "env_var_count": 6,
+    "command_count": 5,
+    "has_health_check": true,
+    "mcp_tool_count": 10,
+    "database_table_count": 3
+  }
+}

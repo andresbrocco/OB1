@@ -1,0 +1,27 @@
+{
+  "status": "created",
+  "directory": "recipes/perplexity-conversation-import",
+  "context_file": "recipes/perplexity-conversation-import/CONTEXT.md",
+  "reasoning": "Contains non-trivial business logic including two distinct ingestion pipelines, a JSON profile flattening system with named sections, selective LLM summarization with a conservative prompt, a local deduplication sync log, and OUTPUT_STR unwrapping. Several behaviors are non-obvious (sync log update only on full success, dry-run still calls LLM, trivial conversations still marked done in sync log).",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "CLI recipe that imports Perplexity AI search history (.xlsx export) into Open Brain as searchable thoughts with embeddings",
+    "key_concepts": [
+      "Two-sheet import (Conversations + Memory)",
+      "JSON profile rows",
+      "Selective LLM summarization",
+      "Local sync log deduplication",
+      "OUTPUT_STR parsing"
+    ],
+    "exports": [],
+    "depends_on": ["OpenRouter API", "Supabase REST API", "Ollama (optional)"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY"],
+      "config_files": [".env.example"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

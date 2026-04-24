@@ -1,0 +1,44 @@
+{
+  "status": "created",
+  "directory": "dashboards/open-brain-dashboard-next",
+  "context_file": "dashboards/open-brain-dashboard-next/CONTEXT.md",
+  "reasoning": "Complex Next.js dashboard with non-obvious auth architecture (two-layer guard via middleware + server-side requireSession), restricted-content session flag, a server-only API client that proxies requests to keep the brain API key out of the browser, and a workaround for the REST API's single-type filter limitation in the kanban view. Multiple domain-specific concepts (sensitivity_tier, quality_score threshold for audit, KANBAN_TYPES restriction) that are not self-evident from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Next.js 14 web dashboard for browsing, searching, capturing, and managing Open Brain thoughts behind session auth",
+    "key_concepts": [
+      "iron-session cookie auth",
+      "two-layer auth guard",
+      "restricted content gating",
+      "server-only API proxy",
+      "kanban workflow (task/idea types)",
+      "quality audit (quality_score <= 29)"
+    ],
+    "exports": [
+      "Web UI pages: thoughts, search, kanban, audit, duplicates, ingest",
+      "Next.js API routes: /api/audit, /api/duplicates, /api/ingest, /api/kanban, /api/search, /api/thoughts, /api/restricted, /api/logout"
+    ],
+    "depends_on": [
+      "Open Brain REST API (Supabase Edge Function)",
+      "iron-session",
+      "Next.js 14"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "NEXT_PUBLIC_API_URL",
+        "SESSION_SECRET",
+        "RESTRICTED_PASSPHRASE_HASH",
+        "NODE_ENV"
+      ],
+      "config_files": [
+        "dashboards/open-brain-dashboard-next/.env.example",
+        "dashboards/open-brain-dashboard-next/next.config.ts",
+        "dashboards/open-brain-dashboard-next/tsconfig.json"
+      ],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

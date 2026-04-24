@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "schemas/workflow-status",
+  "reasoning": "Simple SQL migration that adds two columns (status and status_updated_at) and a partial index to the thoughts table. Purpose is fully self-evident from file names, inline SQL comments, and metadata.json. No domain-specific terminology beyond standard kanban vocabulary, no non-obvious design decisions, and no responsibility boundaries requiring documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Database schema extension adding kanban-style workflow status tracking to the thoughts table",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": ["thoughts table"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["schemas/workflow-status/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": true
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "status": "created",
+  "directory": "extensions/job-hunt",
+  "readme_file": "extensions/job-hunt/README.md",
+  "reasoning": "MCP Edge Function with 10 tools, 2 HTTP routes (POST MCP + GET health check), 4 required env vars, 5 database tables with RLS, and a cross-extension integration with Extension 5 Professional CRM — clear and substantial operational surface.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "api_endpoints",
+    "mcp_tools",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 2,
+    "env_var_count": 4,
+    "command_count": 5,
+    "has_health_check": true,
+    "mcp_tool_count": 10,
+    "database_table_count": 5
+  }
+}

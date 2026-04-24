@@ -1,0 +1,33 @@
+{
+  "status": "created",
+  "directory": "recipes/email-history-import",
+  "context_file": "recipes/email-history-import/CONTEXT.md",
+  "reasoning": "Contains non-obvious multi-layer deduplication logic (local sync log + content fingerprint), a complex email cleaning pipeline, dual ingestion modes (direct Supabase vs. Edge Function endpoint), an embedded OAuth2 browser consent flow with a specific port requirement, and a rollback SQL artifact from a design change. These details are not evident from file names alone and are worth preserving for contributors.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Import Gmail email history into Open Brain as searchable thoughts with deduplication, embedding, and metadata extraction",
+    "key_concepts": [
+      "Sync log",
+      "Two-layer dedup",
+      "Ingestion modes",
+      "Noise filtering",
+      "Body cleaning pipeline"
+    ],
+    "exports": [],
+    "depends_on": ["Gmail API", "OpenRouter", "Supabase REST API"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "OPENROUTER_API_KEY",
+        "INGEST_URL",
+        "INGEST_KEY"
+      ],
+      "config_files": [".env.example"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

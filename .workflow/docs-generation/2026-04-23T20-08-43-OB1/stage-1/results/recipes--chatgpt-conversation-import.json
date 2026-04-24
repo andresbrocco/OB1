@@ -1,0 +1,45 @@
+{
+  "status": "created",
+  "directory": "recipes/chatgpt-conversation-import",
+  "context_file": "recipes/chatgpt-conversation-import/CONTEXT.md",
+  "reasoning": "Two-module pipeline with non-obvious complexity: ChatGPT's node-mapping conversation tree requires branch resolution logic; 14 content types need per-type extraction dispatch; signal-based filtering uses a three-tier scoring system; session splitting handles context window limits across multi-day conversations; an optional pyramid summary schema adds a secondary DB table. Several gotchas (sync log format migration, conversation hash derivation, multi-tenant USER_ID requirement) are not evident from names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Batch import ChatGPT data exports into Open Brain as structured knowledge thoughts",
+    "key_concepts": [
+      "Conversation tree / branch resolution",
+      "Content-type dispatch",
+      "Signal-based filtering",
+      "Session splitting",
+      "Pyramid summaries",
+      "Sync log"
+    ],
+    "exports": [
+      "extract_conversations",
+      "resolve_canonical_path",
+      "extract_dialogue_text",
+      "prepare_dialogue_for_extraction",
+      "should_skip",
+      "split_sessions",
+      "extract_conversation_metadata"
+    ],
+    "depends_on": ["OpenRouter", "Ollama (optional)", "Supabase", "pgvector"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "OPENROUTER_API_KEY",
+        "INGEST_URL",
+        "INGEST_KEY",
+        "USER_ID"
+      ],
+      "config_files": [
+        "recipes/chatgpt-conversation-import/.env.example"
+      ],
+      "has_health_endpoints": false,
+      "has_database_models": true
+    }
+  }
+}

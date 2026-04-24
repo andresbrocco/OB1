@@ -1,0 +1,51 @@
+{
+  "status": "created",
+  "directory": "recipes/repo-learning-coach",
+  "context_file": "recipes/repo-learning-coach/CONTEXT.md",
+  "reasoning": "Complex recipe with multiple interacting sub-systems: a file-based content pipeline that syncs markdown to Supabase on startup, a REST API server with progress/quiz/comment/capture endpoints, an optional brain bridge for semantic retrieval and thought upserts, and a typed config abstraction. Contains non-obvious design decisions (sync-on-start, two-step embedding capture, slug+path dual identity matching, understanding_state taxonomy) and domain-specific terminology (brain bridge, learning artifacts, content-runtime separation) that would not be apparent from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Locally-run learning application that syncs file-based curriculum to Supabase and captures lesson artifacts into Open Brain thoughts",
+    "key_concepts": [
+      "Brain Bridge",
+      "Content-Runtime Separation",
+      "RepoLearningConfig",
+      "Learning Artifacts",
+      "Understanding State"
+    ],
+    "exports": [
+      "syncContentToSupabase",
+      "getBootstrapData",
+      "getLessonDetail",
+      "updateLessonProgress",
+      "addLessonComment",
+      "submitQuizAnswers",
+      "captureLessonArtifact",
+      "getResearchDocumentDetail"
+    ],
+    "depends_on": [
+      "Supabase",
+      "OpenRouter",
+      "gray-matter",
+      "zod",
+      "express"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "OPENROUTER_API_KEY",
+        "OPENROUTER_EMBEDDING_MODEL",
+        "PORT"
+      ],
+      "config_files": [
+        "recipes/repo-learning-coach/repo-learning.config.ts",
+        "recipes/repo-learning-coach/.env.example"
+      ],
+      "has_health_endpoints": false,
+      "has_database_models": true
+    }
+  }
+}

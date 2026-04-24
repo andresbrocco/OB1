@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "skills/research-synthesis",
+  "reasoning": "This directory contains only a SKILL.md prompt definition and metadata.json. The purpose is immediately clear from the file name and the skill's own documentation. There are no code files, no domain abstractions beyond what is explicitly stated in the skill definition, and no non-obvious logic or gotchas. It is a self-documenting prompt pack.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Standalone AI skill pack for synthesizing a source set into decision-grade findings, contradictions, confidence markers, gaps, and next questions",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

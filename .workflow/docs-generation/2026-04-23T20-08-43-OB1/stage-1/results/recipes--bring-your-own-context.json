@@ -1,0 +1,34 @@
+{
+  "status": "created",
+  "directory": "recipes/bring-your-own-context",
+  "context_file": "recipes/bring-your-own-context/CONTEXT.md",
+  "reasoning": "Contains domain-specific terminology (operating model layers, source confidence, portable bundle), a non-obvious two-phase workflow boundary (extraction vs. normalization), and a schema contract with subtle design decisions (artifacts returned as strings, not parsed objects). The separation between this recipe and work-operating-model-activation is meaningful but not self-evident from filenames alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Context extraction and ingestion into Open Brain from AI memory and external note sources, as the first phase of the portable-context workflow",
+    "key_concepts": [
+      "Operating Model Layers",
+      "Source Confidence",
+      "Portable Bundle",
+      "Two-Prompt Extraction Sequence"
+    ],
+    "exports": [
+      "extraction-prompts.md",
+      "context-profile.schema.json"
+    ],
+    "depends_on": [
+      "skills/work-operating-model",
+      "primitives/deploy-edge-function",
+      "primitives/remote-mcp",
+      "recipes/work-operating-model-activation"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["recipes/bring-your-own-context/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

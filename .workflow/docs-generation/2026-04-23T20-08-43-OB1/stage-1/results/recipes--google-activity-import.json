@@ -1,0 +1,27 @@
+{
+  "status": "created",
+  "directory": "recipes/google-activity-import",
+  "context_file": "recipes/google-activity-import/CONTEXT.md",
+  "reasoning": "The recipe has non-obvious responsibility boundaries and implementation details: per-category noise filtering rules, a content-addressed local sync log for idempotent reruns, an LLM prompt with explicit selectivity heuristics, a raw bypass mode, capped entry counts per day, and a specific thought-prefixing format on insert. These are not derivable from file or function names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Convert Google Takeout 'My Activity' exports into searchable, LLM-summarized thoughts in Open Brain",
+    "key_concepts": [
+      "High-value categories",
+      "Per-category noise filtering",
+      "Day-hash dedup via sync log",
+      "Raw mode (no summarization)",
+      "Thought prefix format on insert"
+    ],
+    "exports": ["import-google-activity.mjs (CLI script)"],
+    "depends_on": ["OpenRouter (gpt-4o-mini, text-embedding-3-small)", "Supabase REST API"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY"],
+      "config_files": [".env.example"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

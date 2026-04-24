@@ -1,0 +1,26 @@
+{
+  "status": "created",
+  "directory": "server",
+  "readme_file": "server/README.md",
+  "reasoning": "Core MCP server with 2 HTTP routes, 4 MCP tools, 4 required env vars, deploy and dev commands, and active database table/RPC usage. Strong operational surface warrants full README.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "api_endpoints",
+    "mcp_tools",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 2,
+    "env_var_count": 4,
+    "command_count": 2,
+    "has_health_check": false,
+    "mcp_tool_count": 4,
+    "port": 8000
+  }
+}

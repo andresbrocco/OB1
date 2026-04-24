@@ -1,0 +1,26 @@
+{
+  "status": "created",
+  "directory": "recipes/obsidian-vault-import",
+  "context_file": "recipes/obsidian-vault-import/CONTEXT.md",
+  "reasoning": "Single-script recipe with a multi-stage pipeline (walk, parse, filter, chunk, embed, insert) containing non-obvious chunking thresholds, a two-tier dedup strategy (local sync log + DB fingerprint), active secret scanning before insert, preflight connection validation, and several subtle behavioral edges (mtime vs frontmatter date, sync log write-back only on success, 10-failure abort). Worth documenting so contributors understand chunking decisions and dedup mechanics before modifying.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Bulk and incremental import of Obsidian vault notes into Open Brain as vector-embedded, searchable thoughts",
+    "key_concepts": [
+      "Atomic thought",
+      "Two-tier chunking (heading split + LLM fallback)",
+      "Dual deduplication (sync log + content fingerprint)",
+      "Secret scanning"
+    ],
+    "exports": ["import-obsidian.py (CLI entry point)"],
+    "depends_on": ["OpenRouter API", "Supabase REST API"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY"],
+      "config_files": [".env.example"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

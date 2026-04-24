@@ -1,0 +1,646 @@
+{
+  "generated_at": "2026-04-23T21:10:21-0300",
+  "target_path": "/Users/asbrocco/Documents/REPOS/OB1",
+  "total_candidates": 26,
+  "created": 26,
+  "skipped": 0,
+  "results": [
+    {
+      "status": "created",
+      "directory": "dashboards/open-brain-dashboard",
+      "readme_file": "dashboards/open-brain-dashboard/README.md",
+      "reasoning": "SvelteKit dashboard with a server-side MCP proxy API endpoint, 4 environment variables (MCP_URL, MCP_KEY, PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY), 3 npm commands, and Vercel deployment configuration \u2014 clear operational surface warranting a README.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "api_endpoints",
+        "commands",
+        "configuration",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 2,
+        "env_var_count": 4,
+        "command_count": 6,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "dashboards/open-brain-dashboard-next",
+      "readme_file": "dashboards/open-brain-dashboard-next/README.md",
+      "reasoning": "High operational surface: 15 API routes across audit, duplicates, ingest, kanban, search, and thoughts endpoints; 3 environment variables (2 required, 1 optional); 4 npm commands; iron-session auth with middleware route guard; .env.example configuration file; Vercel deployment target.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "api_endpoints",
+        "commands",
+        "configuration",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting",
+        "related"
+      ],
+      "operational_summary": {
+        "endpoint_count": 15,
+        "env_var_count": 3,
+        "command_count": 4,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "extensions/family-calendar",
+      "readme_file": "extensions/family-calendar/README.md",
+      "reasoning": "MCP Edge Function with 6 domain tools, 4 environment variables (including a manually-set access key and user ID), 3 database tables, deployment commands, and a health check endpoint \u2014 clear operational surface warranting a README.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "api_endpoints",
+        "mcp_tools",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 2,
+        "env_var_count": 4,
+        "command_count": 5,
+        "has_health_check": true,
+        "mcp_tool_count": 6,
+        "database_table_count": 3
+      }
+    },
+    {
+      "status": "created",
+      "directory": "extensions/home-maintenance",
+      "readme_file": "extensions/home-maintenance/README.md",
+      "reasoning": "Strong operational surface: 4 MCP tools exposed over 2 HTTP routes (POST for MCP, GET for health check), 4 environment variables (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, MCP_ACCESS_KEY, DEFAULT_USER_ID), 2 database tables with RLS and auto-trigger logic, a deploy workflow via Supabase CLI, and a deno.json dependency manifest.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "api_endpoints",
+        "mcp_tools",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 2,
+        "env_var_count": 4,
+        "command_count": 5,
+        "has_health_check": true,
+        "mcp_tool_count": 4,
+        "database_table_count": 2
+      }
+    },
+    {
+      "status": "created",
+      "directory": "extensions/household-knowledge",
+      "readme_file": "extensions/household-knowledge/README.md",
+      "reasoning": "Edge Function MCP server with 2 HTTP routes (POST for MCP tool dispatch, GET for health check), 4 required environment variables, 5 MCP tools, 2 database tables with RLS, and deploy/serve commands.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "api_endpoints",
+        "mcp_tools",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 2,
+        "env_var_count": 4,
+        "command_count": 4,
+        "has_health_check": true,
+        "mcp_tool_count": 5,
+        "database_table_count": 2
+      }
+    },
+    {
+      "status": "created",
+      "directory": "extensions/job-hunt",
+      "readme_file": "extensions/job-hunt/README.md",
+      "reasoning": "MCP Edge Function with 10 tools, 2 HTTP routes (POST MCP + GET health check), 4 required env vars, 5 database tables with RLS, and a cross-extension integration with Extension 5 Professional CRM \u2014 clear and substantial operational surface.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "api_endpoints",
+        "mcp_tools",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 2,
+        "env_var_count": 4,
+        "command_count": 5,
+        "has_health_check": true,
+        "mcp_tool_count": 10,
+        "database_table_count": 5
+      }
+    },
+    {
+      "status": "created",
+      "directory": "extensions/meal-planning",
+      "readme_file": "extensions/meal-planning/README.md",
+      "reasoning": "Rich operational surface: 2 MCP Edge Function servers (primary + shared), 10 MCP tools across both servers, 4 env vars (plus 2 for shared server), 3 database tables with RLS, a schema.sql migration file, and a deno.json config. Learning path extension 4 of 6 with both recipe management and household sharing patterns.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "mcp_tools_primary",
+        "mcp_tools_shared",
+        "health_endpoints",
+        "authentication",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 3,
+        "env_var_count": 6,
+        "command_count": 5,
+        "has_health_check": true,
+        "mcp_tool_count": 10,
+        "database_table_count": 3
+      }
+    },
+    {
+      "status": "created",
+      "directory": "extensions/professional-crm",
+      "readme_file": "extensions/professional-crm/README.md",
+      "reasoning": "Supabase Edge Function MCP server with 8 domain tools, 4 env vars (including DEFAULT_USER_ID found in source), 3 database tables with triggers and RLS, deployment commands, and a health-check endpoint.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "api_endpoints",
+        "mcp_tools",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 2,
+        "env_var_count": 4,
+        "command_count": 3,
+        "has_health_check": true,
+        "mcp_tool_count": 8,
+        "database_table_count": 3
+      }
+    },
+    {
+      "status": "created",
+      "directory": "integrations/entity-extraction-worker",
+      "readme_file": "integrations/entity-extraction-worker/README.md",
+      "reasoning": "Edge Function with 9 environment variables, HTTP endpoint with query-param API surface (limit, dry_run), 5 database tables (entity_extraction_queue, entities, thought_entities, edges, thoughts), and deployment commands. Clear operational surface warrants a README.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "api_endpoints",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 1,
+        "env_var_count": 9,
+        "command_count": 4,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "integrations/kubernetes-deployment",
+      "readme_file": "integrations/kubernetes-deployment/README.md",
+      "reasoning": "Strong operational surface: Docker image build, Kubernetes StatefulSet with two containers, 15 environment variables (secrets + config), ports 8000 and 5432, health checks, deploy/dev commands, and a database table initialised via ConfigMap.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "ports",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 0,
+        "env_var_count": 15,
+        "command_count": 4,
+        "has_health_check": true,
+        "docker_services": [
+          "mcp-server",
+          "db"
+        ],
+        "k8s_resources": [
+          "Namespace",
+          "ConfigMap",
+          "StatefulSet",
+          "Service",
+          "Ingress (optional)"
+        ]
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/chatgpt-conversation-import",
+      "readme_file": "recipes/chatgpt-conversation-import/README.md",
+      "reasoning": "Import script with 5 environment variables, 1 optional schema table, multiple CLI commands, and a sync log \u2014 clear operational surface requiring documentation",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "commands",
+        "cli_options",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 0,
+        "env_var_count": 5,
+        "command_count": 12,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/fingerprint-dedup-backfill",
+      "readme_file": "recipes/fingerprint-dedup-backfill/README.md",
+      "reasoning": "Recipe has 3 npm commands (backfill, report, cleanup), 2 required environment variables (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY), direct database table access on thoughts, and resumable state files \u2014 clear operational surface warranting a README.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 0,
+        "env_var_count": 2,
+        "command_count": 3,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/google-activity-import",
+      "readme_file": "recipes/google-activity-import/README.md",
+      "reasoning": "Recipe with 4 environment variables, 2 npm scripts plus full CLI flag surface, a sync-log configuration artifact, and direct writes to the thoughts database table.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "commands",
+        "cli_options",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 0,
+        "env_var_count": 4,
+        "command_count": 2,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/grok-export-import",
+      "readme_file": "recipes/grok-export-import/README.md",
+      "reasoning": "Import recipe with 4 environment variables (3 required, 1 optional), 2 npm commands plus direct CLI flags, .env.example configuration file, and writes to the thoughts table via upsert_thought RPC. Clear operational surface warrants a README.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "commands",
+        "cli_flags",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 0,
+        "env_var_count": 4,
+        "command_count": 2,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/instagram-import",
+      "readme_file": "recipes/instagram-import/README.md",
+      "reasoning": "Module has clear operational surface: 4 environment variables (3 required, 1 optional with default), 2 npm script commands plus documented CLI flags, a .env.example configuration file, and database interaction via the upsert_thought RPC on the thoughts table. No API endpoints (CLI-only tool), but commands, env vars, and setup steps justify a README.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 0,
+        "env_var_count": 4,
+        "command_count": 2,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/journals-blogger-import",
+      "readme_file": "recipes/journals-blogger-import/README.md",
+      "reasoning": "CLI import script with 4 environment variables, 2 npm commands, direct writes to the thoughts table via upsert_thought RPC, and pagination flags \u2014 clear operational surface requiring documentation.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 0,
+        "env_var_count": 4,
+        "command_count": 2,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/local-ollama-embeddings",
+      "readme_file": "recipes/local-ollama-embeddings/README.md",
+      "reasoning": "Module has clear operational surface: 3 environment variables, a CLI script with multiple flags and input modes, 3 supported embedding models, and prerequisites (Ollama server, model pull). Drop-in utility script warrants a reference README.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "commands",
+        "cli_options",
+        "supported_models",
+        "input_formats",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 0,
+        "env_var_count": 3,
+        "command_count": 6,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/ob-graph",
+      "readme_file": "recipes/ob-graph/README.md",
+      "reasoning": "MCP Edge Function with 2 HTTP endpoints (GET health + POST MCP), 10 MCP tools, 4 required env vars, 2 database tables, 2 SQL traversal functions, and a deployment workflow \u2014 strong operational surface warrants a README.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "api_endpoints",
+        "mcp_tools",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 2,
+        "env_var_count": 4,
+        "command_count": 5,
+        "has_health_check": true,
+        "mcp_tool_count": 10,
+        "database_table_count": 2,
+        "sql_function_count": 2
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/repo-learning-coach",
+      "readme_file": "recipes/repo-learning-coach/README.md",
+      "reasoning": "Express API with 7 endpoints, 6 environment variables (5 required), 5 npm commands, 10 Supabase tables, and a configurable curriculum sync workflow \u2014 strong operational surface warrants a full README.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "ports",
+        "api_endpoints",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 7,
+        "env_var_count": 6,
+        "command_count": 5,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/vercel-neon-telegram",
+      "readme_file": "recipes/vercel-neon-telegram/README.md",
+      "reasoning": "Full operational surface: 4 API endpoints including a health check, 6 env vars, 6 npm scripts (including migrate, generate-key, set-telegram-webhook), 2 SQL migrations, MCP tools, and Telegram bot commands. High-value reference content for deployers.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "api_endpoints",
+        "commands",
+        "configuration",
+        "database_tables",
+        "mcp_tools",
+        "telegram_bot_commands",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 4,
+        "env_var_count": 6,
+        "command_count": 7,
+        "has_health_check": true
+      }
+    },
+    {
+      "status": "created",
+      "directory": "recipes/x-twitter-import",
+      "readme_file": "recipes/x-twitter-import/README.md",
+      "reasoning": "Module has 4 environment variables, 2 npm scripts, CLI flags with multiple import modes, a prescribed archive directory structure, and writes to the thoughts table via upsert_thought RPC \u2014 clear operational surface warranting a README.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "commands",
+        "cli_flags",
+        "archive_structure",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 0,
+        "env_var_count": 4,
+        "command_count": 2,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "schemas/enhanced-thoughts",
+      "readme_file": "schemas/enhanced-thoughts/README.md",
+      "reasoning": "Schema extension with 6 new columns on the thoughts table, 4 indexes, and 3 PostgreSQL RPC functions (search_thoughts_text, brain_stats_aggregate, get_thought_connections) \u2014 clear operational surface requiring command, SQL, and curl documentation.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "commands",
+        "database_tables",
+        "rpc_functions",
+        "indexes",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 3,
+        "env_var_count": 0,
+        "command_count": 2,
+        "has_health_check": false,
+        "table_count": 1,
+        "rpc_function_count": 3,
+        "index_count": 4
+      }
+    },
+    {
+      "status": "created",
+      "directory": "schemas/entity-extraction",
+      "readme_file": "schemas/entity-extraction/README.md",
+      "reasoning": "Directory has significant operational surface: 5 database tables (entities, edges, thought_entities, entity_extraction_queue, consolidation_log), a PostgreSQL trigger (trg_queue_entity_extraction), RLS policies, grants, and a backfill procedure. No env vars or HTTP endpoints but rich schema-level operational details warrant full documentation.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "database_tables",
+        "key_columns",
+        "trigger",
+        "prerequisites",
+        "configuration",
+        "common_tasks",
+        "troubleshooting",
+        "related"
+      ],
+      "operational_summary": {
+        "endpoint_count": 0,
+        "env_var_count": 0,
+        "command_count": 0,
+        "has_health_check": false,
+        "table_count": 5,
+        "has_trigger": true,
+        "has_rls": true
+      }
+    },
+    {
+      "status": "created",
+      "directory": "schemas/typed-reasoning-edges",
+      "readme_file": "schemas/typed-reasoning-edges/README.md",
+      "reasoning": "Schema module with a new database table (thought_edges), an RPC function exposed as a PostgREST endpoint (POST /rpc/thought_edges_upsert), and ALTER TABLE migrations on the existing entity edges table. Clear operational surface: table structure, relation vocabulary, upsert RPC, RLS posture, and idempotent migration commands all warrant documentation.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "database_tables",
+        "schema_changes",
+        "rpc_functions",
+        "relation_types",
+        "prerequisites",
+        "commands",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 1,
+        "env_var_count": 0,
+        "command_count": 1,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "schemas/workflow-status",
+      "readme_file": "schemas/workflow-status/README.md",
+      "reasoning": "SQL migration schema with database table modifications (2 columns added to thoughts table), a partial index, and a backfill operation \u2014 all with direct operational instructions required for apply and usage.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "database_tables",
+        "configuration",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 0,
+        "env_var_count": 0,
+        "command_count": 2,
+        "has_health_check": false
+      }
+    },
+    {
+      "status": "created",
+      "directory": "server",
+      "readme_file": "server/README.md",
+      "reasoning": "Core MCP server with 2 HTTP routes, 4 MCP tools, 4 required env vars, deploy and dev commands, and active database table/RPC usage. Strong operational surface warrants full README.",
+      "has_human_curated_info": false,
+      "sections_generated": [
+        "environment_variables",
+        "api_endpoints",
+        "mcp_tools",
+        "commands",
+        "configuration",
+        "database_tables",
+        "prerequisites",
+        "common_tasks",
+        "troubleshooting"
+      ],
+      "operational_summary": {
+        "endpoint_count": 2,
+        "env_var_count": 4,
+        "command_count": 2,
+        "has_health_check": false,
+        "mcp_tool_count": 4,
+        "port": 8000
+      }
+    }
+  ]
+}

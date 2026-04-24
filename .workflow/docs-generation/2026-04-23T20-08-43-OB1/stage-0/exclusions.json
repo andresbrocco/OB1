@@ -1,0 +1,126 @@
+{
+  "status": "success",
+  "target_path": "/Users/asbrocco/Documents/REPOS/OB1",
+  "exclusions": {
+    "standard": [
+      {
+        "pattern": "node_modules/",
+        "reason": "npm dependencies",
+        "found": false
+      },
+      {
+        "pattern": "__pycache__/",
+        "reason": "Python bytecode cache",
+        "found": false
+      },
+      {
+        "pattern": ".git/",
+        "reason": "Git internals",
+        "found": true
+      },
+      {
+        "pattern": "venv/",
+        "reason": "Python virtual environment",
+        "found": false
+      },
+      {
+        "pattern": ".venv/",
+        "reason": "Python virtual environment",
+        "found": false
+      },
+      {
+        "pattern": "env/",
+        "reason": "Python virtual environment",
+        "found": false
+      },
+      {
+        "pattern": "dist/",
+        "reason": "Build output",
+        "found": false
+      },
+      {
+        "pattern": "build/",
+        "reason": "Build output",
+        "found": false
+      },
+      {
+        "pattern": "out/",
+        "reason": "Build output",
+        "found": false
+      },
+      {
+        "pattern": "target/",
+        "reason": "Rust/Java build output",
+        "found": false
+      },
+      {
+        "pattern": ".next/",
+        "reason": "Next.js build cache",
+        "found": false
+      },
+      {
+        "pattern": ".nuxt/",
+        "reason": "Nuxt.js build cache",
+        "found": false
+      },
+      {
+        "pattern": "coverage/",
+        "reason": "Test coverage reports",
+        "found": false
+      },
+      {
+        "pattern": ".cache/",
+        "reason": "General cache directory",
+        "found": false
+      },
+      {
+        "pattern": "vendor/",
+        "reason": "Vendor dependencies",
+        "found": false
+      }
+    ],
+    "from_gitignore": [
+      "node_modules/",
+      ".DS_Store",
+      ".planning/",
+      "supabase/",
+      ".local/",
+      ".agent/",
+      ".claude.json",
+      "__pycache__/",
+      "*.pyc",
+      ".env",
+      ".env.local",
+      ".env.*.local",
+      "credentials.json",
+      "token.json",
+      "gmail-sync-log.json",
+      "sync-log.json",
+      "deno.lock"
+    ],
+    "generated_code": [],
+    "vendor_code": []
+  },
+  "exclude_patterns": [
+    ".git/**",
+    "node_modules/**",
+    "__pycache__/**",
+    "*.pyc",
+    ".planning/**",
+    "supabase/**",
+    ".local/**",
+    ".agent/**",
+    ".claude.json",
+    ".env",
+    ".env.local",
+    ".env.*.local",
+    "credentials.json",
+    "token.json",
+    "gmail-sync-log.json",
+    "sync-log.json",
+    "deno.lock",
+    ".DS_Store",
+    ".workflow/**"
+  ],
+  "documentation_note": "These paths should be excluded from per-directory CONTEXT.md generation"
+}

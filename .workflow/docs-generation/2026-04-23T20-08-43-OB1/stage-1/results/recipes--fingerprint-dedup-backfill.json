@@ -1,0 +1,37 @@
+{
+  "status": "created",
+  "directory": "recipes/fingerprint-dedup-backfill",
+  "context_file": "recipes/fingerprint-dedup-backfill/CONTEXT.md",
+  "reasoning": "Two-script workflow with a non-obvious run-order dependency, a resumable cursor pattern, an orphan-vs-duplicate classification that is not evident from names alone, and a fingerprint normalization algorithm that must exactly mirror a SQL function defined in a separate primitive. These details would not be apparent to a developer encountering the directory for the first time.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Retroactive backfill of content_fingerprint on NULL thoughts rows, and safe removal of duplicate rows discovered during backfill",
+    "key_concepts": [
+      "Content fingerprint",
+      "Orphan row",
+      "Duplicate row",
+      "Cursor-based resumability"
+    ],
+    "exports": [
+      "backfill-fingerprints.mjs",
+      "delete-duplicates.mjs"
+    ],
+    "depends_on": [
+      "content-fingerprint-dedup primitive (normalization contract)",
+      "Supabase REST API"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY"
+      ],
+      "config_files": [
+        "recipes/fingerprint-dedup-backfill/.env.example"
+      ],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

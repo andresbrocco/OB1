@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-04-23T21:30:00-0300",
+  "target_path": "/Users/asbrocco/Documents/REPOS/OB1",
+  "output_file": "docs/ARCHITECTURE.md",
+  "inputs_read": {
+    "context_files": 79,
+    "dependencies_file": "docs/DEPENDENCIES.md"
+  },
+  "summary": {
+    "system_type": "monorepo — composable components on a shared MCP + Supabase/pgvector memory core",
+    "layers": [
+      "core-mcp-server",
+      "database-schemas",
+      "extensions",
+      "integrations",
+      "dashboards",
+      "recipes",
+      "skills",
+      "primitives",
+      "ci-governance"
+    ],
+    "components": 11,
+    "external_services": 12,
+    "deployment_units": 10
+  },
+  "ambiguities": [
+    "open-brain-rest Supabase Edge Function referenced by Next.js dashboard is not present as a module in this repo",
+    "slack-capture and discord-capture integration subdirectories listed in repo structure but have no CONTEXT.md files and could not be analyzed"
+  ]
+}

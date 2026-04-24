@@ -1,0 +1,29 @@
+{
+  "status": "created",
+  "directory": "recipes/live-retrieval",
+  "context_file": "recipes/live-retrieval/CONTEXT.md",
+  "reasoning": "The skill defines non-obvious behavioral contracts: topic-shift detection heuristics, a hard session cap of 3 retrievals, a 0.6 score threshold, a silent-on-miss contract, session-scoped deduplication by thought ID, and a self-calibrating retrieval log with prescriptive hit-rate tuning thresholds. These are design decisions that would not be evident from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Ambient proactive skill that surfaces relevant Open Brain thoughts on detected topic shifts, operating as the read side of the capture-retrieve flywheel",
+    "key_concepts": [
+      "Flywheel (read side)",
+      "Topic shift detection",
+      "Hit threshold (score > 0.6)",
+      "Session cap (max 3 retrievals)",
+      "Silent-on-miss contract",
+      "Session-scoped deduplication",
+      "Retrieval log"
+    ],
+    "exports": ["live-retrieval.skill.md"],
+    "depends_on": ["search_thoughts MCP tool", "list_thoughts MCP tool"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

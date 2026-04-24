@@ -1,0 +1,23 @@
+{
+  "status": "created",
+  "directory": "recipes/local-ollama-embeddings",
+  "readme_file": "recipes/local-ollama-embeddings/README.md",
+  "reasoning": "Module has clear operational surface: 3 environment variables, a CLI script with multiple flags and input modes, 3 supported embedding models, and prerequisites (Ollama server, model pull). Drop-in utility script warrants a reference README.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "commands",
+    "cli_options",
+    "supported_models",
+    "input_formats",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 0,
+    "env_var_count": 3,
+    "command_count": 6,
+    "has_health_check": false
+  }
+}

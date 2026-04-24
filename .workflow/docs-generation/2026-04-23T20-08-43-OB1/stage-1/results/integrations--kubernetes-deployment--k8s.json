@@ -1,0 +1,47 @@
+{
+  "status": "created",
+  "directory": "integrations/kubernetes-deployment/k8s",
+  "context_file": "integrations/kubernetes-deployment/k8s/CONTEXT.md",
+  "reasoning": "Directory contains non-trivial Kubernetes manifests with a co-located pod pattern (two containers sharing 127.0.0.1), a duplicated init.sql (standalone file vs. ConfigMap-embedded copy), and a deliberate divergence from the standard Supabase-hosted deployment. The hostPath volume constraint, single-replica limitation, and pre-apply secrets workflow are all gotchas not obvious from filenames alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Kubernetes manifests and database initialization for self-hosting Open Brain outside of Supabase",
+    "key_concepts": [
+      "Co-located pod pattern",
+      "ConfigMap-embedded SQL",
+      "Supabase schema parity",
+      "hostPath volume",
+      "match_thoughts RPC equivalent"
+    ],
+    "exports": [
+      "openbrain namespace",
+      "openbrain-init-sql ConfigMap",
+      "openbrain StatefulSet",
+      "openbrain ClusterIP Service",
+      "secrets.yml.example"
+    ],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "POSTGRES_PASSWORD",
+        "DB_PASSWORD",
+        "MCP_ACCESS_KEY",
+        "EMBEDDING_API_BASE",
+        "EMBEDDING_API_KEY",
+        "EMBEDDING_MODEL",
+        "CHAT_API_BASE",
+        "CHAT_API_KEY",
+        "CHAT_MODEL",
+        "PORT"
+      ],
+      "config_files": [
+        "integrations/kubernetes-deployment/k8s/secrets.yml.example",
+        "integrations/kubernetes-deployment/k8s/openbrain.yml"
+      ],
+      "has_health_endpoints": false,
+      "has_database_models": true
+    }
+  }
+}

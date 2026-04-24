@@ -1,0 +1,21 @@
+{
+  "status": "created",
+  "directory": "dashboards/open-brain-dashboard/src/lib",
+  "context_file": "dashboards/open-brain-dashboard/src/lib/CONTEXT.md",
+  "reasoning": "Contains a non-obvious text-parsing layer that converts human-readable MCP tool responses into typed TypeScript objects using regex parsers. The two MCP list/search tools return structurally different text formats requiring separate parsers, and all parsed thought IDs are ephemeral (generated via crypto.randomUUID). These are genuine gotchas not evident from file names.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Shared data layer providing domain types, a Supabase browser client, and an MCP API client with text-response parsing",
+    "key_concepts": ["ThoughtType", "MCP text-response parsing", "ephemeral IDs"],
+    "exports": ["Thought", "ThoughtMetadata", "ThoughtType", "THOUGHT_TYPES", "supabase", "getThoughts", "getStats", "captureThought"],
+    "depends_on": ["@supabase/ssr", "$env/dynamic/public", "/api/mcp"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": ["PUBLIC_SUPABASE_URL", "PUBLIC_SUPABASE_ANON_KEY"],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

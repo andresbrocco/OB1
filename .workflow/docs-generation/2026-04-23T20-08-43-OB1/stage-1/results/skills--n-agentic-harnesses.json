@@ -1,0 +1,21 @@
+{
+  "status": "created",
+  "directory": "skills/n-agentic-harnesses",
+  "context_file": "skills/n-agentic-harnesses/CONTEXT.md",
+  "reasoning": "Domain-specific skill pack with specialized terminology (harness, harness primitives, approval gates, durability), a non-obvious index-based routing architecture where SKILL.md acts as the sole routing index into 11 numbered reference files, explicit mode classification logic (design/evaluation/design+evaluation), a solo-developer bias that overrides default multi-agent assumptions, and structurally distinct output contracts per mode. Purpose and module relationships are not self-evident from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Reusable AI skill pack for designing, auditing, and improving the harness layer of agentic products",
+    "key_concepts": ["Harness", "Harness primitives", "Product shape", "Mode classification", "Approval gates"],
+    "exports": ["SKILL.md (routing index)", "references/01-principles-and-solo-dev-defaults.md", "references/02-harness-shapes-and-architecture.md", "references/03-tools-execution-and-permissions.md", "references/04-state-sessions-and-durability.md", "references/05-context-memory-and-evaluation.md", "references/06-agents-and-extensibility.md", "references/07-ux-observability-and-operations.md", "references/08-design-and-build-playbook.md", "references/09-evaluation-and-improvement-playbook.md", "references/10-example-requests-and-output-patterns.md", "references/11-codex-translation-notes.md"],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["skills/n-agentic-harnesses/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

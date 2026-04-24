@@ -1,0 +1,21 @@
+{
+  "status": "created",
+  "directory": "recipes/journals-blogger-import",
+  "context_file": "recipes/journals-blogger-import/CONTEXT.md",
+  "reasoning": "The recipe has non-obvious implementation details: a regex-based Atom XML parser that filters by Blogger entry kind, silent truncation at two different length limits for storage vs embedding, SHA-256 content fingerprinting for deduplication, and fixed metadata values (importance, quality_score) set at import time. These details would not be evident from file names or high-level description alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Import Google Blogger Atom XML exports into Open Brain as journal thoughts with embeddings",
+    "key_concepts": ["Atom XML export", "Entry kind filtering (post/comment vs settings/template)", "Content fingerprint for deduplication"],
+    "exports": [],
+    "depends_on": ["@supabase/supabase-js", "OpenRouter API"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "EMBEDDING_MODEL"],
+      "config_files": [".env.example"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

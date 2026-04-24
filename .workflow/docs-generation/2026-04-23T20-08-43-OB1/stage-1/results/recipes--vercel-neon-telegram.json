@@ -1,0 +1,47 @@
+{
+  "status": "created",
+  "directory": "recipes/vercel-neon-telegram",
+  "context_file": "recipes/vercel-neon-telegram/CONTEXT.md",
+  "reasoning": "Complex alternative-architecture recipe with multiple non-obvious design decisions: stateless MCP transport pattern, parallel capture pipeline, triple-path auth supporting header-less AI clients, separate Telegram webhook secret, mixed SQL client strategies in db.ts, and an in-memory rate limiter with cold-start reset semantics. Domain terminology (ThoughtType taxonomy, match_thoughts function, maxDuration Vercel override) would not be obvious from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Alternative Open Brain deployment using Vercel, Neon Postgres, and Telegram — replaces Cloudflare + Supabase + Slack while preserving the same thoughts schema and MCP interface",
+    "key_concepts": [
+      "Stateless MCP transport",
+      "Parallel capture pipeline",
+      "ThoughtType taxonomy",
+      "In-memory rate limiter with cold-start reset"
+    ],
+    "exports": [
+      "POST /api/capture",
+      "POST /api/mcp",
+      "POST /api/telegram",
+      "GET /api/health"
+    ],
+    "depends_on": [
+      "OpenAI API",
+      "Neon Postgres (pgvector)",
+      "grammY (Telegram bot library)",
+      "@modelcontextprotocol/sdk"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": true,
+      "env_vars_referenced": [
+        "DATABASE_URL",
+        "OPENAI_API_KEY",
+        "BRAIN_ACCESS_KEY",
+        "TELEGRAM_BOT_TOKEN",
+        "TELEGRAM_WEBHOOK_SECRET",
+        "APP_URL"
+      ],
+      "config_files": [
+        "recipes/vercel-neon-telegram/.env.example",
+        "recipes/vercel-neon-telegram/vercel.json",
+        "recipes/vercel-neon-telegram/next.config.mjs"
+      ],
+      "has_health_endpoints": true,
+      "has_database_models": true
+    }
+  }
+}

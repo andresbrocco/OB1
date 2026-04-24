@@ -1,0 +1,50 @@
+{
+  "status": "created",
+  "directory": "dashboards/open-brain-dashboard-next/app/api",
+  "context_file": "dashboards/open-brain-dashboard-next/app/api/CONTEXT.md",
+  "reasoning": "Multiple sub-domains (audit, ingest, duplicates, kanban, thoughts, restricted) with non-obvious cross-cutting concerns: a two-tier restricted content system using session state + SHA-256 passphrase verification, an auto-routing heuristic that decides between single-thought capture and multi-thought extraction, partial-success batch delete semantics, and an inconsistency where some routes proxy via @/lib/api while others construct backend URLs directly.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Authenticated proxy and orchestration layer between the dashboard frontend and the Open Brain backend API",
+    "key_concepts": [
+      "Restricted content unlock",
+      "Auto-routing heuristic (shouldExtract)",
+      "Kanban statuses",
+      "Audit quality threshold",
+      "Session-scoped API key forwarding"
+    ],
+    "exports": [
+      "GET /api/audit",
+      "POST /api/audit/delete",
+      "GET /api/duplicates",
+      "POST /api/duplicates/resolve",
+      "GET /api/ingest",
+      "POST /api/ingest",
+      "GET /api/ingest/[id]",
+      "POST /api/ingest/[id]/execute",
+      "GET /api/kanban",
+      "POST /api/kanban/update",
+      "POST /api/kanban/delete",
+      "POST /api/logout",
+      "GET|POST|DELETE /api/restricted",
+      "GET /api/search",
+      "GET /api/thoughts/[id]/connections",
+      "POST /api/thoughts/[id]/reflection"
+    ],
+    "depends_on": [
+      "@/lib/api",
+      "@/lib/auth"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "RESTRICTED_PASSPHRASE_HASH",
+        "NEXT_PUBLIC_API_URL"
+      ],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

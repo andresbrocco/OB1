@@ -1,0 +1,47 @@
+{
+  "status": "created",
+  "directory": "extensions/family-calendar",
+  "context_file": "extensions/family-calendar/CONTEXT.md",
+  "reasoning": "Contains non-obvious implementation details: a Claude Desktop Accept-header workaround with a Deno duplex streaming hack, a dual one-time/recurring activity model sharing a single table with a complex OR filter, NULL family_member_id semantics for household-wide events, and a DEFAULT_USER_ID pinning pattern not documented in .env.example. Worth documenting for contributors maintaining or extending this extension.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Remote MCP server providing household scheduling tools: family member roster, one-time and recurring activities, and important date tracking",
+    "key_concepts": [
+      "recurring vs. one-time activities in a unified table",
+      "NULL family_member_id for household-wide events",
+      "Claude Desktop Accept-header patch",
+      "DEFAULT_USER_ID single-tenant pinning"
+    ],
+    "exports": [
+      "add_family_member",
+      "add_activity",
+      "get_week_schedule",
+      "search_activities",
+      "add_important_date",
+      "get_upcoming_dates"
+    ],
+    "depends_on": [
+      "Supabase (family_members, activities, important_dates tables)",
+      "@hono/mcp StreamableHTTPTransport",
+      "@modelcontextprotocol/sdk McpServer",
+      "hono",
+      "zod"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "MCP_ACCESS_KEY",
+        "DEFAULT_USER_ID"
+      ],
+      "config_files": [
+        "extensions/family-calendar/deno.json",
+        "extensions/family-calendar/.env.example"
+      ],
+      "has_health_endpoints": true,
+      "has_database_models": true
+    }
+  }
+}

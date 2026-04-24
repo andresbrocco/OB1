@@ -1,0 +1,27 @@
+{
+  "status": "created",
+  "directory": "skills/weekly-signal-diff",
+  "context_file": "skills/weekly-signal-diff/CONTEXT.md",
+  "reasoning": "The skill introduces domain-specific terminology ('signal diff' vs 'digest', 'starter universe', 'structural questions') and contains non-obvious design decisions around personalization balance, portable tool-name abstraction, and the intentional 3-7 signal cap. These concepts are not self-evident from file names or standard patterns.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Reusable AI skill for turning weekly market or industry news into a personalized structural diff using Open Brain memory and optional live web search",
+    "key_concepts": [
+      "Signal diff vs digest",
+      "Starter universe bootstrap",
+      "Structural questions framework",
+      "Personalization vs discovery balance",
+      "Live search upgrade"
+    ],
+    "exports": ["SKILL.md prompt pack"],
+    "depends_on": ["Open Brain memory tools", "Optional: OpenRouter / Perplexity Sonar"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": ["skills/weekly-signal-diff/metadata.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

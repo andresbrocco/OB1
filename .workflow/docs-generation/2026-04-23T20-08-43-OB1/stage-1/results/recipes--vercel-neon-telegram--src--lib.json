@@ -1,0 +1,21 @@
+{
+  "status": "created",
+  "directory": "recipes/vercel-neon-telegram/src/lib",
+  "context_file": "recipes/vercel-neon-telegram/src/lib/CONTEXT.md",
+  "reasoning": "Contains a multi-stage thought-capture pipeline with non-obvious details: in-memory rate limiter that resets on cold start, mixed Neon query styles (tagged template vs parameterized), three-strategy auth key extraction with timing-safe comparison, and vector serialization quirk for pgvector via Neon driver. Domain concepts like ThoughtMetadata, thought type taxonomy, and the match_thoughts Postgres function dependency warrant documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Core shared library for the thought-capture pipeline: authentication, rate limiting, AI enrichment, and Neon DB persistence",
+    "key_concepts": ["Thought", "ThoughtMetadata", "ThoughtType", "match_thoughts", "captureThought pipeline"],
+    "exports": ["captureThought", "generateEmbedding", "extractMetadata", "insertThought", "searchThoughts", "listThoughts", "validateAccessKey", "extractKey", "requireAuth", "checkRateLimit", "thoughtTypeEnum", "metadataSchema"],
+    "depends_on": ["@ai-sdk/openai", "@neondatabase/serverless", "zod", "crypto"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": ["BRAIN_ACCESS_KEY", "DATABASE_URL", "OPENAI_API_KEY"],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": true
+    }
+  }
+}

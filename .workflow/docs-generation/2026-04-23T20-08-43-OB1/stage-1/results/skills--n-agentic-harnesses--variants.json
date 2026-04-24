@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "skills/n-agentic-harnesses/variants",
+  "reasoning": "This directory is a pure organizational container with no files of its own. It holds two subdirectories ('anthropic' and 'codex') each containing a platform-specific SKILL.md. The name 'variants' and the subdirectory names make the structure self-evident. No domain logic, no non-obvious boundaries, and no concepts requiring documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Organizational container for platform-specific variants of the n-agentic-harnesses skill",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "status": "created",
+  "directory": "recipes/grok-export-import",
+  "context_file": "recipes/grok-export-import/CONTEXT.md",
+  "reasoning": "The recipe has non-obvious implementation details: MongoDB Extended JSON date parsing, multi-variant Grok export schema normalization, content fingerprinting for deduplication, and specific truncation thresholds for embeddings vs. storage. The use of the service role key (bypassing RLS) and the hardcoded thought metadata values are gotchas worth documenting.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Import xAI Grok conversation history exports into Open Brain as searchable thoughts with vector embeddings",
+    "key_concepts": ["MongoDB-style date parsing", "Content fingerprint deduplication", "Conversation normalization", "Transcript assembly"],
+    "exports": ["import-grok.mjs (CLI script)"],
+    "depends_on": ["@supabase/supabase-js", "OpenRouter API", "dotenv"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": true,
+      "env_vars_referenced": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "EMBEDDING_MODEL"],
+      "config_files": [".env.example"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

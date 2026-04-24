@@ -1,0 +1,41 @@
+{
+  "status": "created",
+  "directory": "integrations/kubernetes-deployment",
+  "context_file": "integrations/kubernetes-deployment/CONTEXT.md",
+  "reasoning": "This is a non-trivial MCP server variant with a deliberate architectural departure from the canonical repo pattern (direct PostgreSQL instead of Supabase). It contains non-obvious design decisions: dual API configuration for embeddings vs. chat, raw SQL vector casting, in-memory aggregation in thought_stats, and a specific authentication scheme. The divergence from the repo-wide Edge Function rule also warrants explanation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Self-hosted Kubernetes variant of the Open Brain MCP server using direct PostgreSQL + pgvector instead of Supabase",
+    "key_concepts": [
+      "Supabase replacement pattern",
+      "Dual API configuration (embedding vs. chat)",
+      "MCP_ACCESS_KEY authentication",
+      "pgvector cosine distance via raw SQL"
+    ],
+    "exports": ["MCP HTTP server (Hono/StreamableHTTPTransport) on port 8000"],
+    "depends_on": ["PostgreSQL + pgvector", "OpenAI-compatible embedding API", "OpenAI-compatible chat API"],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "DB_HOST",
+        "DB_PORT",
+        "DB_NAME",
+        "DB_USER",
+        "DB_PASSWORD",
+        "EMBEDDING_API_BASE",
+        "EMBEDDING_API_KEY",
+        "OPENROUTER_API_KEY",
+        "EMBEDDING_MODEL",
+        "CHAT_API_BASE",
+        "CHAT_API_KEY",
+        "CHAT_MODEL",
+        "MCP_ACCESS_KEY",
+        "PORT"
+      ],
+      "config_files": ["integrations/kubernetes-deployment/deno.json"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

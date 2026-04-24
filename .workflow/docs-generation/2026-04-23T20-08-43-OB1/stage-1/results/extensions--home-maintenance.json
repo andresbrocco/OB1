@@ -1,0 +1,45 @@
+{
+  "status": "created",
+  "directory": "extensions/home-maintenance",
+  "context_file": "extensions/home-maintenance/CONTEXT.md",
+  "reasoning": "Contains non-obvious implementation details: a Claude Desktop Accept-header workaround required for the MCP transport, a PostgreSQL trigger that drives next_due recalculation (invisible from the MCP layer), a DEFAULT_USER_ID identity pattern instead of JWT auth, a service-role key that bypasses RLS, and a two-phase query strategy in search_maintenance_history. These are all genuine gotchas a developer would need to know.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "MCP server (Supabase Edge Function) exposing four tools to manage recurring and one-time home maintenance tasks and log completed work",
+    "key_concepts": [
+      "maintenance_tasks vs maintenance_logs two-table design",
+      "trigger-driven next_due recalculation",
+      "frequency_days=NULL for one-time tasks",
+      "DEFAULT_USER_ID identity pinning"
+    ],
+    "exports": [
+      "add_maintenance_task",
+      "log_maintenance",
+      "get_upcoming_maintenance",
+      "search_maintenance_history"
+    ],
+    "depends_on": [
+      "Supabase (postgres + edge functions)",
+      "@hono/mcp",
+      "@modelcontextprotocol/sdk",
+      "hono",
+      "zod"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "MCP_ACCESS_KEY",
+        "DEFAULT_USER_ID"
+      ],
+      "config_files": [
+        "extensions/home-maintenance/.env.example",
+        "extensions/home-maintenance/deno.json"
+      ],
+      "has_health_endpoints": true,
+      "has_database_models": true
+    }
+  }
+}

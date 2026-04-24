@@ -1,0 +1,33 @@
+{
+  "status": "created",
+  "directory": "recipes/vercel-neon-telegram/src/app/api",
+  "context_file": "recipes/vercel-neon-telegram/src/app/api/CONTEXT.md",
+  "reasoning": "Contains four distinct API route handlers with non-obvious design decisions: stateless MCP server instantiation per request, a bot singleton for Telegram warm-instance reuse, two different authentication mechanisms (bearer token vs Telegram webhook secret), and Vercel-specific maxDuration hints. These are not self-evident from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "HTTP route handlers exposing REST capture, MCP protocol, Telegram bot webhook, and health check surfaces",
+    "key_concepts": [
+      "Stateless MCP server per request",
+      "Telegram webhook secret authentication",
+      "Bearer token authentication",
+      "Bot singleton pattern",
+      "MCP protocol compliance (HEAD/DELETE/OPTIONS)"
+    ],
+    "exports": ["POST (capture)", "POST/GET/HEAD/DELETE/OPTIONS (mcp)", "POST (telegram)", "GET (health)"],
+    "depends_on": [
+      "recipes/vercel-neon-telegram/src/lib/auth",
+      "recipes/vercel-neon-telegram/src/lib/rate-limit",
+      "recipes/vercel-neon-telegram/src/lib/capture",
+      "recipes/vercel-neon-telegram/src/lib/db",
+      "recipes/vercel-neon-telegram/src/lib/ai"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": ["TELEGRAM_BOT_TOKEN", "TELEGRAM_WEBHOOK_SECRET"],
+      "config_files": [],
+      "has_health_endpoints": true,
+      "has_database_models": false
+    }
+  }
+}

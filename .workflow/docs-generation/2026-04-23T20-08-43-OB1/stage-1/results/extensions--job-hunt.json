@@ -1,0 +1,51 @@
+{
+  "status": "created",
+  "directory": "extensions/job-hunt",
+  "context_file": "extensions/job-hunt/CONTEXT.md",
+  "reasoning": "Complex domain module with a multi-table job search pipeline (companies, postings, applications, interviews, contacts), a cross-extension integration pattern with Extension 5 Professional CRM, a non-obvious Claude Desktop Accept-header workaround, and application-managed (non-DB-enforced) foreign key semantics. Multiple sub-modules with conceptual relationships that are not self-evident from file names alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Remote MCP server managing a full job search pipeline: company tracking, job postings, application status, interview scheduling, and job contacts with optional promotion into the Professional CRM extension",
+    "key_concepts": [
+      "Pipeline (application status lifecycle)",
+      "Job contact vs professional contact",
+      "Interview stages",
+      "Cross-extension CRM link",
+      "only_unlinked filter"
+    ],
+    "exports": [
+      "add_company",
+      "add_job_posting",
+      "add_job_contact",
+      "submit_application",
+      "schedule_interview",
+      "log_interview_notes",
+      "get_pipeline_overview",
+      "get_upcoming_interviews",
+      "search_job_contacts",
+      "link_contact_to_professional_crm"
+    ],
+    "depends_on": [
+      "extensions/professional-crm (professional_contacts table)",
+      "primitives/deploy-edge-function",
+      "primitives/remote-mcp",
+      "primitives/rls"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "MCP_ACCESS_KEY",
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "DEFAULT_USER_ID"
+      ],
+      "config_files": [
+        "extensions/job-hunt/.env.example",
+        "extensions/job-hunt/deno.json"
+      ],
+      "has_health_endpoints": true,
+      "has_database_models": true
+    }
+  }
+}

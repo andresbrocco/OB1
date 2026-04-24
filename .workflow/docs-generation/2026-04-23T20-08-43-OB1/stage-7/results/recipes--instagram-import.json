@@ -1,0 +1,22 @@
+{
+  "status": "created",
+  "directory": "recipes/instagram-import",
+  "readme_file": "recipes/instagram-import/README.md",
+  "reasoning": "Module has clear operational surface: 4 environment variables (3 required, 1 optional with default), 2 npm script commands plus documented CLI flags, a .env.example configuration file, and database interaction via the upsert_thought RPC on the thoughts table. No API endpoints (CLI-only tool), but commands, env vars, and setup steps justify a README.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "commands",
+    "configuration",
+    "database_tables",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 0,
+    "env_var_count": 4,
+    "command_count": 2,
+    "has_health_check": false
+  }
+}

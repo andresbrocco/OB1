@@ -1,0 +1,23 @@
+{
+  "status": "created",
+  "directory": "schemas/typed-reasoning-edges",
+  "readme_file": "schemas/typed-reasoning-edges/README.md",
+  "reasoning": "Schema module with a new database table (thought_edges), an RPC function exposed as a PostgREST endpoint (POST /rpc/thought_edges_upsert), and ALTER TABLE migrations on the existing entity edges table. Clear operational surface: table structure, relation vocabulary, upsert RPC, RLS posture, and idempotent migration commands all warrant documentation.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "database_tables",
+    "schema_changes",
+    "rpc_functions",
+    "relation_types",
+    "prerequisites",
+    "commands",
+    "common_tasks",
+    "troubleshooting"
+  ],
+  "operational_summary": {
+    "endpoint_count": 1,
+    "env_var_count": 0,
+    "command_count": 1,
+    "has_health_check": false
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "status": "created",
+  "directory": "schemas/entity-extraction",
+  "readme_file": "schemas/entity-extraction/README.md",
+  "reasoning": "Directory has significant operational surface: 5 database tables (entities, edges, thought_entities, entity_extraction_queue, consolidation_log), a PostgreSQL trigger (trg_queue_entity_extraction), RLS policies, grants, and a backfill procedure. No env vars or HTTP endpoints but rich schema-level operational details warrant full documentation.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "database_tables",
+    "key_columns",
+    "trigger",
+    "prerequisites",
+    "configuration",
+    "common_tasks",
+    "troubleshooting",
+    "related"
+  ],
+  "operational_summary": {
+    "endpoint_count": 0,
+    "env_var_count": 0,
+    "command_count": 0,
+    "has_health_check": false,
+    "table_count": 5,
+    "has_trigger": true,
+    "has_rls": true
+  }
+}

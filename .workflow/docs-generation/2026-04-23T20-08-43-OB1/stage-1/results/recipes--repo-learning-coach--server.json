@@ -1,0 +1,21 @@
+{
+  "status": "created",
+  "directory": "recipes/repo-learning-coach/server",
+  "context_file": "recipes/repo-learning-coach/server/CONTEXT.md",
+  "reasoning": "This server directory combines multiple non-trivial responsibilities: Express HTTP route handling, a startup content-sync pipeline, Supabase query orchestration across 8+ tables, and an optional Open Brain vector-search integration called BrainBridge. The BrainBridge degradation pattern, the sync-before-listen startup sequence, quiz question identity semantics, and the use of the service role key are all non-obvious details that benefit from documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Express HTTP API server that syncs file-based lesson content to Supabase on startup and serves REST endpoints for lesson progress, quiz submission, commenting, and optional Open Brain memory integration",
+    "key_concepts": ["BrainBridge", "Content sync", "Artifact kinds (takeaway, confusion, summary)", "LessonStatus", "UnderstandingState"],
+    "exports": ["syncContentToSupabase", "getBootstrapData", "getLessonDetail", "getResearchDocumentDetail", "updateLessonProgress", "addLessonComment", "submitQuizAnswers", "captureLessonArtifact"],
+    "depends_on": ["../repo-learning.config.js", "Supabase (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)", "OpenRouter API (optional, OPENROUTER_API_KEY)"],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": true,
+      "env_vars_referenced": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "OPENROUTER_API_KEY", "OPENROUTER_EMBEDDING_MODEL", "PORT", "NODE_ENV"],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

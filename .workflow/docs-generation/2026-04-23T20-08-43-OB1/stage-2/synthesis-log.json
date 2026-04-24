@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-04-23T21:15:00-0300",
+  "target_path": "/Users/asbrocco/Documents/REPOS/OB1",
+  "output_file": "docs/DEPENDENCIES.md",
+  "context_files_read": 79,
+  "summary": {
+    "internal_modules": 12,
+    "external_runtime": 35,
+    "external_dev": 22,
+    "circular_dependencies": 0
+  }
+}

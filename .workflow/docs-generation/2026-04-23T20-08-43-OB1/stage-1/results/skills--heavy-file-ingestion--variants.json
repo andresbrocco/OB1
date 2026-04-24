@@ -1,0 +1,20 @@
+{
+  "status": "skipped",
+  "directory": "skills/heavy-file-ingestion/variants",
+  "reasoning": "This directory is a flat container of three per-client SKILL.md files (claude-code, claude-desktop, codex). The purpose is immediately obvious from the directory name and subdirectory names. Each SKILL.md is self-documenting. There are no domain-specific concepts, shared logic, or non-obvious relationships between the variants that require explanation beyond reading the files themselves.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Per-client variants of the heavy file ingestion skill prompt",
+    "key_concepts": [],
+    "exports": [],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

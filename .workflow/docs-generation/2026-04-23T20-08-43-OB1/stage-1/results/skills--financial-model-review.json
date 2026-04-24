@@ -1,0 +1,27 @@
+{
+  "status": "created",
+  "directory": "skills/financial-model-review",
+  "context_file": "skills/financial-model-review/CONTEXT.md",
+  "reasoning": "The skill pack defines domain-specific finance terminology (investor-grade, board-grade, CAC efficiency, roll-forwards), a multi-step analytical process with distinct judgment tiers, and non-obvious scoping boundaries that prevent the skill from drifting into model building. The responsibility split between this skill and peer skills (deal-memo-drafting, research-synthesis, competitive-analysis) is also non-obvious and worth documenting.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Investor-first AI skill pack for reviewing existing financial models, forecasts, and scenario sets for assumption quality, structural risk, and decision usefulness",
+    "key_concepts": [
+      "Investor-grade / Board-grade / Internal planning standard",
+      "Model shape",
+      "Fatal issues vs. caution flags vs. acceptable simplifications",
+      "Structural risk vs. business risk",
+      "Roll-forwards"
+    ],
+    "exports": [],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

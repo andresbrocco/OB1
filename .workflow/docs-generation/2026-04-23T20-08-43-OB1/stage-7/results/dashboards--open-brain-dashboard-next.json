@@ -1,0 +1,23 @@
+{
+  "status": "created",
+  "directory": "dashboards/open-brain-dashboard-next",
+  "readme_file": "dashboards/open-brain-dashboard-next/README.md",
+  "reasoning": "High operational surface: 15 API routes across audit, duplicates, ingest, kanban, search, and thoughts endpoints; 3 environment variables (2 required, 1 optional); 4 npm commands; iron-session auth with middleware route guard; .env.example configuration file; Vercel deployment target.",
+  "has_human_curated_info": false,
+  "sections_generated": [
+    "environment_variables",
+    "api_endpoints",
+    "commands",
+    "configuration",
+    "prerequisites",
+    "common_tasks",
+    "troubleshooting",
+    "related"
+  ],
+  "operational_summary": {
+    "endpoint_count": 15,
+    "env_var_count": 3,
+    "command_count": 4,
+    "has_health_check": false
+  }
+}

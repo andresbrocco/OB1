@@ -1,0 +1,21 @@
+{
+  "status": "created",
+  "directory": ".claude/skills",
+  "context_file": ".claude/skills/CONTEXT.md",
+  "reasoning": "Contains a single but non-trivial skill file defining a multi-step admin PR review workflow. The skill has clear responsibility boundaries (admin judgment vs CI automation), domain-specific outputs (admin summary, Discord draft, PR comment), and non-obvious behavioral constraints (branch checkout/return, user confirmation before side effects). The purpose and boundaries are not evident from the directory name alone.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Claude Code skill definitions for OB1 maintainer PR review workflows",
+    "key_concepts": ["Skill file format", "Human-judgment layer", "Admin review vs CI automation"],
+    "exports": ["review-pr"],
+    "depends_on": [".github/workflows/ob1-review.yml", "gh CLI"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

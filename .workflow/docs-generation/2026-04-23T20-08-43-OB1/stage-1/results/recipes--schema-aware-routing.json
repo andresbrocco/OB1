@@ -1,0 +1,37 @@
+{
+  "status": "created",
+  "directory": "recipes/schema-aware-routing",
+  "context_file": "recipes/schema-aware-routing/CONTEXT.md",
+  "reasoning": "Contains non-trivial domain logic: a three-pass person resolution algorithm, a first-person intent gate for action item routing, and a schema-driven multi-table write pipeline. Multiple non-obvious behaviors (pending resolution, last-write linking, parallel extraction) warrant documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "LLM-driven metadata extraction and schema-aware routing of unstructured text into multiple Supabase tables",
+    "key_concepts": [
+      "Schema-aware routing",
+      "Three-pass person resolution",
+      "First-person intent gate",
+      "Pending person confirmation"
+    ],
+    "exports": [
+      "processThought",
+      "findOrCreatePerson",
+      "extractMetadata",
+      "namesAreSimilar",
+      "EXTRACTION_SYSTEM_PROMPT",
+      "ExtractedMetadata",
+      "PersonMention",
+      "PersonResult",
+      "WriteResult",
+      "RoutingOutcome"
+    ],
+    "depends_on": ["@supabase/supabase-js", "OpenAI-compatible LLM API", "OpenAI-compatible embeddings API"],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "status": "created",
+  "directory": "integrations/entity-extraction-worker",
+  "context_file": "integrations/entity-extraction-worker/CONTEXT.md",
+  "reasoning": "Complex async worker with non-obvious queue ownership model, atomic claim pattern, symmetric relation canonicalization, re-extraction idempotency, prompt injection defenses, per-container cost cap semantics, and wall-clock budget management. Multiple interacting design decisions that would not be apparent from file names or a casual read.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Async Edge Function worker that drains the entity extraction queue, calling an LLM to extract entities and relationships from thoughts and writing results into the knowledge graph",
+    "key_concepts": [
+      "entity_extraction_queue",
+      "support_count",
+      "symmetric relation canonicalization",
+      "re-extraction idempotency",
+      "ExtractionCostCapError",
+      "wall-clock budget"
+    ],
+    "exports": [],
+    "depends_on": [
+      "schemas/knowledge-graph",
+      "schemas/enhanced-thoughts"
+    ],
+    "operational_hints": {
+      "has_api_routes": true,
+      "has_cli_commands": false,
+      "env_vars_referenced": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "MCP_ACCESS_KEY",
+        "OPENROUTER_API_KEY",
+        "OPENAI_API_KEY",
+        "ANTHROPIC_API_KEY",
+        "ENTITY_EXTRACTION_MAX_CALLS",
+        "FETCH_TIMEOUT_MS"
+      ],
+      "config_files": [
+        "integrations/entity-extraction-worker/deno.json"
+      ],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

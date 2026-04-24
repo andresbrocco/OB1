@@ -1,0 +1,45 @@
+{
+  "status": "created",
+  "directory": ".github",
+  "context_file": ".github/CONTEXT.md",
+  "reasoning": "The .github directory contains a non-trivial two-stage CI/CD pipeline with a deterministic gate workflow, an LLM-backed qualitative review workflow, a trust-tier system for auto-review eligibility, idempotent PR comment management, and a metadata JSON schema that all contributions must satisfy. The design decisions (decoupled stages, artifact passing between workflows, docs-PR bypass, trusted-contributor quota gating) are not obvious from filenames and warrant documentation.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "Automated contribution governance: CI gate, LLM-backed PR review, issue triage, metadata schema validation, and community automation",
+    "key_concepts": [
+      "Two-stage review pipeline (deterministic gate + LLM qualitative review)",
+      "Trusted contributor auto-review",
+      "Idempotent PR comment via ob1-automated-review marker",
+      "Docs PR bypass",
+      "PR quota enforcement",
+      "security-blocked and needs-maintainer-triage label lifecycle"
+    ],
+    "exports": [
+      "metadata.schema.json",
+      "PULL_REQUEST_TEMPLATE.md",
+      "ob1-gate.yml",
+      "claude-review.yml",
+      "ob1-pr-followups.yml",
+      "claude-issue-triage.yml",
+      "auto-label.yml",
+      "discord-announce.yml",
+      "markdown-lint.yml",
+      "release-drafter.yml",
+      "welcome-new-contributors.yml"
+    ],
+    "depends_on": [
+      "CONTRIBUTING.md",
+      "CLAUDE.md",
+      "docs/01-getting-started.md",
+      "docs/05-tool-audit.md"
+    ],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": ["ANTHROPIC_API_KEY", "GITHUB_TOKEN"],
+      "config_files": [".github/.markdownlint.jsonc", ".github/release-drafter.yml"],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}

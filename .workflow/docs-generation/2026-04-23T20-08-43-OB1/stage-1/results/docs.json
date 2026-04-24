@@ -1,0 +1,39 @@
+{
+  "status": "created",
+  "directory": "docs",
+  "context_file": "docs/CONTEXT.md",
+  "reasoning": "The docs directory has non-obvious organizational logic: numbered files form a deliberate progressive onboarding sequence, companion prompts are executable templates not just explanatory text, and the tool audit guide addresses a subtle MCP context-window degradation problem that isn't visible in any single extension. The query-parameter auth pattern documented in the FAQ is the most common setup failure and is genuinely non-obvious. These details go beyond what file names alone convey.",
+  "has_human_curated_info": false,
+  "module_summary": {
+    "purpose": "End-user-facing setup guides, executable companion prompts, FAQ, AI-assisted setup instructions, and MCP optimization guidance for Open Brain onboarding and operation",
+    "key_concepts": [
+      "Progressive onboarding sequence",
+      "Executable companion prompts",
+      "MCP tool context overhead",
+      "Query-parameter auth pattern"
+    ],
+    "exports": [
+      "01-getting-started.md",
+      "02-companion-prompts.md",
+      "03-faq.md",
+      "04-ai-assisted-setup.md",
+      "05-tool-audit.md",
+      "video-walkthrough-script.md",
+      "workflow-pipeline.html",
+      "open-brain-credential-tracker.xlsx",
+      "open-brain-guide-mac.xlsx",
+      "open-brain-guide-mac-tabbed.xlsx",
+      "open-brain-guide-windows.xlsx",
+      "open-brain-guide-windows-tabbed.xlsx"
+    ],
+    "depends_on": [],
+    "operational_hints": {
+      "has_api_routes": false,
+      "has_cli_commands": false,
+      "env_vars_referenced": [],
+      "config_files": [],
+      "has_health_endpoints": false,
+      "has_database_models": false
+    }
+  }
+}
